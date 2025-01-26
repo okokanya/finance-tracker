@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .button {
+    @apply whitespace-nowrap rounded-lg px-4 py-2 disabled:bg-gray-400 disabled:text-gray-300 disabled:cursor-not-allowed hover:transition-colors  font-medium text-white transition-colors hover:bg-red-400;
+  }
+}
