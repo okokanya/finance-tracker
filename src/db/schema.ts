@@ -6,7 +6,5 @@ export const todos = sqliteTable('todos', {
   id: text('id').primaryKey().$defaultFn(uuid),
   text: text('text').notNull(),
   isCompleted: integer('isCompleted', { mode: 'boolean' }).notNull(),
-  createdAt: integer('timestamp', { mode: 'timestamp' }).default(
-    sql`(strftime('%s', 'now'))`
-  ),
+  createdAt: integer('timestamp', { mode: 'timestamp' }).default(sql`(strftime('%s', 'now'))`),
 });

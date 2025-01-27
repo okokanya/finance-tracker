@@ -1,8 +1,10 @@
-import Button from '@/components/button';
-import { todoSchema } from '@/models/todos';
-import { useQuery } from '@tanstack/react-query';
 import { Inter } from 'next/font/google';
 import Head from 'next/head';
+import { useQuery } from '@tanstack/react-query';
+
+import Button from '@/components/button';
+import { todoSchema } from '@/models/todos';
+
 const inter = Inter({ subsets: ['latin'] });
 
 export default function Home() {
@@ -16,26 +18,21 @@ export default function Home() {
   });
 
   return (
-    <div
-      className={`${inter.className} flex items-center justify-center flex-col`}>
+    <div className={`${inter.className} flex flex-col items-center justify-center`}>
       <Head>
         <title>Finance Tracker</title>
       </Head>
-      <h2 className='text-2xl '>Компонент кнопки</h2>
-      <div className='flex gap-2'>
+      <h2 className="text-2xl">Компонент кнопки</h2>
+      <div className="flex gap-2">
         <Button>Primary</Button>
-        <Button variant='secondary'>Secondary</Button>
+        <Button variant="secondary">Secondary</Button>
         <Button disabled>Disabled</Button>
       </div>
 
       {isPending ? (
-        <p className='text-yellow-400'>загрузка...</p>
+        <p className="text-yellow-400">загрузка...</p>
       ) : (
-        <ul>
-          {todos?.map((item) => (
-            <li key={item.id}>{item.text}</li>
-          ))}
-        </ul>
+        <ul>{todos?.map(item => <li key={item.id}>{item.text}</li>)}</ul>
       )}
     </div>
   );

@@ -1,6 +1,7 @@
-import { cn } from '@/utils/cn';
-import { Button as HeadlessButton } from '@headlessui/react';
 import { ComponentProps, ReactNode } from 'react';
+import { Button as HeadlessButton } from '@headlessui/react';
+
+import { cn } from '@/utils/cn';
 
 type ButtonVariant = 'primary' | 'secondary' | 'icon';
 
@@ -28,9 +29,7 @@ const Button: React.FC<ButtonProps> = ({
   );
 
   return (
-    <HeadlessButton
-      className={classNames}
-      {...otherProps}>
+    <HeadlessButton className={classNames} {...otherProps}>
       {children}
     </HeadlessButton>
   );

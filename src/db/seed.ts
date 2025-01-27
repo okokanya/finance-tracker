@@ -1,12 +1,7 @@
-import Database from 'better-sqlite3';
-import { drizzle } from 'drizzle-orm/better-sqlite3';
 import { v4 as uuidv4 } from 'uuid';
 
+import { db } from './db';
 import * as schema from './schema';
-
-const sqlite = new Database('sqlite.db');
-
-export const db = drizzle(sqlite, { schema });
 
 const main = async () => {
   try {
