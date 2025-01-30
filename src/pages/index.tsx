@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { useQuery } from '@tanstack/react-query';
 
 import Button from '@/components/button';
+import Input from '@/components/input/input';
 import { todoSchema } from '@/models/todos';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -27,6 +28,12 @@ export default function Home() {
         <Button>Primary</Button>
         <Button variant="secondary">Secondary</Button>
         <Button disabled>Disabled</Button>
+      </div>
+      <div className="mt-2 flex flex-col gap-2">
+        <Input />
+        <Input placeholder="Placeholder" />
+        <Input errorText="Error text" />
+        <Input disabled value="Disabled" />
       </div>
 
       {isPending ? (
