@@ -1,29 +1,33 @@
-import { ComponentProps, ReactNode } from 'react';
+import { ComponentProps } from 'react';
 import { Button as HeadlessButton } from '@headlessui/react';
 
 import { cn } from '@/utils/cn';
 
-type ButtonVariant = 'primary' | 'secondary' | 'icon';
+type ButtonVariant = 'primary' | 'secondary' | 'error' | 'warning';
 
 export type ButtonProps = ComponentProps<'button'> & {
   variant?: ButtonVariant;
-  icon?: ReactNode;
 };
 
 const Button: React.FC<ButtonProps> = ({
   variant = 'primary',
   children,
-  icon,
   className,
   ...otherProps
 }) => {
+  const secondaryBaseClass =
+    'border-2 border-solid border-gray-300 bg-white hover:bg-white disabled:bg-white';
   const classNames = cn(
-    'button ',
+    'button font-inter font-bold',
     {
-      ['bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-grey-100 active:text-white']:
+      ['text-grey-100 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 active:text-white']:
         variant === 'primary',
-      ['bg-white text-gray-800 border-2 border-solid border-gray-300 hover:bg-white  hover:text-blue-600 disabled:text-gray-400 disabled:bg-white']:
+      [`${secondaryBaseClass} text-gray-800 hover:text-blue-600 disabled:text-gray-400`]:
         variant === 'secondary',
+      [`${secondaryBaseClass} text-red-500 hover:text-red-700 disabled:text-red-100`]:
+        variant === 'error',
+      [`${secondaryBaseClass} text-yellow-500 hover:text-yellow-600 disabled:text-yellow-100`]:
+        variant === 'warning',
     },
     className
   );
