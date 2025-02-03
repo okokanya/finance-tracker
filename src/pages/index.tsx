@@ -3,7 +3,6 @@ import Head from 'next/head';
 import { useQuery } from '@tanstack/react-query';
 
 import Button from '@/components/button';
-import Header from '@/components/header';
 import Input from '@/components/input/input';
 import { todoSchema } from '@/models/todos';
 
@@ -25,7 +24,6 @@ export default function Home() {
         <title>Finance Tracker</title>
       </Head>
 
-      <Header />
       <main>
         <h2 className="text-2xl">Компонент кнопки</h2>
         <div className="flex gap-2">
