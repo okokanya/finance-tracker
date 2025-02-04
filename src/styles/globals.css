@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,4 +7,33 @@
   .button {
     @apply whitespace-nowrap rounded-lg px-4 py-2 font-medium text-white transition-colors hover:bg-red-400 hover:transition-colors disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-gray-300;
   }
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+h1 {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.5rem; /* 24px */
+    font-weight: 700;
+    line-height: 2rem; /* 32px */
+    margin-bottom: 1.5rem;
+}
+label {
+    color: #6B7280;
+    font-weight: 400;
+}
+
+input::placeholder {
+    color: #9CA3AF;
+    font-weight: 400;
+    font-size: 1rem;
+
+}
+input {
+    margin-bottom: 1rem;
+    border-color: #D1D5DB;
+    border-radius: 4px;
+    font-size: 1rem;
 }
