@@ -4,12 +4,12 @@ type FullScreenBackgroundProps = {
   children?: ReactNode;
 };
 
-const FsBg = ({ children }: FullScreenBackgroundProps) => {
+const formWrap = ({ children }: FullScreenBackgroundProps) => {
   return (
-    <div className="w-screen h-screen bg-[url('/bg.png')] bg-cover bg-center items-center justify-center flex flex-col">
+    <div className="bg-white py-8 px-8 rounded-[12px] w-[36.25rem]">
       {children && <div className="w-full h-full flex items-center justify-center flex-col">{children}</div>}
     </div>
   );
 };
 
-export default FsBg;
+export default formWrap;

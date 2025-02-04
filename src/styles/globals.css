@@ -20,20 +20,31 @@ h1 {
     line-height: 2rem; /* 32px */
     margin-bottom: 1.5rem;
 }
-label {
+/* label {
     color: #6B7280;
     font-weight: 400;
-}
+} */
 
 input::placeholder {
     color: #9CA3AF;
     font-weight: 400;
     font-size: 1rem;
-
 }
-input {
-    margin-bottom: 1rem;
+.input-txt {
     border-color: #D1D5DB;
     border-radius: 4px;
     font-size: 1rem;
+}
+
+.label {
+    @apply flex flex-col relative mb-4 w-full;
+}
+.half-width {
+    @apply w-full md:w-[47%]
+}
+.errorSpan {
+    @apply text-[#EF4444] text-[0.5rem] block absolute bottom-[-10px]
+}
+.link {
+    @apply text-[#2563EB] font-bold
 }
