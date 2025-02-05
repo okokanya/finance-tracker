@@ -84,7 +84,7 @@ export default function Signup() {
           </Button>
         </form>
 
-        <p className='ml-0 mr-auto'>Уже есть аккаунт? <a className="link" href='/signin'>Войти</a></p>
+        <p className='ml-0 mr-auto mt-10'>Уже есть аккаунт? <a className="link" href='/signin'>Войти</a></p>
       </FormWrap>
     </MainWrap>
   );
