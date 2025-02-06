@@ -20,16 +20,13 @@ h1 {
     line-height: 2rem; /* 32px */
     margin-bottom: 1.5rem;
 }
-/* label {
-    color: #6B7280;
-    font-weight: 400;
-} */
 
 input::placeholder {
     color: #9CA3AF;
     font-weight: 400;
     font-size: 1rem;
 }
+
 .input-txt {
     border-color: #D1D5DB;
     border-radius: 4px;
