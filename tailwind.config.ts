@@ -18,6 +18,8 @@ export default {
       },
       fontFamily: {
         inter: ['Inter', 'sans-serif'],
+        roboro: ['Roboto', 'sans-serif'],
+
       },
     },
   },

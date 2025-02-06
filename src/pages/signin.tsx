@@ -10,6 +10,7 @@ type FormData = {
   password: string;
 };
 
+Signin.title = "Вход"
 export default function Signin() {
   const {
     register,

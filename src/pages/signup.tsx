@@ -13,6 +13,9 @@ type FormData = {
   passwordCheck: string;
 };
 
+Signup.title = "Регистрация"
+
+
 export default function Signup() {
   const [passwordMatch, setPasswordMatch] = useState(true); // State to track password match
   const {
