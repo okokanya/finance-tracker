@@ -117,6 +117,7 @@ const main = async () => {
     await db.insert(schema.transactions).values([
       {
         id: uuidv4(),
+        userId: user1Id,
         accountId: account1Id,
         categoryId: category2Id,
         type: 'topup',
@@ -124,6 +125,7 @@ const main = async () => {
       },
       {
         id: uuidv4(),
+        userId: user1Id,
         accountId: account1Id,
         categoryId: category2Id,
         type: 'topup',
@@ -132,6 +134,7 @@ const main = async () => {
       },
       {
         id: uuidv4(),
+        userId: user1Id,
         accountId: account1Id,
         categoryId: category1Id,
         type: 'withdrawal',
@@ -141,6 +144,7 @@ const main = async () => {
       },
       {
         id: uuidv4(),
+        userId: user1Id,
         accountId: account1Id,
         targetAccountId: account2Id,
         type: 'transfer',
@@ -150,6 +154,7 @@ const main = async () => {
       },
       {
         id: uuidv4(),
+        userId: user1Id,
         accountId: account2Id,
         targetAccountId: account1Id,
         type: 'transfer',
@@ -159,6 +164,7 @@ const main = async () => {
       },
       {
         id: uuidv4(),
+        userId: user1Id,
         accountId: account1Id,
         categoryId: category3Id,
         type: 'withdrawal',
