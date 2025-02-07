@@ -6,6 +6,7 @@ export const transactionTypeEnum = z.enum(TRANSACTION_TYPES);
 
 export const transactionSchema = z.object({
   id: z.string().uuid(),
+  userId: z.string().uuid(),
   accountId: z.string().uuid(),
   categoryId: z.string().uuid().nullable(),
   targetAccountId: z.string().uuid().nullable(),

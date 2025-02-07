@@ -50,6 +50,9 @@ export const categories = sqliteTable('categories', {
 
 export const transactions = sqliteTable('transactions', {
   id: text('id').primaryKey().$defaultFn(uuid),
+  userId: text('userId')
+    .notNull()
+    .references(() => users.id),
   accountId: text('accountId')
     .notNull()
     .references(() => accounts.id),

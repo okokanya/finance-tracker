@@ -1,0 +1,1 @@
+ALTER TABLE `transactions` ADD `userId` text NOT NULL REFERENCES users(id);

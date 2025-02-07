@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { eq } from 'drizzle-orm';
 
 import { db } from '@/db';
 import { users } from '@/db/schema';
