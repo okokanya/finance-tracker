@@ -1,31 +1,30 @@
 import { FC, useMemo } from 'react';
 
+import { CategoryType } from '@/types/enums';
 import { cn } from '@/utils/cn';
 
 import Text from '../text/text';
 import Title from '../title/title';
-
-type Balance = 'income' | 'outcome';
 
 type CategoryCardProps = {
   category: string;
   description?: string;
   value: number;
   isEdit?: boolean;
-  balance?: Balance;
+  type?: CategoryType;
 };
 
-const CategoryCard: FC<CategoryCardProps> = ({ category, description, value, isEdit, balance }) => {
+const CategoryCard: FC<CategoryCardProps> = ({ category, description, value, isEdit, type }) => {
   const operationSign = useMemo(() => {
-    switch (balance) {
+    switch (type) {
       case 'income':
         return '+';
-      case 'outcome':
+      case 'expense':
         return '—';
       default:
         return '';
     }
-  }, [balance]);
+  }, [type]);
 
   return (
     <div
@@ -44,8 +43,8 @@ const CategoryCard: FC<CategoryCardProps> = ({ category, description, value, isE
       </Text>
       <Title
         className={cn({
-          ['text-green-500']: balance === 'income',
-          ['text-red-500']: balance === 'outcome',
+          ['text-green-500']: type === 'income',
+          ['text-red-500']: type === 'expense',
         })}
       >
         {operationSign} {value} ₽

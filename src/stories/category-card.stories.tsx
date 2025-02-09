@@ -13,7 +13,7 @@ const meta = {
     category: 'Кафе и рестораны',
     description: 'Вечера за чашкой кофе или трапезой в любимом месте',
     value: 2000,
-    balance: 'outcome'
+    type: 'expense'
   }
 
 } satisfies Meta<typeof CategoryCard>;
@@ -23,20 +23,20 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    balance: undefined,
+    type: undefined,
     value: 0
   }
 }
 
 export const IncomeBalance : Story = {
   args: {
-    balance: 'income'
+    type: 'income'
   }
 }
 
 export const OutcomeBalance: Story = {
   args: {
-    balance: 'outcome'
+    type: 'expense'
   }
 }
 
