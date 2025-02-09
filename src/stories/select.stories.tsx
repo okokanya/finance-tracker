@@ -16,6 +16,7 @@ const meta = {
     layout: 'centered',
   },
   args: {
+    selected: options[0],
     options: options,
     onChangeOption: (selected: OptionType) => {
       console.log(`выбран: title - ${selected.title}, value - ${selected.value}`)
@@ -31,9 +32,9 @@ export const Main: Story = {
   args: {},
 };
 
-export const Scroll: Story = {
+export const Checked: Story = {
   args: {
-    optionsWrapperClassName: 'max-h-[150px]',
+    checked: true,
   },
 };
 
