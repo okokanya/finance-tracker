@@ -1,8 +1,8 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "c6bf44c3-38c0-4e49-ae0c-f57cae3a10f8",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "2974e088-f2a8-4287-8295-7243d90cd4e8",
+  "prevId": "c6bf44c3-38c0-4e49-ae0c-f57cae3a10f8",
   "tables": {
     "accounts": {
       "name": "accounts",
@@ -172,6 +172,13 @@
           "notNull": true,
           "autoincrement": false
         },
+        "userId": {
+          "name": "userId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
         "accountId": {
           "name": "accountId",
           "type": "text",
@@ -233,6 +240,19 @@
       },
       "indexes": {},
       "foreignKeys": {
+        "transactions_userId_users_id_fk": {
+          "name": "transactions_userId_users_id_fk",
+          "tableFrom": "transactions",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
         "transactions_accountId_accounts_id_fk": {
           "name": "transactions_accountId_accounts_id_fk",
           "tableFrom": "transactions",
