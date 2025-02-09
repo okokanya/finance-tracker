@@ -24,7 +24,7 @@ const Title: FC<PropsWithChildren<TitleProps>> = ({
 
   const classNames = cn(
     roboto.className,
-    'font-bold',
+    'font-bold p-0 m-0',
     {
       ['text-2xl']: variant === 'h2',
       ['text-3xl']: variant === 'h1',
