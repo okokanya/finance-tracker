@@ -6,7 +6,7 @@ export default defineConfig({
   schema: './src/db/schema.ts',
   dialect: 'turso',
   dbCredentials: {
-    url: process.env.TURSO_DATABASE_URL as string,
-    authToken: process.env.TURSO_AUTH_TOKEN as string,
+    url: 'libsql://finance-tracker-finance-tracker.turso.io',
+    authToken: 'eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJnaWQiOiJkZDZmMWY2Ni0wNmE5LTQ4ZDktYjAyOC1iNmQwMWQ3OWE2NjgiLCJpYXQiOjE3Mzg2NDM1ODN9.i464trP1W4jBdBENAjDdwDjqyohnCOW-aNa37vCmvPU3lszXTB6I2Szp7N6_3-igBncq5ssMrTMOTdTvSMj2Cw',
   },
 });
