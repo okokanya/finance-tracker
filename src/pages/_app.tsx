@@ -6,10 +6,15 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import Head from 'next/head';
 
 import Layout from '@/components/layout/layout';
+type CustomAppProps = AppProps & {
+  Component: AppProps['Component'] & {
+    title?: string;
+  };
+};
 
 const queryClient = new QueryClient();
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function App({ Component, pageProps }: CustomAppProps) {
   return (
 
     <QueryClientProvider client={queryClient}>
