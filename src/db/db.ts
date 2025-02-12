@@ -1,9 +1,11 @@
-import Database from 'better-sqlite3';
-import { drizzle } from 'drizzle-orm/better-sqlite3';
+import 'dotenv/config';
+import { drizzle } from 'drizzle-orm/libsql';
+// You can specify any property from the libsql connection options
+const db = drizzle({
+  connection: {
+    url: 'libsql://finance-tracker-finance-tracker.turso.io',
+    authToken: 'eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJnaWQiOiJkZDZmMWY2Ni0wNmE5LTQ4ZDktYjAyOC1iNmQwMWQ3OWE2NjgiLCJpYXQiOjE3Mzg2NDM1ODN9.i464trP1W4jBdBENAjDdwDjqyohnCOW-aNa37vCmvPU3lszXTB6I2Szp7N6_3-igBncq5ssMrTMOTdTvSMj2Cw'
+  }
+});
 
-import * as schema from './schema';
-
-const DATABASE_URL = 'sqlite.db';
-const sqlite = new Database(DATABASE_URL);
-
-export const db = drizzle(sqlite, { schema });
+export default db;
