@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import Button from '@/components/button';
+import { OptionType } from '@/components/select/option-type';
 import Select from '@/components/select/select';
 import Text from '@/components/text/text';
 import Title from '@/components/title/title';
@@ -12,8 +13,10 @@ Categories.title = 'Категории';
 
 export default function Categories() {
   const [isEditMode, setIsEditMode] = useState(false);
-  const [selectedBalance, setSelectedBalance] = useState<CategoryType>('expense');
-  const [selectedPeriod, setSelectedPeriod] = useState<Period>('thisMonth');
+  const [selectedBalance, setSelectedBalance] = useState<OptionType<CategoryType>>(
+    BALANCE_OPTIONS[0]
+  );
+  const [selectedPeriod, setSelectedPeriod] = useState<OptionType<Period>>(PERIOD_OPTIONS[0]);
 
   const handleMainButtonClick = (save?: boolean) => {
     if (save) {
@@ -52,12 +55,12 @@ export default function Categories() {
           <Select
             options={BALANCE_OPTIONS}
             selected={selectedBalance}
-            onChangeOption={selected => setSelectedBalance(selected.value as CategoryType)}
+            onChangeOption={selected => setSelectedBalance(selected as OptionType<CategoryType>)}
           />
           <Select
             options={PERIOD_OPTIONS}
             selected={selectedPeriod}
-            onChangeOption={selected => setSelectedPeriod(selected.value as Period)}
+            onChangeOption={selected => setSelectedPeriod(selected as OptionType<Period>)}
           />
         </div>
       </div>
