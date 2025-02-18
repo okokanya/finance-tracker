@@ -1,10 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import db from '@/db/db';
-// import { users } from '@/db/schema';
-import { userSchema } from '@/models';
+import { db } from '@/db';
 import { users } from '@/db/schema';
-
+import { userSchema } from '@/models';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {
