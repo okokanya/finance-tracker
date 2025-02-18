@@ -3,7 +3,6 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import MainWrap from '@/components/mainWrap';
 import FormWrap from '@/components/formWrap';
 import Button from '@/components/button';
-import { registerUser } from '@/utils/api';
 
 type FormData = {
   firstName: string;
@@ -13,11 +12,11 @@ type FormData = {
   passwordCheck: string;
 };
 
-Signup.title = "Регистрация"
-
+Signup.title = "Регистрация";
 
 export default function Signup() {
   const [passwordMatch, setPasswordMatch] = useState(true); // State to track password match
+  const [submitError, setSubmitError] = useState<string | null>(null); // State to handle submission errors
   const {
     register,
     handleSubmit,
@@ -25,7 +24,40 @@ export default function Signup() {
     setValue,
   } = useForm<FormData>();
 
-  const onSubmit: SubmitHandler<FormData> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
+    // Проверяем, совпадают ли пароли
+    if (data.password !== data.passwordCheck) {
+      setPasswordMatch(false);
+      return;
+    }
+
+    try {
+      // Отправляем данные на сервер
+      const response = await fetch('/auth/index', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: data.email,
+          password: data.password,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Ошибка при отправке данных');
+      }
+
+      const result = await response.json();
+      console.log('Успешно:', result);
+      setSubmitError(null); // Очищаем ошибку, если отправка прошла успешно
+    } catch (error) {
+      console.error('Ошибка:', error);
+      setSubmitError('Произошла ошибка при регистрации. Попробуйте еще раз.'); // Устанавливаем сообщение об ошибке
+    }
+  };
 
   const handlePasswordCheckBlur = () => {
     const password = document.getElementById('password') as HTMLInputElement;
@@ -33,7 +65,7 @@ export default function Signup() {
 
     if (password.value !== passwordCheck.value) {
       setPasswordMatch(false);
-      setValue('passwordCheck', ''); // Clear the passwordCheck field
+      setValue('passwordCheck', ''); // Очищаем поле подтверждения пароля
     } else {
       setPasswordMatch(true);
     }
@@ -82,8 +114,10 @@ export default function Signup() {
             {(!passwordMatch || errors.passwordCheck) && <span className='errorSpan'>Поля не совпадают</span>}
           </label>
 
+          {submitError && <span className='errorSpan'>{submitError}</span>}
+
           <Button>
-            <input type="submit" />
+            <input type="submit" value="Зарегистрироваться" />
           </Button>
         </form>
 
