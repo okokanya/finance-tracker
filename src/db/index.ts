@@ -1,17 +1,3 @@
-import { drizzle, Client } from 'drizzle-orm/libsql';
-
-// Типизация параметров для подключения
-interface ConnectionConfig {
-  url: string | undefined;
-  authToken: string | undefined;
-}
-
-// Подключение к базе данных
-const db = drizzle({
-  client: {
-    url: process.env.DATABASE_URL,
-    authToken: process.env.DATABASE_AUTH_TOKEN,
-  } as Client,
-});
-
-export default db;
+import { drizzle } from 'drizzle-orm/better-sqlite3';
+const db = drizzle(process.env.DATABASE_URL);
+const result = await db.execute('select 1');
