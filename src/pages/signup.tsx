@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { useMutation } from '@tanstack/react-query';
 import MainWrap from '@/components/mainWrap';
 import FormWrap from '@/components/formWrap';
 import Button from '@/components/button';
+
 
 type FormData = {
   firstName: string;
@@ -12,11 +14,11 @@ type FormData = {
   passwordCheck: string;
 };
 
-Signup.title = "Регистрация";
+Signup.title = 'Регистрация';
 
 export default function Signup() {
-  const [passwordMatch, setPasswordMatch] = useState(true); // State to track password match
-  const [submitError, setSubmitError] = useState<string | null>(null); // State to handle submission errors
+  const [passwordMatch, setPasswordMatch] = useState(true);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
@@ -24,16 +26,10 @@ export default function Signup() {
     setValue,
   } = useForm<FormData>();
 
-  const onSubmit: SubmitHandler<FormData> = async (data) => {
-    // Проверяем, совпадают ли пароли
-    if (data.password !== data.passwordCheck) {
-      setPasswordMatch(false);
-      return;
-    }
-
-    try {
-      // Отправляем данные на сервер
-      const response = await fetch('/auth/index', {
+  // Используем useMutation для отправки данных
+  const mutation = useMutation({
+    mutationFn: async (data: FormData) => {
+      const response = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -50,13 +46,26 @@ export default function Signup() {
         throw new Error('Ошибка при отправке данных');
       }
 
-      const result = await response.json();
-      console.log('Успешно:', result);
-      setSubmitError(null); // Очищаем ошибку, если отправка прошла успешно
-    } catch (error) {
+      return response.json();
+    },
+    onSuccess: (data) => {
+      console.log('Успешно:', data);
+      setSubmitError(null);
+    },
+    onError: (error) => {
       console.error('Ошибка:', error);
-      setSubmitError('Произошла ошибка при регистрации. Попробуйте еще раз.'); // Устанавливаем сообщение об ошибке
+      setSubmitError('Произошла ошибка при регистрации. Попробуйте еще раз.');
+    },
+  });
+
+  const onSubmit: SubmitHandler<FormData> = (data) => {
+    if (data.password !== data.passwordCheck) {
+      setPasswordMatch(false);
+      return;
     }
+
+    // Вызываем мутацию
+    mutation.mutate(data);
   };
 
   const handlePasswordCheckBlur = () => {
@@ -65,7 +74,7 @@ export default function Signup() {
 
     if (password.value !== passwordCheck.value) {
       setPasswordMatch(false);
-      setValue('passwordCheck', ''); // Очищаем поле подтверждения пароля
+      setValue('passwordCheck', '');
     } else {
       setPasswordMatch(true);
     }
@@ -74,54 +83,61 @@ export default function Signup() {
   return (
     <MainWrap>
       <FormWrap>
-        <h1 className='ml-0 mr-auto'>Регистрация</h1>
-        <form className='flex flex-wrap w-full justify-between' onSubmit={handleSubmit(onSubmit)}>
-          <label className="label half-width">Имя
-            <input className="input-txt" placeholder="Имя" {...register("firstName", { required: true })} />
-            {errors.firstName && <span className='errorSpan'>Это поле обязательно</span>}
+        <h1 className="ml-0 mr-auto">Регистрация</h1>
+        <form className="flex flex-wrap w-full justify-between" onSubmit={handleSubmit(onSubmit)}>
+          <label className="label half-width">
+            Имя
+            <input className="input-txt" placeholder="Имя" {...register('firstName', { required: true })} />
+            {errors.firstName && <span className="errorSpan">Это поле обязательно</span>}
           </label>
 
-          <label className="label half-width">Фамилия
-            <input className="input-txt" placeholder="Фамилия" {...register("lastName", { required: true })} />
-            {errors.lastName && <span className='errorSpan'>Это поле обязательно</span>}
+          <label className="label half-width">
+            Фамилия
+            <input className="input-txt" placeholder="Фамилия" {...register('lastName', { required: true })} />
+            {errors.lastName && <span className="errorSpan">Это поле обязательно</span>}
           </label>
 
-          <label className="label">Email
-            <input className="input-txt" placeholder="email" type="email" {...register("email", { required: true })} />
-            {errors.email && <span className='errorSpan'>Это поле обязательно</span>}
+          <label className="label">
+            Email
+            <input className="input-txt" placeholder="email" type="email" {...register('email', { required: true })} />
+            {errors.email && <span className="errorSpan">Это поле обязательно</span>}
           </label>
 
-          <label className="label half-width">Придумайте пароль
+          <label className="label half-width">
+            Придумайте пароль
             <input
               className="input-txt"
               placeholder="Пароль"
               type="password"
-              {...register("password", { required: true })}
+              {...register('password', { required: true })}
               id="password"
             />
-            {errors.password && <span className='errorSpan'>Это поле обязательно</span>}
+            {errors.password && <span className="errorSpan">Это поле обязательно</span>}
           </label>
 
-          <label className="label half-width">Повторите пароль
+          <label className="label half-width">
+            Повторите пароль
             <input
               className="input-txt"
               placeholder="Повторите пароль"
               type="password"
-              {...register("passwordCheck", { required: true })}
+              {...register('passwordCheck', { required: true })}
               id="passwordCheck"
               onBlur={handlePasswordCheckBlur}
             />
-            {(!passwordMatch || errors.passwordCheck) && <span className='errorSpan'>Поля не совпадают</span>}
+            {(!passwordMatch || errors.passwordCheck) && <span className="errorSpan">Поля не совпадают</span>}
           </label>
 
-          {submitError && <span className='errorSpan'>{submitError}</span>}
+          {submitError && <span className="errorSpan">{submitError}</span>}
 
           <Button>
             <input type="submit" value="Зарегистрироваться" />
           </Button>
         </form>
 
-        <p className='ml-0 mr-auto mt-10'>Уже есть аккаунт? <a className="link" href='/signin'>Войти</a></p>
+        <p className="ml-0 mr-auto mt-10">
+          Уже есть аккаунт? <a className="link" href="/signin">Войти</a>
+        </p>
       </FormWrap>
     </MainWrap>
   );
