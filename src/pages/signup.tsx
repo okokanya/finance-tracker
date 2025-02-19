@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'next/router'; // Импортируем useRouter для редиректа
 import MainWrap from '@/components/mainWrap';
 import FormWrap from '@/components/formWrap';
 import Button from '@/components/button';
-
 
 type FormData = {
   firstName: string;
@@ -26,7 +26,8 @@ export default function Signup() {
     setValue,
   } = useForm<FormData>();
 
-  // Используем useMutation для отправки данных
+  const router = useRouter(); // Хук для навигации в Next.js
+
   const mutation = useMutation({
     mutationFn: async (data: FormData) => {
       const response = await fetch('/api/auth/signup', {
@@ -51,6 +52,7 @@ export default function Signup() {
     onSuccess: (data) => {
       console.log('Успешно:', data);
       setSubmitError(null);
+      router.push('/signin'); // Редирект на страницу входа
     },
     onError: (error) => {
       console.error('Ошибка:', error);
