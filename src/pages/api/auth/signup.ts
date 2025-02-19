@@ -16,7 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       // валидируем данные, чтобы соответствовали модели создания пользователя
       const userData = createUserSchema.parse(req.body);
 
-      // Хэшируем пароль перед сохранением
+      // хэшируем пароль
       const hashedPassword = await bcrypt.hash(userData.password, 10);
       const newUser = {
         ...userData,
@@ -25,9 +25,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
       await db.insert(users).values(newUser);
 
-      // Перенаправление на страницу auth/me после успешной регистрации
-      res.setHeader('Location', '/auth/me');
-      res.status(302).end(); // Статус 302 — временное перенаправление
+      res.status(200).json({ message: 'Регистрация прошла успешно!' });
     } catch (error) {
       if (error instanceof ZodError) {
         console.error('Ошибка валидации:', error);
