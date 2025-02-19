@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { ZodError } from 'zod';
+import bcrypt from 'bcryptjs';
 
 import { db } from '@/db';
 import { users } from '@/db/schema';
@@ -15,15 +16,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       // валидируем данные, чтобы соответствовали модели создания пользователя
       const userData = createUserSchema.parse(req.body);
 
-      // TODO: хэш пароля
+      // Хэшируем пароль перед сохранением
+      const hashedPassword = await bcrypt.hash(userData.password, 10);
       const newUser = {
         ...userData,
+        password: hashedPassword, // заменяем пароль на хеш
       };
 
       await db.insert(users).values(newUser);
 
-      // TODO: рассмотреть возможность сохранять токен в куки
-      res.status(200).json({ message: 'Регистрация прошла успешно!' });
+      // Перенаправление на страницу auth/me после успешной регистрации
+      res.setHeader('Location', '/auth/me');
+      res.status(302).end(); // Статус 302 — временное перенаправление
     } catch (error) {
       if (error instanceof ZodError) {
         console.error('Ошибка валидации:', error);
