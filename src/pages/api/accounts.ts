@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 
 import { db } from '@/db';
 import { accounts } from '@/db/schema';
@@ -18,15 +18,29 @@ async function GET(req: NextApiRequest, res: NextApiResponse) {
   try {
     const { userId } = req.query;
 
-    const data = userId
-      ? await db
+    const accountsQuery = userId
+      ? db
           .select()
           .from(accounts)
           .where(eq(accounts.userId, String(userId)))
-      : await db.select().from(accounts);
+      : db.select().from(accounts);
 
-    const parsedData = accountSchema.array().parse(data);
-    return res.status(200).json(parsedData);
+    const totalBalanceQuery = userId
+      ? db
+          .select({ total: sql`sum(balance)` })
+          .from(accounts)
+          .where(eq(accounts.userId, String(userId)))
+      : db.select({ total: sql`sum(balance)` }).from(accounts);
+
+    const [accountsData, [totalBalance]] = await Promise.all([accountsQuery, totalBalanceQuery]);
+
+    const parsedAccounts = accountSchema.array().parse(accountsData);
+    const finalTotalBalance = Number(totalBalance?.total) ?? 0;
+
+    return res.status(200).json({
+      accounts: parsedAccounts,
+      totalBalance: finalTotalBalance,
+    });
   } catch (error) {
     console.error('Error fetching accounts:', error);
     return res.status(500).json({ error: 'Failed to fetch accounts' });
