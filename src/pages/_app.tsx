@@ -19,7 +19,7 @@ export default function App({ Component, pageProps }: CustomAppProps) {
 
     <QueryClientProvider client={queryClient}>
       <Head>
-       <title>{`Finance Tracker - {Component.title}`}</title>
+       <title>{`Finance Tracker - ${Component.title}`}</title>
       </Head>
       <Layout>
         <Component {...pageProps} />
