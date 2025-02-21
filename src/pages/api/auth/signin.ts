@@ -9,6 +9,7 @@ const SECRET_KEY = process.env.JWT_SECRET || 'your_secret_key';
 
 type ResponseData = {
   message: string;
+  token?: string;
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<ResponseData>) {
@@ -22,7 +23,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       console.log('Нормализованный email:', normalizedEmail);
 
       // Ищем пользователя в базе по email
-      const user = await db.select().from(users).where(eq(users.email, normalizedEmail)).limit(1);
+      let user;
+      try {
+        user = await db.select().from(users).where(eq(users.email, normalizedEmail)).limit(1);
+      } catch (dbError) {
+        console.error('Ошибка при запросе к базе данных:', dbError);
+        return res.status(500).json({ message: 'Ошибка при подключении к базе данных' });
+      }
+
       console.log('Результат поиска пользователя:', user);
 
       if (!user || user.length === 0) {
@@ -52,8 +60,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       // Устанавливаем токен в куки
       res.setHeader('Set-Cookie', `token=${token}; HttpOnly; Path=/; Max-Age=${60 * 60 * 24 * 7};`);
 
-      // Редиректим на /profile
-      res.status(302).redirect('http://localhost:3000/profile');
+      // Возвращаем успешный ответ с токеном и сообщением
+      return res.status(200).json({ message: 'Авторизация успешна', token });
     } catch (error) {
       console.error('Ошибка при входе:', error);
       res.status(500).json({ message: 'Ошибка сервера' });
