@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       const { email, password } = req.body;
       console.log('Полученный email:', email);
 
-      // Нормализуем email (убираем пробелы и приводим к нижнему регистру)
+      // Нормализуем email
       const normalizedEmail = String(email).trim().toLowerCase();
       console.log('Нормализованный email:', normalizedEmail);
 
@@ -27,16 +27,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
       if (!user || user.length === 0) {
         console.log('Пользователь не найден.');
-        return res.status(401).json({ message: 'Неверный email или пароль' });
+        return res.status(401).json({ message: 'Пользователь не найден. Неверный email или пароль' });
       }
 
       console.log('Проверяем пароль:', password);
       console.log('Хэш пароля из базы:', user[0].password);
 
-      const validPassword = await bcrypt.compare(password, user[0].password);
+      // проверим, есть ли пробелы в пароле
+      const validPassword = await bcrypt.compare(password.trim(), user[0].password);
       if (!validPassword) {
         console.log('Пароль не совпадает.');
-        return res.status(401).json({ message: 'Неверный email или пароль' });
+        return res.status(401).json({ message: 'Пароль не совпадает. Неверный email или пароль' });
       }
 
       // Генерация JWT токена
@@ -52,7 +53,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       res.setHeader('Set-Cookie', `token=${token}; HttpOnly; Path=/; Max-Age=${60 * 60 * 24 * 7};`);
 
       // Редиректим на /profile
-      res.status(302).redirect('http://localhost:3003/profile');
+      res.status(302).redirect('http://localhost:3000/profile');
     } catch (error) {
       console.error('Ошибка при входе:', error);
       res.status(500).json({ message: 'Ошибка сервера' });

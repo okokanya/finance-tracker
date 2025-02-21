@@ -12,6 +12,7 @@ type FormData = {
 };
 
 Signin.title = "Вход";
+
 export default function Signin() {
   const {
     register,
@@ -38,11 +39,11 @@ export default function Signin() {
       return response.json();
     },
     onSuccess: () => {
-      router.push('../api/signin');
+      router.push('/profile');
     },
-    onError: () => {
-      alert('Неверный email или пароль');
-    },
+    // onError: () => {
+    //   alert('Неверный email или пароль');
+    // },
   });
 
   const onSubmit: SubmitHandler<FormData> = (data) => {
