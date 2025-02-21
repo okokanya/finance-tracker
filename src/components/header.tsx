@@ -40,7 +40,7 @@ const items = [
     isImage: false,
   },
   {
-    link: 'me',
+    link: 'profile',
     text: 'профиль',
     icon: 'UserIcon',
     image: '/avatar.png',

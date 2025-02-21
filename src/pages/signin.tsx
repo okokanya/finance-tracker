@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { useForm, SubmitHandler } from "react-hook-form";
+import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'next/router';
 import MainWrap from '@/components/mainWrap';
 import FormWrap from '@/components/formWrap';
 import Button from '@/components/button';
-import { registerUser } from '@/utils/api';
 
 type FormData = {
   email: string;
   password: string;
 };
 
-Signin.title = "Вход"
+Signin.title = "Вход";
 export default function Signin() {
   const {
     register,
@@ -19,8 +20,34 @@ export default function Signin() {
     setValue,
   } = useForm<FormData>();
 
-  const onSubmit: SubmitHandler<FormData> = (data) => console.log(data);
+  const router = useRouter();
+  const mutation = useMutation({
+    mutationFn: async (data: FormData) => {
+      const response = await fetch('/api/auth/signin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
 
+      if (!response.ok) {
+        throw new Error('Ошибка при входе');
+      }
+
+      return response.json();
+    },
+    onSuccess: () => {
+      router.push('../api/signin');
+    },
+    onError: () => {
+      alert('Неверный email или пароль');
+    },
+  });
+
+  const onSubmit: SubmitHandler<FormData> = (data) => {
+    mutation.mutate(data);
+  };
 
   return (
     <MainWrap>
