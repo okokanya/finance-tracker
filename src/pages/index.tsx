@@ -1,6 +1,8 @@
 import { Inter } from 'next/font/google';
 import Head from 'next/head';
 import Button from '@/components/button';
+import LogoutButton from '@/components/LogoutButton';
+
 import Input from '@/components/input/input';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -28,6 +30,8 @@ export default function Home() {
         <Input errorText="Error text" />
         <Input disabled value="Disabled" />
       </div>
+
+      <LogoutButton/>
     </div>
   );
 }
