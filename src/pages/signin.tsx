@@ -41,9 +41,9 @@ export default function Signin() {
     onSuccess: () => {
       router.push('/profile');
     },
-    // onError: () => {
-    //   alert('Неверный email или пароль');
-    // },
+    onError: () => {
+      alert('Неверный email или пароль');
+    },
   });
 
   const onSubmit: SubmitHandler<FormData> = (data) => {
