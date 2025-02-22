@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { Account, Category, Transaction, User } from '@/models';
+import { Category, Transaction, User } from '@/models';
+import { AccountsResponse } from '@/types/accounts-response';
 
 export default function Data() {
   const { data: users, isPending: isLoadingUsers } = useQuery<User[]>({
@@ -11,7 +12,7 @@ export default function Data() {
     },
   });
 
-  const { data: accounts, isPending: isLoadingAccounts } = useQuery<Account[]>({
+  const { data: accountsData, isPending: isLoadingAccounts } = useQuery<AccountsResponse>({
     queryKey: ['accounts'],
     queryFn: async () => {
       const res = await fetch('/api/accounts');
@@ -76,9 +77,9 @@ export default function Data() {
 
             {/* Accounts Section */}
             <section>
-              <h2 className="mb-4 text-2xl font-bold">Счета</h2>
+              <h2 className="mb-4 text-2xl font-bold">{`Счета. Сумма: ${accountsData?.totalBalance}`}</h2>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {accounts?.map(account => (
+                {accountsData?.accounts.map(account => (
                   <div key={account.id} className="rounded-lg bg-white p-4 shadow">
                     <h3 className="font-bold">{account.name}</h3>
                     <p className="text-2xl font-bold">{account.balance} ₽</p>
@@ -123,7 +124,9 @@ export default function Data() {
                 {categories?.map(category => (
                   <div key={category.id} className="rounded-lg bg-white p-4 shadow">
                     <p className="font-bold">{category.name}</p>
-                    <p className="text-sm text-gray-500">{category.description ?? 'Нет описания'}</p>
+                    <p className="text-sm text-gray-500">
+                      {category.description ?? 'Нет описания'}
+                    </p>
                     <p className="text-sm text-gray-500">{category.type}</p>
                   </div>
                 ))}
