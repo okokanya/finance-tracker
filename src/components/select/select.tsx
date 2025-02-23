@@ -22,9 +22,10 @@ const Select: React.FC<SelectProps> = ({
   checked = false,
   disabled = false,
   className,
+  ...props
 }) => {
   return (
-    <Listbox value={selected} onChange={onChangeOption} disabled={disabled}>
+    <Listbox value={selected} onChange={onChangeOption} disabled={disabled} as="div">
       {({ open }) => (
         <>
           <ListboxButton
@@ -35,6 +36,7 @@ const Select: React.FC<SelectProps> = ({
               { [DISABLED_CLASSES]: disabled },
               className
             )}
+            {...props}
           >
             <span
               title={selected.title}

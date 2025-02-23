@@ -1,9 +1,15 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { AccountsResponse } from '@/types/accounts-response';
+import {
+  ACCOUNTS_QUERY_KEY,
+  ACCOUNTS_QUERY_PATH,
+  ACCOUNTS_QUERY_STALE_TIME,
+} from '@/features/accounts/accounts.constants';
+import { AccountFormSuccessResult, AccountsResponse } from '@/features/accounts/accounts.types';
+import { User } from '@/models';
 
-const ACCOUNTS_QUERY_KEY = ['accounts'] as const;
-const STALE_TIME = 5 * 60 * 1000; // 5 minutes
+// TODO: remove
+let user: User;
 
 export const useAccounts = () => {
   const query = useQuery<AccountsResponse>({
@@ -11,9 +17,9 @@ export const useAccounts = () => {
     queryFn: async () => {
       const userRes = await fetch('/api/users');
       const usersData = await userRes.json();
-      const user = usersData[0];
+      user = usersData[0];
 
-      const res = await fetch(`/api/accounts?userId=${user?.id}`);
+      const res = await fetch(`${ACCOUNTS_QUERY_PATH}?userId=${user?.id}`);
 
       if (!res.ok) {
         throw new Error('Failed to fetch accounts');
@@ -21,7 +27,7 @@ export const useAccounts = () => {
 
       return await res.json();
     },
-    staleTime: STALE_TIME,
+    staleTime: ACCOUNTS_QUERY_STALE_TIME,
     refetchOnWindowFocus: true,
     refetchOnMount: true,
     refetchOnReconnect: false,
@@ -30,6 +36,29 @@ export const useAccounts = () => {
   return {
     data: query.data,
     error: query.error,
-    isLoading: query.isPending,
+    isPending: query.isPending,
   };
+};
+
+export const useAddAccount = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (account: AccountFormSuccessResult) => {
+      const response = await fetch(`${ACCOUNTS_QUERY_PATH}?userId=${user?.id}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(account),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to add account');
+      }
+
+      return await response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ACCOUNTS_QUERY_KEY });
+    },
+  });
 };
