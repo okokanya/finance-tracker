@@ -13,8 +13,8 @@ export const accountSchema = z.object({
     .max(30, 'Название не должно превышать 30 символов'),
   description: z
     .string()
-    .min(1, 'Описание не может быть пустым')
     .max(200, 'Описание не должно превышать 200 символов')
+    .transform(val => val.trim() === '' ? null : val)
     .nullable(),
   type: accountTypeEnum,
   balance: z.number().default(0),

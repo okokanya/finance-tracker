@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
+import { AccountsResponse } from '@/features/accounts/accounts.types';
 import { Category, Transaction, User } from '@/models';
-import { AccountsResponse } from '@/types/accounts-response';
 
 export default function Data() {
   const { data: users, isPending: isLoadingUsers } = useQuery<User[]>({
