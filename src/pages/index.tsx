@@ -1,13 +1,10 @@
 import { Inter } from 'next/font/google';
 import Head from 'next/head';
 import Button from '@/components/button';
-import LogoutButton from '@/components/LogoutButton';
-
 import Input from '@/components/input/input';
 
 const inter = Inter({ subsets: ['latin'] });
 Home.title = 'Регистрация';
-
 
 export default function Home() {
   return (
@@ -15,7 +12,6 @@ export default function Home() {
       <Head>
         <title>Finance Tracker</title>
       </Head>
-
       <main>
         <h2 className="text-2xl">Компонент кнопки</h2>
         <div className="flex gap-2">
@@ -31,7 +27,6 @@ export default function Home() {
         <Input disabled value="Disabled" />
       </div>
 
-      <LogoutButton/>
     </div>
   );
 }

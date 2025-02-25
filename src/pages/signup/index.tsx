@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'; // Импортируем useRouter д�
 import MainWrap from '@/components/mainWrap';
 import FormWrap from '@/components/formWrap';
 import Button from '@/components/button';
+import Link from 'next/link'
 
 type FormData = {
   firstName: string;
@@ -26,7 +27,7 @@ export default function Signup() {
     setValue,
   } = useForm<FormData>();
 
-  const router = useRouter(); // Хук для навигации в Next.js
+  const router = useRouter();
 
   const mutation = useMutation({
     mutationFn: async (data: FormData) => {
@@ -52,7 +53,7 @@ export default function Signup() {
     onSuccess: (data) => {
       console.log('Успешно:', data);
       setSubmitError(null);
-      router.push('/signin'); // Редирект на страницу входа
+      router.push('/signin');
     },
     onError: (error) => {
       console.error('Ошибка:', error);
@@ -65,8 +66,6 @@ export default function Signup() {
       setPasswordMatch(false);
       return;
     }
-
-    // Вызываем мутацию
     mutation.mutate(data);
   };
 
@@ -138,7 +137,7 @@ export default function Signup() {
         </form>
 
         <p className="ml-0 mr-auto mt-10">
-          Уже есть аккаунт? <a className="link" href="/signin">Войти</a>
+          Уже есть аккаунт? <Link className="link" href="/signin">Войти</Link>
         </p>
       </FormWrap>
     </MainWrap>

@@ -4,8 +4,14 @@ import jwt from 'jsonwebtoken';
 import { db } from '@/db';
 import { users } from '@/db/schema';
 import { eq } from 'drizzle-orm';
-
+import { z } from 'zod';
 const SECRET_KEY = process.env.JWT_SECRET || 'your_secret_key';
+
+// схема валидации данных
+const loginSchema = z.object({
+  email: z.string().email('Неверный формат email').trim().toLowerCase(),
+  password: z.string().min(8, 'Пароль должен содержать хотя бы 8 символов'),
+});
 
 type ResponseData = {
   message: string;
@@ -15,17 +21,22 @@ type ResponseData = {
 export default async function handler(req: NextApiRequest, res: NextApiResponse<ResponseData>) {
   if (req.method === 'POST') {
     try {
-      const { email, password } = req.body;
-      console.log('Полученный email:', email);
+      // валидация
+      const parsedData = loginSchema.safeParse(req.body);
 
-      // Нормализуем email
-      const normalizedEmail = String(email).trim().toLowerCase();
-      console.log('Нормализованный email:', normalizedEmail);
+      if (!parsedData.success) {
+        const errorMessages = parsedData.error.errors.map((err) => err.message);
+        return res.status(400).json({ message: errorMessages.join(', ') });
+      }
+
+      const { email, password } = parsedData.data;
+
+      console.log('Полученный email:', email);
 
       // Ищем пользователя в базе по email
       let user;
       try {
-        user = await db.select().from(users).where(eq(users.email, normalizedEmail)).limit(1);
+        user = await db.select().from(users).where(eq(users.email, email)).limit(1);
       } catch (dbError) {
         console.error('Ошибка при запросе к базе данных:', dbError);
         return res.status(500).json({ message: 'Ошибка при подключении к базе данных' });
@@ -47,7 +58,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         return res.status(401).json({ message: 'Пароль не совпадает. Неверный email или пароль' });
       }
 
-      // Генерация JWT токена с только id пользователя
       const token = jwt.sign(
         { id: user[0].id },
         SECRET_KEY,
@@ -56,10 +66,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
       console.log('JWT Token:', token);
 
-      // Устанавливаем токен в куки
+      // устанавливаем токен в куки
       res.setHeader('Set-Cookie', `token=${token}; HttpOnly; Path=/; Max-Age=${60 * 60 * 24 * 7};`);
 
-      // Возвращаем успешный ответ с токеном и сообщением
       return res.status(200).json({ message: 'Авторизация успешна', token });
     } catch (error) {
       console.error('Ошибка при входе:', error);

@@ -12,7 +12,7 @@ import {
 
 const items = [
   {
-    link: '',
+    link: 'accounts',
     text: 'счета',
     icon: 'CreditCardIcon',
     image: '/logo',
