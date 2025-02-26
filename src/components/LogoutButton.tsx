@@ -1,5 +1,5 @@
 import React from 'react';
-import button from './button'
+import Button from './button'
 const logout = (): void => {
   document.cookie = 'token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
   window.location.reload();
@@ -7,9 +7,9 @@ const logout = (): void => {
 
 const LogoutButton: React.FC = () => {
   return (
-    <button onClick={logout} className="bg-red-500 text-white p-2 rounded">
+    <Button onClick={logout} className="bg-red-500 text-white p-2 rounded">
       Выйти
-    </button>
+    </Button>
   );
 };
 
