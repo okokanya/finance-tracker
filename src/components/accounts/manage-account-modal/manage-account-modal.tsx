@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
+import TransactionList from '@/components/accounts/manage-account-modal/transaction-list';
 import Button from '@/components/button';
 import Input from '@/components/input/input';
 import Modal, { ModalProps } from '@/components/modal/modal';
@@ -14,38 +15,73 @@ import {
   accountFormSchema,
   AccountFormSuccessResult,
 } from '@/features/accounts/accounts.types';
+import { hasAccountChanges } from '@/features/accounts/accounts.utils';
+import { useManageAccountController } from '@/features/accounts/controllers/manage-account.controller';
+import { Account } from '@/models';
 import { AccountType } from '@/types/enums';
 
-type AddAccountModalProps = Omit<ModalProps, 'title' | 'children'> & {
-  onSuccess: (account: AccountFormSuccessResult) => void;
+type ManageAccountModalProps = Omit<ModalProps, 'title' | 'children'> & {
+  account: Account;
+  onUpdate: (account: AccountFormSuccessResult) => void;
+  onDelete: () => void;
+  onArchive: () => void;
 };
 
-const AddAccountModal: React.FC<AddAccountModalProps> = ({ isOpen, onClose, onSuccess }) => {
-  const [selectedType, setSelectedType] = useState<OptionType<AccountType>>(ACCOUNT_OPTIONS[0]);
+const ManageAccountModal: React.FC<ManageAccountModalProps> = ({
+  account,
+  isOpen,
+  onClose,
+  onUpdate,
+  onDelete,
+  onArchive,
+}) => {
+  const [selectedType, setSelectedType] = useState<OptionType<AccountType>>(
+    ACCOUNT_OPTIONS.find(option => option.value == account.type) ?? ACCOUNT_OPTIONS[0]
+  );
+  const { transactions, isLoadingTransactions, isTransactionsError, refetchTransactions } =
+    useManageAccountController();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
   } = useForm<AccountForm>({
     resolver: zodResolver(accountFormSchema),
+    defaultValues: {
+      name: account.name,
+      description: account.description ?? '',
+      balance: account.balance,
+    },
+  });
+
+  const formValues = watch();
+  const hasChanges = hasAccountChanges(account, {
+    name: formValues.name,
+    description: formValues.description,
+    type: selectedType.value,
+    balance: formValues.balance,
+    isArchived: account.isArchived,
   });
 
   const onSubmit = (data: AccountForm) => {
-    onSuccess({
+    onUpdate({
       name: data.name,
       description: data.description,
       type: selectedType.value,
       balance: data.balance,
-      isArchived: false,
+      isArchived: account.isArchived,
     });
     reset();
-    onClose();
   };
 
   return (
-    <Modal title={texts.addAccount.action.title} isOpen={isOpen} onClose={onClose}>
+    <Modal
+      title={`${texts.manageAccount.action.title} ${account.name}`}
+      isOpen={isOpen}
+      onClose={onClose}
+    >
       <form onSubmit={handleSubmit(onSubmit)} className="flex w-full flex-col gap-6">
         <div className="mt-3 flex w-full flex-col gap-4">
           <div className="flex w-full flex-wrap justify-stretch gap-4">
@@ -84,18 +120,29 @@ const AddAccountModal: React.FC<AddAccountModalProps> = ({ isOpen, onClose, onSu
             type="text"
             {...register('balance', { valueAsNumber: true })}
           />
+          <TransactionList
+            transactions={transactions}
+            isLoading={isLoadingTransactions}
+            isError={isTransactionsError}
+            repeatOnError={refetchTransactions}
+          />
         </div>
-        <div className="flex w-full gap-2">
-          <Button type="submit" className="w-4/5">
-            {texts.addAccount.action.create}
+        <div className="flex w-full flex-col gap-2">
+          <Button type="submit" className="w-full" disabled={!hasChanges}>
+            {texts.manageAccount.action.updateAccount}
           </Button>
-          <Button variant="secondary" onClick={onClose}>
-            {texts.cancel}
-          </Button>
+          <div className="flex w-full gap-2">
+            <Button variant="error" onClick={onDelete} className="w-full">
+              {texts.manageAccount.action.deleteAccount}
+            </Button>
+            <Button variant="warning" onClick={onArchive} className="w-full">
+              {texts.manageAccount.action.archiveAccount}
+            </Button>
+          </div>
         </div>
       </form>
     </Modal>
   );
 };
 
-export default AddAccountModal;
+export default ManageAccountModal;

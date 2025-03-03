@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+
 import { OptionType } from '@/components/select/option-type';
 import Select from '@/components/select/select';
 
@@ -19,7 +20,7 @@ const meta = {
     selected: options[0],
     options: options,
     onChangeOption: (selected: OptionType) => {
-      console.log(`выбран: title - ${selected.title}, value - ${selected.value}`)
+      console.log(`выбран: title - ${selected.title}, value - ${selected.value}`);
     },
   },
   tags: ['autodocs'],
@@ -30,6 +31,12 @@ type Story = StoryObj<typeof meta>;
 
 export const Main: Story = {
   args: {},
+};
+
+export const Label: Story = {
+  args: {
+    label: 'Название счета',
+  },
 };
 
 export const Checked: Story = {
@@ -43,4 +50,3 @@ export const Disabled: Story = {
     disabled: true,
   },
 };
-

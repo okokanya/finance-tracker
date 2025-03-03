@@ -1,32 +1,23 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import {
+  ACCOUNT_TRANSACTIONS_QUERY_KEY,
   ACCOUNTS_QUERY_KEY,
   ACCOUNTS_QUERY_PATH,
   ACCOUNTS_QUERY_STALE_TIME,
+  TRANSACTIONS_QUERY_PATH,
 } from '@/features/accounts/accounts.constants';
-import { AccountFormSuccessResult, AccountsResponse } from '@/features/accounts/accounts.types';
-import { User } from '@/models';
-
-// TODO: remove
-let user: User;
+import {
+  AccountFormSuccessResult,
+  AccountsResponse,
+  AccountTransaction,
+} from '@/features/accounts/accounts.types';
+import { apiFetch } from '@/utils/api-fetch';
 
 export const useAccounts = () => {
   const query = useQuery<AccountsResponse>({
     queryKey: ACCOUNTS_QUERY_KEY,
-    queryFn: async () => {
-      const userRes = await fetch('/api/users');
-      const usersData = await userRes.json();
-      user = usersData[0];
-
-      const res = await fetch(`${ACCOUNTS_QUERY_PATH}?userId=${user?.id}`);
-
-      if (!res.ok) {
-        throw new Error('Failed to fetch accounts');
-      }
-
-      return await res.json();
-    },
+    queryFn: () => apiFetch(ACCOUNTS_QUERY_PATH),
     staleTime: ACCOUNTS_QUERY_STALE_TIME,
     refetchOnWindowFocus: true,
     refetchOnMount: true,
@@ -44,19 +35,56 @@ export const useAddAccount = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (account: AccountFormSuccessResult) => {
-      const response = await fetch(`${ACCOUNTS_QUERY_PATH}?userId=${user?.id}`, {
+    mutationFn: (account: AccountFormSuccessResult) =>
+      apiFetch(ACCOUNTS_QUERY_PATH, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(account),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to add account');
-      }
-
-      return await response.json();
+        fetchBody: account,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ACCOUNTS_QUERY_KEY });
     },
+  });
+};
+
+export const useUpdateAccount = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, ...account }: AccountFormSuccessResult & { id: string }) =>
+      apiFetch(`${ACCOUNTS_QUERY_PATH}/${id}`, {
+        method: 'PUT',
+        fetchBody: account,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ACCOUNTS_QUERY_KEY });
+    },
+  });
+};
+
+export const useAccountTransactions = (accountId?: string) => {
+  const query = useQuery<AccountTransaction[]>({
+    queryKey: [ACCOUNT_TRANSACTIONS_QUERY_KEY, accountId],
+    queryFn: () => apiFetch(`${ACCOUNTS_QUERY_PATH}/${accountId}/${TRANSACTIONS_QUERY_PATH}`),
+    enabled: !!accountId,
+    staleTime: ACCOUNTS_QUERY_STALE_TIME,
+  });
+
+  return {
+    data: query.data,
+    isError: query.isError,
+    isPending: query.isPending,
+    refetch: query.refetch,
+  };
+};
+
+export const useDeleteAccount = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (accountId: string) =>
+      apiFetch(`${ACCOUNTS_QUERY_PATH}/${accountId}`, {
+        method: 'DELETE',
+      }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ACCOUNTS_QUERY_KEY });
     },

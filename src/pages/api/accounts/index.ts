@@ -1,9 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { eq, sql } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 import { v4 as uuidv4 } from 'uuid';
 
 import { db } from '@/db';
 import { accounts } from '@/db/schema';
+import { FAKE_USER_ID } from '@/features/accounts/accounts.constants';
 import { accountSchema } from '@/models';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -19,20 +20,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 async function GET(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const { userId } = req.query;
+    const userId = FAKE_USER_ID;
 
     const accountsQuery = userId
       ? db
           .select()
           .from(accounts)
-          .where(eq(accounts.userId, String(userId)))
+          .where(and(eq(accounts.userId, String(userId)), eq(accounts.isArchived, false)))
       : db.select().from(accounts);
 
     const totalBalanceQuery = userId
       ? db
           .select({ total: sql`sum(balance)` })
           .from(accounts)
-          .where(eq(accounts.userId, String(userId)))
+          .where(and(eq(accounts.userId, String(userId)), eq(accounts.isArchived, false)))
       : db.select({ total: sql`sum(balance)` }).from(accounts);
 
     const [accountsData, [totalBalance]] = await Promise.all([accountsQuery, totalBalanceQuery]);
@@ -52,7 +53,7 @@ async function GET(req: NextApiRequest, res: NextApiResponse) {
 
 async function POST(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const { userId } = req.query;
+    const userId = FAKE_USER_ID;
     const { name, description, type, balance } = req.body;
 
     const newAccount = {

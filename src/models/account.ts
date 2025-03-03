@@ -18,6 +18,7 @@ export const accountSchema = z.object({
     .nullable(),
   type: accountTypeEnum,
   balance: z.number().default(0),
+  isArchived: z.boolean().default(false),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 });

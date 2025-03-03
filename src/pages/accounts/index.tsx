@@ -1,6 +1,5 @@
 import AccountCard from '@/components/accounts/account-card/account-card';
-import AddAccountModal from '@/components/accounts/add-account-modal/add-account-modal';
-import ActionModal from '@/components/accounts/action-modal/action-modal';
+import AccountsModals from '@/components/accounts/accounts-modals/accounts-modals';
 import TotalBalance from '@/components/accounts/total-balance/total-balance';
 import Button from '@/components/button';
 import Text from '@/components/text/text';
@@ -8,24 +7,16 @@ import Title from '@/components/title/title';
 import texts from '@/features/accounts/accounts.texts';
 import { useAccountsController } from '@/features/accounts/controllers/accounts.controller';
 import { useAddAccountController } from '@/features/accounts/controllers/add-account.controller';
+import { useManageAccountController } from '@/features/accounts/controllers/manage-account.controller';
 
 Accounts.title = texts.accounts.title;
 
 export default function Accounts() {
   const { accountsData, isAccountsLoading, accountsError } = useAccountsController();
+  const { isAddAccountLoading, setAddAccountModalOpen } = useAddAccountController();
+  const { isUpdateAccountLoading, onManageAccountClicked } = useManageAccountController();
 
-  const {
-    isAddAccountLoading,
-    isAddModalOpen,
-    setAddModalOpen,
-    onAddFormSuccess,
-    isRepeatAddModalOpen,
-    onRepeatAddFormSuccess,
-    onCloseRepeatAddModal,
-  } = useAddAccountController();
-
-
-  const isLoading = isAccountsLoading || isAddAccountLoading;
+  const isLoading = isAccountsLoading || isAddAccountLoading || isUpdateAccountLoading;
 
   if (isLoading) return <span>Загрузка...</span>;
 
@@ -43,29 +34,21 @@ export default function Accounts() {
         </div>
       </section>
       <section className="w-full">
-        <Button className="justify-self-start" onClick={() => setAddModalOpen(true)}>
+        <Button className="justify-self-start" onClick={() => setAddAccountModalOpen(true)}>
           {texts.accounts.addAccount}
         </Button>
       </section>
       <section className="flex w-full flex-wrap gap-2">
-        {accountsData?.accounts.map(account => <AccountCard key={account.id} account={account} />)}
+        {accountsData?.accounts.map(account => (
+          <AccountCard
+            key={account.id}
+            account={account}
+            onTransactionClick={() => alert('Not implemented yet')}
+            onManageClick={() => onManageAccountClicked(account)}
+          />
+        ))}
       </section>
-      {isAddModalOpen && (
-        <AddAccountModal
-          isOpen={isAddModalOpen}
-          onClose={() => setAddModalOpen(false)}
-          onSuccess={onAddFormSuccess}
-        />
-      )}
-      {isRepeatAddModalOpen && (
-        <ActionModal
-          title={texts.addAccount.repeadAction.title}
-          description={texts.addAccount.repeadAction.description}
-          isOpen={isRepeatAddModalOpen}
-          onClose={onCloseRepeatAddModal}
-          onSuccess={onRepeatAddFormSuccess}
-        />
-      )}
+      <AccountsModals />
     </>
   );
 }

@@ -1,7 +1,6 @@
 import { z } from 'zod';
 
-import { Account } from '@/models';
-import { accountSchema } from '@/models/account';
+import { Account, accountSchema } from '@/models';
 
 export interface AccountsResponse {
   accounts: Account[];
@@ -17,8 +16,17 @@ const accountBaseSchema = accountSchema.omit({
 
 export const accountFormSchema = accountBaseSchema.omit({
   type: true,
+  isArchived: true,
+});
+
+export const accountTransactionSchema = z.object({
+  id: z.string().uuid(),
+  description: z.string().nullable(),
+  amount: z.number(),
 });
 
 export type AccountForm = z.infer<typeof accountFormSchema>;
 
 export type AccountFormSuccessResult = z.infer<typeof accountBaseSchema>;
+
+export type AccountTransaction = z.infer<typeof accountTransactionSchema>;

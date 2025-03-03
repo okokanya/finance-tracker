@@ -1,13 +1,20 @@
-import { Input as HeadlessInput, InputProps as HeadlessInputProps } from '@headlessui/react';
+import {
+  Field,
+  Input as HeadlessInput,
+  InputProps as HeadlessInputProps,
+  Label,
+} from '@headlessui/react';
 
 import { cn } from '@/utils/cn';
 
 export type InputProps = HeadlessInputProps & {
+  label?: string;
   errorText?: string;
   wrapperClassName?: string;
 };
 
 const Input: React.FC<InputProps> = ({
+  label,
   className,
   errorText,
   disabled,
@@ -25,7 +32,10 @@ const Input: React.FC<InputProps> = ({
 
   return (
     <div className={cn('block h-auto w-auto', wrapperClassName)}>
-      <HeadlessInput className={inputClasses} disabled={disabled} {...props} />
+      <Field className="flex flex-col gap-0.5">
+        {label && <Label className="text-xs text-gray-500">{label}</Label>}
+        <HeadlessInput className={inputClasses} disabled={disabled} {...props} />
+      </Field>
       {errorText ? <p className="m-0 text-xs font-normal text-red-500">{errorText}</p> : null}
     </div>
   );
