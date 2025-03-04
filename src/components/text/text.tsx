@@ -17,7 +17,7 @@ const Text: FC<PropsWithChildren<TextProps>> = ({
   ...props
 }) => {
   const classNames = cn(
-    'p-0 m-0',
+    'p-0 my-auto',
     {
       ['text-base']: variant === 'base',
       ['text-sm']: variant === 'sm',
