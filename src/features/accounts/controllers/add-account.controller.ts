@@ -1,47 +1,50 @@
 import { useAddAccount } from '@/features/accounts/accounts.queries';
 import {
+  useAccountFormData,
   useAccountsStoreActions,
-  useAccountToAdd,
-  useIsAddModalOpen,
-  useIsRepeatAddModalOpen,
+  useIsAddAccountModalOpen,
+  useIsRepeatAddAccountModalOpen,
 } from '@/features/accounts/accounts.store';
 import { AccountFormSuccessResult } from '@/features/accounts/accounts.types';
 
 export const useAddAccountController = () => {
-  const isAddModalOpen = useIsAddModalOpen();
-  const isRepeatAddModalOpen = useIsRepeatAddModalOpen();
-  const accountToAdd = useAccountToAdd();
-  const { setAddModalOpen, setRepeatAddModalOpen, setAccountToAdd } = useAccountsStoreActions();
+  const isAddAccountModalOpen = useIsAddAccountModalOpen();
+  const isRepeatAddAccountModalOpen = useIsRepeatAddAccountModalOpen();
+  const accountFormData = useAccountFormData();
+  const { setAddAccountModalOpen, setRepeatAddAccountModalOpen, setAccountFormData } =
+    useAccountsStoreActions();
   const { mutate: mutateAddAccount, isPending: isAddAccountLoading } = useAddAccount();
 
-  const onAddFormSuccess = (data: AccountFormSuccessResult) => {
+  const onAddAccount = (data: AccountFormSuccessResult) => {
     mutateAddAccount(data, {
       onSuccess: () => {
-        setAccountToAdd(null);
+        setAccountFormData(null);
       },
       onError: () => {
-        setRepeatAddModalOpen(true);
-        setAccountToAdd(data);
+        setRepeatAddAccountModalOpen(true);
+        setAccountFormData(data);
       },
     });
   };
 
-  const onRepeatAddFormSuccess = () => {
-    if (accountToAdd) onAddFormSuccess(accountToAdd);
+  const onRepeatAddAccount = () => {
+    setRepeatAddAccountModalOpen(false);
+
+    if (accountFormData) onAddAccount(accountFormData);
   };
 
-  const onCloseRepeatAddModal = () => {
-    setRepeatAddModalOpen(false);
-    setAccountToAdd(null);
+  const onCloseRepeatAddAccountModal = () => {
+    setRepeatAddAccountModalOpen(false);
+    setAccountFormData(null);
   };
 
   return {
     isAddAccountLoading,
-    isAddModalOpen,
-    setAddModalOpen,
-    onAddFormSuccess,
-    isRepeatAddModalOpen,
-    onRepeatAddFormSuccess,
-    onCloseRepeatAddModal,
+    isAddAccountModalOpen,
+    setAddAccountModalOpen,
+    onAddAccount,
+    isRepeatAddAccountModalOpen,
+    onRepeatAddAccount,
+    onCloseRepeatAddAccountModal,
   };
 };

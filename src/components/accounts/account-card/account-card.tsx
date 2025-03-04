@@ -1,18 +1,25 @@
-import { ComponentProps } from 'react';
 import { Button as HeadlessButton } from '@headlessui/react';
+import { ArrowsRightLeftIcon, Cog6ToothIcon } from '@heroicons/react/24/outline';
 
 import Text from '@/components/text/text';
 import Title from '@/components/title/title';
 import { CARD_SHADOW_CLASS } from '@/components/util/common-classes';
+import texts from '@/features/accounts/accounts.texts';
 import { Account } from '@/models';
 import { cn } from '@/utils/cn';
 import { getDisplayAmount } from '@/utils/format-amount';
 
-type AccountCardProps = ComponentProps<'button'> & {
+type AccountCardProps = {
   account: Omit<Account, 'id' | 'userId' | 'createdAt' | 'updatedAt'>;
+  onTransactionClick: () => void;
+  onManageClick: () => void;
 };
 
-const AccountCard: React.FC<AccountCardProps> = ({ account, ...otherProps }) => {
+const AccountCard: React.FC<AccountCardProps> = ({
+  account,
+  onManageClick,
+  onTransactionClick,
+}) => {
   const getVariantStyles = () => {
     switch (account.type) {
       case 'savings':
@@ -42,23 +49,32 @@ const AccountCard: React.FC<AccountCardProps> = ({ account, ...otherProps }) => 
   const displayAmount = getDisplayAmount(account.balance);
 
   return (
-    <HeadlessButton
+    <div
       className={cn(
         `flex h-[118px] w-[289px] flex-col items-start justify-between gap-2 rounded-lg px-6 py-4`,
         `${getVariantStyles()} ${CARD_SHADOW_CLASS}`
       )}
-      {...otherProps}
     >
-      <Text isBold={true} className="line-clamp-1 text-left text-gray-800">
-        {account.name}
-      </Text>
+      <div className="flex w-full justify-between gap-1">
+        <Text isBold={true} className="line-clamp-1 text-left text-gray-800">
+          {account.name}
+        </Text>
+        <div className="flex items-center gap-1">
+          <HeadlessButton title={texts.accountCard.transaction} onClick={onTransactionClick}>
+            <ArrowsRightLeftIcon className="size-5 text-gray-500" />
+          </HeadlessButton>
+          <HeadlessButton title={texts.accountCard.manage} onClick={onManageClick}>
+            <Cog6ToothIcon className="size-5 text-gray-500" />
+          </HeadlessButton>
+        </div>
+      </div>
       <div className="flex w-full flex-col items-start gap-0.5 self-stretch">
         <Text variant="sm" className="line-clamp-1 text-left text-gray-500">
           {account.description}
         </Text>
         <Title className={cn(getAmountStyles(), 'line-clamp-1 text-left')}>{displayAmount}</Title>
       </div>
-    </HeadlessButton>
+    </div>
   );
 };
 
