@@ -49,11 +49,8 @@ const Signin = () => {
       <FormWrap>
         <h1 className='ml-0 mr-auto'>Вход в аккаунт</h1>
         <form className='flex flex-wrap flex-col w-full justify-between' onSubmit={handleSubmit(onSubmit)}>
-          <label htmlFor="email" className="mb-2">Email</label>
-          <Input type="email" className="mb-4" placeholder="Email" {...register("email", { required: true })} errorText={errors.email?.message} />
-
-          <label htmlFor="password" className="mb-2">Пароль</label>
-          <Input type="password" className="mb-4" placeholder="Пароль" {...register("password", { required: true })} errorText={errors.password?.message} />
+          <Input label="Email" type="email" className="mb-4" placeholder="Email" {...register("email", { required: true })} errorText={errors.email?.message} />
+          <Input label="Пароль" type="password" className="mb-4" placeholder="Пароль" {...register("password", { required: true })} errorText={errors.password?.message} />
           <Button>
             <input type="submit" />
           </Button>
