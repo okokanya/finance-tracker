@@ -34,6 +34,7 @@ export const accounts = sqliteTable('accounts', {
   description: text('description', { length: 200 }),
   type: text('type', { enum: ACCOUNT_TYPES }).notNull(),
   balance: integer('balance', { mode: 'number' }).notNull().default(0),
+  isArchived: integer('isArchived', { mode: 'boolean' }).notNull(),
   ...timestamps,
 });
 

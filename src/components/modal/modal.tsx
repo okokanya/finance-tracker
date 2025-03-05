@@ -4,7 +4,7 @@ import { XMarkIcon } from '@heroicons/react/24/outline';
 import Title from '@/components/title/title';
 import { cn } from '@/utils/cn';
 
-type ModalProps = {
+export type ModalProps = {
   title: string;
   isOpen: boolean;
   onClose: () => void;
