@@ -8,6 +8,7 @@ import MainWrap from '@/components/mainWrap';
 import FormWrap from '@/components/formWrap';
 import Button from '@/components/button';
 import Link from 'next/link';
+import Input from '@/components/input/input';
 
 const schema = z.object({
   firstName: z.string().min(1, 'Это поле обязательно'),
@@ -75,35 +76,11 @@ export default function Signup() {
       <FormWrap>
         <h1 className="ml-0 mr-auto">Регистрация</h1>
         <form className="flex flex-wrap w-full justify-between" onSubmit={handleSubmit(onSubmit)}>
-          <label className="label half-width">
-            Имя
-            <input className="input-txt" placeholder="Имя" {...register('firstName')} />
-            {errors.firstName && <span className="errorSpan">{errors.firstName.message}</span>}
-          </label>
-
-          <label className="label half-width">
-            Фамилия
-            <input className="input-txt" placeholder="Фамилия" {...register('lastName')} />
-            {errors.lastName && <span className="errorSpan">{errors.lastName.message}</span>}
-          </label>
-
-          <label className="label">
-            Email
-            <input className="input-txt" placeholder="email" type="email" {...register('email')} />
-            {errors.email && <span className="errorSpan">{errors.email.message}</span>}
-          </label>
-
-          <label className="label half-width">
-            Придумайте пароль
-            <input className="input-txt" placeholder="Пароль" type="password" {...register('password')} />
-            {errors.password && <span className="errorSpan">{errors.password.message}</span>}
-          </label>
-
-          <label className="label half-width">
-            Повторите пароль
-            <input className="input-txt" placeholder="Повторите пароль" type="password" {...register('passwordCheck')} />
-            {errors.passwordCheck && <span className="errorSpan">{errors.passwordCheck.message}</span>}
-          </label>
+          <Input placeholder="Имя" {...register('firstName')} errorText={errors.firstName?.message} />
+          <Input placeholder="Фамилия" {...register('lastName')} errorText={errors.lastName?.message} />
+          <Input type="email" placeholder="Email" {...register('email')} errorText={errors.email?.message} />
+          <Input type="password" placeholder="Пароль" {...register('password')} errorText={errors.password?.message} />
+          <Input type="password" placeholder="Повторите пароль" {...register('passwordCheck')} errorText={errors.passwordCheck?.message} />
 
           {submitError && <span className="errorSpan">{submitError}</span>}
 

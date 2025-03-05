@@ -1,30 +1,23 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import MainWrap from '@/components/mainWrap';
 import FormWrap from '@/components/formWrap';
 import Button from '@/components/button';
-import Link from 'next/link'
+import Link from 'next/link';
+import Input from '@/components/input/input';
 
-type FormData = {
-  email: string;
-  password: string;
-};
-
-Signin.title = "Вход";
-
-export default function Signin() {
+const Signin = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-    setValue,
-  } = useForm<FormData>();
+  } = useForm<{ email: string; password: string }>();
 
   const router = useRouter();
   const mutation = useMutation({
-    mutationFn: async (data: FormData) => {
+    mutationFn: async (data) => {
       const response = await fetch('/api/auth/signin', {
         method: 'POST',
         headers: {
@@ -47,7 +40,7 @@ export default function Signin() {
     },
   });
 
-  const onSubmit: SubmitHandler<FormData> = (data) => {
+  const onSubmit: SubmitHandler<{ email: string; password: string }> = (data) => {
     mutation.mutate(data);
   };
 
@@ -56,29 +49,17 @@ export default function Signin() {
       <FormWrap>
         <h1 className='ml-0 mr-auto'>Вход в аккаунт</h1>
         <form className='flex flex-wrap w-full justify-between' onSubmit={handleSubmit(onSubmit)}>
-          <label className="label">Email
-            <input className="input-txt" placeholder="email" type="email" {...register("email", { required: true })} />
-            {errors.email && <span className='errorSpan'>Это поле обязательно</span>}
-          </label>
-
-          <label className="label">Пароль
-            <input
-              className="input-txt"
-              placeholder="Пароль"
-              type="password"
-              {...register("password", { required: true })}
-              id="password"
-            />
-            {errors.password && <span className='errorSpan'>Это поле обязательно</span>}
-          </label>
-
+          <Input type="email" placeholder="Email" {...register("email", { required: true })} errorText={errors.email?.message} />
+          <Input type="password" placeholder="Пароль" {...register("password", { required: true })} errorText={errors.password?.message} />
           <Button>
             <input type="submit" />
           </Button>
         </form>
-
         <p className='ml-0 mr-auto mt-10'>У вас еще нет аккаунта? <Link className="link" href='/signup'>Зарегистрироваться</Link></p>
       </FormWrap>
     </MainWrap>
   );
-}
+};
+
+Signin.title = "Вход";
+export default Signin;
