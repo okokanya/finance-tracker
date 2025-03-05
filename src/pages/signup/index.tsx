@@ -77,11 +77,11 @@ export default function Signup() {
       <FormWrap>
         <h1 className="ml-0 mr-auto">Регистрация</h1>
         <form className="flex flex-wrap w-full justify-between" onSubmit={handleSubmit(onSubmit)}>
-          <Input placeholder="Имя" {...register('firstName')} errorText={errors.firstName?.message} />
-          <Input placeholder="Фамилия" {...register('lastName')} errorText={errors.lastName?.message} />
-          <Input type="email" placeholder="Email" {...register('email')} errorText={errors.email?.message} />
-          <Input type="password" placeholder="Пароль" {...register('password')} errorText={errors.password?.message} />
-          <Input type="password" placeholder="Повторите пароль" {...register('passwordCheck')} errorText={errors.passwordCheck?.message} />
+          <Input label="Имя" placeholder="Имя" {...register('firstName')} errorText={errors.firstName?.message} />
+          <Input label="Фамилия" placeholder="Фамилия" {...register('lastName')} errorText={errors.lastName?.message} />
+          <Input label="Email" type="email" placeholder="Email" {...register('email')} errorText={errors.email?.message} />
+          <Input label="Придумайте пароль" type="password" placeholder="Пароль" {...register('password')} errorText={errors.password?.message} />
+          <Input label="Повторите пароль" type="password" placeholder="Повторите пароль" {...register('passwordCheck')} errorText={errors.passwordCheck?.message} />
 
           {submitError && <span className="errorSpan">{submitError}</span>}
 
