@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+
 import Accordion from '@/components/accordion/accordion';
 import Input from '@/components/input/input';
 
@@ -24,6 +25,6 @@ export const Main: Story = {
         <Input errorText="Error text" />
         <Input disabled value="Disabled" />
       </div>
-    )
+    ),
   },
 };

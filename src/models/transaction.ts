@@ -15,7 +15,7 @@ export const transactionSchema = z.object({
   comment: z
     .string()
     .max(200, 'Комментарий не должен превышать 200 символов')
-    .transform(val => val.trim() === '' ? null : val)
+    .transform(val => (val.trim() === '' ? null : val))
     .nullable(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),

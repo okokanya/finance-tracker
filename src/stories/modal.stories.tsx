@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
-import Modal from '@/components/modal/modal';
+
 import Input from '@/components/input/input';
+import Modal from '@/components/modal/modal';
 
 const meta = {
   title: 'Components/Modal',
@@ -17,7 +18,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Main: Story = {
   args: {
-    title:'Модальное окно',
+    title: 'Модальное окно',
     isOpen: true,
     onClose: fn(),
     children: (
@@ -27,6 +28,6 @@ export const Main: Story = {
         <Input errorText="Error text" />
         <Input disabled value="Disabled" />
       </div>
-    )
+    ),
   },
 };

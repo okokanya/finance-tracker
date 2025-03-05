@@ -14,7 +14,7 @@ export const categorySchema = z.object({
   description: z
     .string()
     .max(200, 'Описание не должно превышать 200 символов')
-    .transform(val => val.trim() === '' ? null : val)
+    .transform(val => (val.trim() === '' ? null : val))
     .nullable(),
   type: categoryTypeEnum,
   createdAt: z.coerce.date(),

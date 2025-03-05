@@ -22,12 +22,12 @@ export const Positive: Story = {
 
 export const Negative: Story = {
   args: {
-    amount: -200000.00,
+    amount: -200000.0,
   },
 };
 
 export const Zero: Story = {
   args: {
-    amount: 0.00,
+    amount: 0.0,
   },
 };

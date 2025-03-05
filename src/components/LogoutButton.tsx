@@ -1,12 +1,14 @@
 import React from 'react';
-import Button from './button';
+
 import { useLogout } from '@/hooks/useLogout';
+
+import Button from './button';
 
 const LogoutButton: React.FC = () => {
   const logout = useLogout();
 
   return (
-    <Button onClick={logout} className="bg-red-500 text-white p-2 rounded">
+    <Button onClick={logout} className="rounded bg-red-500 p-2 text-white">
       Выйти
     </Button>
   );

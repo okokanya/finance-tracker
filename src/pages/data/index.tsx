@@ -31,9 +31,11 @@ export default function Data() {
   const { data: categories, isPending: isLoadingCategories } = useQuery<Category[]>({
     queryKey: ['categories'],
     queryFn: async () => {
-      const res = await fetch('/api/categories');
-      return res.json();
+      const res = await fetch(`/api/categories?userId=${users ? users[0].id : '1'}`);
+      const data = await res.json();
+      return data.data;
     },
+    enabled: !!users,
   });
 
   const isLoading =

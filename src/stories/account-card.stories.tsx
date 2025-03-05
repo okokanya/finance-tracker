@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { fn } from '@storybook/test';
 
 import AccountCard from '@/components/accounts/account-card/account-card';
 
@@ -7,6 +8,10 @@ const meta = {
   component: AccountCard,
   parameters: {
     layout: 'centered',
+  },
+  args: {
+    onTransactionClick: fn(),
+    onManageClick: fn(),
   },
   tags: ['autodocs'],
 } satisfies Meta<typeof AccountCard>;
@@ -21,7 +26,7 @@ export const Regular: Story = {
       description: 'Обычный',
       balance: 10500.55,
       type: 'regular',
-    }
+    },
   },
 };
 
@@ -32,7 +37,7 @@ export const RegularWithoutDescription: Story = {
       description: null,
       balance: 10500.55,
       type: 'regular',
-    }
+    },
   },
 };
 
@@ -43,7 +48,7 @@ export const Savings: Story = {
       description: 'Накопительный',
       balance: 50000.75,
       type: 'savings',
-    }
+    },
   },
 };
 
@@ -52,7 +57,7 @@ export const DebtIOwe: Story = {
     account: {
       name: 'Автокредит',
       description: 'Долговой; я должен',
-      balance: -200000.00,
+      balance: -200000.0,
       type: 'debt_i_owe',
     },
   },
@@ -63,7 +68,7 @@ export const DebtTheyOwe: Story = {
     account: {
       name: 'Долг Ивана',
       description: 'Долговой; мне должны',
-      balance: 15000.00,
+      balance: 15000.0,
       type: 'debt_they_owe',
     },
   },
