@@ -1,25 +1,28 @@
 import React, { useState } from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { useMutation } from '@tanstack/react-query';
-import { useRouter } from 'next/router';
-import MainWrap from '@/components/mainWrap';
-import FormWrap from '@/components/formWrap';
-import Button from '@/components/button';
 import Link from 'next/link';
-import Input from '@/components/input/input';
+import { useRouter } from 'next/router';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { z } from 'zod';
 
-const schema = z.object({
-  firstName: z.string().min(1, 'Это поле обязательно'),
-  lastName: z.string().min(1, 'Это поле обязательно'),
-  email: z.string().email('Некорректный email'),
-  password: z.string().min(6, 'Пароль должен содержать минимум 6 символов'),
-  passwordCheck: z.string().min(6, 'Пароль должен содержать минимум 6 символов'),
-}).refine((data) => data.password === data.passwordCheck, {
-  message: 'Пароли не совпадают',
-  path: ['passwordCheck'],
-});
+import Button from '@/components/button';
+import FormWrap from '@/components/formWrap';
+import Input from '@/components/input/input';
+import MainWrap from '@/components/mainWrap';
+
+const schema = z
+  .object({
+    firstName: z.string().min(1, 'Это поле обязательно'),
+    lastName: z.string().min(1, 'Это поле обязательно'),
+    email: z.string().email('Некорректный email'),
+    password: z.string().min(6, 'Пароль должен содержать минимум 6 символов'),
+    passwordCheck: z.string().min(6, 'Пароль должен содержать минимум 6 символов'),
+  })
+  .refine(data => data.password === data.passwordCheck, {
+    message: 'Пароли не совпадают',
+    path: ['passwordCheck'],
+  });
 
 // типизация формы
 type FormData = z.infer<typeof schema>;
@@ -68,7 +71,7 @@ export default function Signup() {
     },
   });
 
-  const onSubmit: SubmitHandler<FormData> = (data) => {
+  const onSubmit: SubmitHandler<FormData> = data => {
     mutation.mutate(data);
   };
 
@@ -76,12 +79,40 @@ export default function Signup() {
     <MainWrap>
       <FormWrap>
         <h1 className="ml-0 mr-auto">Регистрация</h1>
-        <form className="flex flex-wrap w-full justify-between" onSubmit={handleSubmit(onSubmit)}>
-          <Input label="Имя" placeholder="Имя" {...register('firstName')} errorText={errors.firstName?.message} />
-          <Input label="Фамилия" placeholder="Фамилия" {...register('lastName')} errorText={errors.lastName?.message} />
-          <Input label="Email" type="email" placeholder="Email" {...register('email')} errorText={errors.email?.message} />
-          <Input label="Придумайте пароль" type="password" placeholder="Пароль" {...register('password')} errorText={errors.password?.message} />
-          <Input label="Повторите пароль" type="password" placeholder="Повторите пароль" {...register('passwordCheck')} errorText={errors.passwordCheck?.message} />
+        <form className="flex w-full flex-wrap justify-between" onSubmit={handleSubmit(onSubmit)}>
+          <Input
+            label="Имя"
+            placeholder="Имя"
+            {...register('firstName')}
+            errorText={errors.firstName?.message}
+          />
+          <Input
+            label="Фамилия"
+            placeholder="Фамилия"
+            {...register('lastName')}
+            errorText={errors.lastName?.message}
+          />
+          <Input
+            label="Email"
+            type="email"
+            placeholder="Email"
+            {...register('email')}
+            errorText={errors.email?.message}
+          />
+          <Input
+            label="Придумайте пароль"
+            type="password"
+            placeholder="Пароль"
+            {...register('password')}
+            errorText={errors.password?.message}
+          />
+          <Input
+            label="Повторите пароль"
+            type="password"
+            placeholder="Повторите пароль"
+            {...register('passwordCheck')}
+            errorText={errors.passwordCheck?.message}
+          />
 
           {submitError && <span className="errorSpan">{submitError}</span>}
 
@@ -91,7 +122,10 @@ export default function Signup() {
         </form>
 
         <p className="ml-0 mr-auto mt-10">
-          Уже есть аккаунт? <Link className="link" href="/signin">Войти</Link>
+          Уже есть аккаунт?{' '}
+          <Link className="link" href="/signin">
+            Войти
+          </Link>
         </p>
       </FormWrap>
     </MainWrap>

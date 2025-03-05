@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode } from 'react';
 
 type FullScreenBackgroundProps = {
   children?: ReactNode;
@@ -6,8 +6,10 @@ type FullScreenBackgroundProps = {
 
 const MainWrap = ({ children }: FullScreenBackgroundProps) => {
   return (
-    <div className="w-screen h-screen bg-[url('/bg.png')] bg-cover bg-center items-center justify-center flex flex-col">
-      {children && <div className="w-full h-full flex items-center justify-center flex-col">{children}</div>}
+    <div className="flex h-screen w-screen flex-col items-center justify-center bg-[url('/bg.png')] bg-cover bg-center">
+      {children && (
+        <div className="flex h-full w-full flex-col items-center justify-center">{children}</div>
+      )}
     </div>
   );
 };

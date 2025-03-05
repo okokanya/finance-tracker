@@ -32,15 +32,15 @@ export const Secondary: Story = {
 };
 
 export const Error: Story = {
-    args: {
-      variant: 'error',
-    },
+  args: {
+    variant: 'error',
+  },
 };
 
 export const Warning: Story = {
-    args: {
-      variant: 'warning',
-    },
+  args: {
+    variant: 'warning',
+  },
 };
 
 export const DisabledPrimary: Story = {
@@ -57,15 +57,15 @@ export const DisabledSecondary: Story = {
 };
 
 export const DisabledError: Story = {
-    args: {
-      variant: 'error',
-      disabled: true,
-    },
+  args: {
+    variant: 'error',
+    disabled: true,
+  },
 };
 
 export const DisabledWarning: Story = {
-    args: {
-      variant: 'warning',
-      disabled: true,
-    },
+  args: {
+    variant: 'warning',
+    disabled: true,
+  },
 };

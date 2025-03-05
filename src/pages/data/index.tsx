@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
 
 import { AccountsResponse } from '@/features/accounts/accounts.types';
@@ -31,9 +32,11 @@ export default function Data() {
   const { data: categories, isPending: isLoadingCategories } = useQuery<Category[]>({
     queryKey: ['categories'],
     queryFn: async () => {
-      const res = await fetch('/api/categories');
-      return res.json();
+      const res = await fetch(`/api/categories?userId=${users ? users[0].id : '1'}`);
+      const data = await res.json();
+      return data.data;
     },
+    enabled: !!users,
   });
 
   const isLoading =
@@ -55,7 +58,7 @@ export default function Data() {
                     <div className="flex items-center gap-4">
                       {user.avatar && (
                         <div className="h-12 w-12 overflow-hidden rounded-full">
-                          <img
+                          <Image
                             src={`/api/users/avatar?userId=${user.id}`}
                             alt={`${user.firstName} ${user.lastName}`}
                             className="h-full w-full object-cover"

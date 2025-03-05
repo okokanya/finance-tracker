@@ -10,38 +10,38 @@
 }
 
 body {
-    font-family: 'Inter', sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 
 h1 {
-    font-family: 'Roboto', sans-serif;
-    font-size: 1.5rem; /* 24px */
-    font-weight: 700;
-    line-height: 2rem; /* 32px */
-    margin-bottom: 1.5rem;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.5rem; /* 24px */
+  font-weight: 700;
+  line-height: 2rem; /* 32px */
+  margin-bottom: 1.5rem;
 }
 
 input::placeholder {
-    color: #9CA3AF;
-    font-weight: 400;
-    font-size: 1rem;
+  color: #9ca3af;
+  font-weight: 400;
+  font-size: 1rem;
 }
 
 .input-txt {
-    border-color: #D1D5DB;
-    border-radius: 4px;
-    font-size: 1rem;
+  border-color: #d1d5db;
+  border-radius: 4px;
+  font-size: 1rem;
 }
 
 .label {
-    @apply flex flex-col relative mb-4 w-full;
+  @apply relative mb-4 flex w-full flex-col;
 }
 .half-width {
-    @apply w-full md:w-[47%]
+  @apply w-full md:w-[47%];
 }
 .errorSpan {
-    @apply text-[#EF4444] text-[0.5rem] block absolute bottom-[-10px]
+  @apply absolute bottom-[-10px] block text-[0.5rem] text-[#EF4444];
 }
 .link {
-    @apply text-[#2563EB] font-bold
+  @apply font-bold text-[#2563EB];
 }
