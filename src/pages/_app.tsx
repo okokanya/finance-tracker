@@ -8,19 +8,24 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import ErrorBoundary from '@/components/error-boundary/error-boundary';
 import Layout from '@/components/layout/layout';
 
+type CustomAppProps = AppProps & {
+  Component: AppProps['Component'] & {
+    title?: string;
+  };
+};
+
 const queryClient = new QueryClient();
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function App({ Component, pageProps }: CustomAppProps) {
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
         <Head>
-          <title>Finance Tracker || {Component.title}</title>
+          <title>{`Finance Tracker - ${Component.title}`}</title>
         </Head>
         <Layout>
           <Component {...pageProps} />
         </Layout>
-
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </ErrorBoundary>

@@ -11,9 +11,7 @@ export const userSchema = z.object({
     .min(2, 'Фамилия должна содержать минимум 2 буквы')
     .max(30, 'Фамилия не должна превышать 30 символов'),
   email: z.string().email('Некорректный email'),
-  password: z
-    .string()
-    .min(8, 'Пароль должен содержать минимум 8 символов'),
+  password: z.string().min(8, 'Пароль должен содержать минимум 8 символов'),
   phone: z.string().nullable(),
   avatar: z.instanceof(Buffer).nullable(),
   createdAt: z.coerce.date(),
@@ -21,3 +19,14 @@ export const userSchema = z.object({
 });
 
 export type User = z.infer<typeof userSchema>;
+
+// модель пользователя для создания
+export const createUserSchema = userSchema.omit({
+  createdAt: true,
+  updatedAt: true,
+  avatar: true,
+  id: true,
+  phone: true,
+});
+
+export type CreateUser = z.infer<typeof createUserSchema>;
