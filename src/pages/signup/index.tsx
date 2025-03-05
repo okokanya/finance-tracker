@@ -21,6 +21,7 @@ const schema = z.object({
   path: ['passwordCheck'],
 });
 
+// типизация формы
 type FormData = z.infer<typeof schema>;
 
 Signup.title = 'Регистрация';
