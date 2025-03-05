@@ -1,11 +1,10 @@
 import React from 'react';
-import Button from './button'
-const logout = (): void => {
-  document.cookie = 'token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-  window.location.reload();
-};
+import Button from './button';
+import { useLogout } from '@/hooks/useLogout';
 
 const LogoutButton: React.FC = () => {
+  const logout = useLogout();
+
   return (
     <Button onClick={logout} className="bg-red-500 text-white p-2 rounded">
       Выйти
