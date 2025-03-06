@@ -3,5 +3,5 @@ export const getAmountStyle = (amount: number) => {
     return 'text-gray-800';
   }
 
-  return amount > 0 ? 'text-emerald-500' : 'text-red-500'
+  return amount > 0 ? 'text-emerald-500' : 'text-red-500';
 };

@@ -2,17 +2,19 @@ import { defineConfig } from 'drizzle-kit';
 
 import './env-config';
 
-console.log({
-  TURSO_DATABASE_URL: process.env.TURSO_DATABASE_URL,
-  TURSO_AUTH_TOKEN: process.env.TURSO_AUTH_TOKEN,
-});
+const dialect = process.env.DATABASE_DIALECT! as
+  | 'postgresql'
+  | 'mysql'
+  | 'sqlite'
+  | 'turso'
+  | 'singlestore';
 
 export default defineConfig({
   out: './drizzle',
   schema: './src/db/schema.ts',
-  dialect: 'turso',
+  dialect: dialect,
   dbCredentials: {
-    url: process.env.TURSO_DATABASE_URL!,
-    authToken: process.env.TURSO_AUTH_TOKEN!,
+    url: process.env.DATABASE_URL!,
+    authToken: process.env.DATABASE_AUTH_TOKEN!,
   },
 });

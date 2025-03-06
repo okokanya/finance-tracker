@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { ZodError } from 'zod';
 import bcrypt from 'bcryptjs';
+import { ZodError } from 'zod';
 
 import { db } from '@/db';
 import { users } from '@/db/schema';

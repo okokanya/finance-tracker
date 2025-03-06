@@ -14,7 +14,7 @@ export const accountSchema = z.object({
   description: z
     .string()
     .max(200, 'Описание не должно превышать 200 символов')
-    .transform(val => val.trim() === '' ? null : val)
+    .transform(val => (val.trim() === '' ? null : val))
     .nullable(),
   type: accountTypeEnum,
   balance: z.number().default(0),

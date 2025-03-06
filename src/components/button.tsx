@@ -15,8 +15,7 @@ const Button: React.FC<ButtonProps> = ({
   className,
   ...otherProps
 }) => {
-  const secondaryBaseClass =
-    'ring-2 ring-gray-300 bg-white hover:bg-white disabled:bg-white';
+  const secondaryBaseClass = 'ring-2 ring-gray-300 bg-white hover:bg-white disabled:bg-white';
   const classNames = cn(
     'button font-inter font-bold border-2 border-transparent',
     {

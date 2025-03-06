@@ -1,9 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import bcrypt from 'bcryptjs';
+import { eq } from 'drizzle-orm';
 import jwt from 'jsonwebtoken';
+
 import { db } from '@/db';
 import { users } from '@/db/schema';
-import { eq } from 'drizzle-orm';
 
 const SECRET_KEY = process.env.JWT_SECRET!;
 
@@ -35,7 +36,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
       if (!user || user.length === 0) {
         console.log('Пользователь не найден.');
-        return res.status(401).json({ message: 'Пользователь не найден. Неверный email или пароль' });
+        return res
+          .status(401)
+          .json({ message: 'Пользователь не найден. Неверный email или пароль' });
       }
 
       console.log('Проверяем пароль:', password);
@@ -48,11 +51,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       }
 
       // Генерация JWT токена с только id пользователя
-      const token = jwt.sign(
-        { id: user[0].id },
-        SECRET_KEY,
-        { expiresIn: '7d' }
-      );
+      const token = jwt.sign({ id: user[0].id }, SECRET_KEY, { expiresIn: '7d' });
 
       console.log('JWT Token:', token);
 

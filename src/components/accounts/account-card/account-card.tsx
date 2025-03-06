@@ -10,7 +10,7 @@ import { cn } from '@/utils/cn';
 import { getDisplayAmount } from '@/utils/format-amount';
 
 type AccountCardProps = {
-  account: Omit<Account, 'id' | 'userId' | 'createdAt' | 'updatedAt'>;
+  account: Omit<Account, 'id' | 'userId' | 'createdAt' | 'updatedAt' | 'isArchived'>;
   onTransactionClick: () => void;
   onManageClick: () => void;
 };
