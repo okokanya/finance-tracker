@@ -11,7 +11,7 @@ const timestamps = {
   updatedAt: integer('updatedAt', { mode: 'timestamp' })
     .default(sql`(strftime('%s', 'now'))`)
     .notNull()
-    .$onUpdate(() => sql`(strftime('%s', 'now'))`),
+    .$onUpdateFn(() => new Date()),
 };
 
 export const users = sqliteTable('users', {

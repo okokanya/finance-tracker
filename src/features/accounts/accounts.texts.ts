@@ -51,6 +51,22 @@ const texts = {
       description: 'Что-то пошло не так при архивировании счета. Пожалуйста, попробуйте снова.',
     },
   },
+  accountTransaction: {
+    action: {
+      title: 'Изменение баланса:',
+      operationType: 'Тип операции',
+      operationTypes: ['Пополнение', 'Перевод'],
+      amount: 'Сумма',
+      amountPlaceholder: '500 ₽',
+      transferAccount: 'Счет перевода',
+      replenish: 'Пополнить',
+      transfer: 'Перевести',
+    },
+    repeatAction: {
+      title: 'Ошибка изменения баланса счета',
+      description: 'Что-то пошло не так при изменении баланса счета. Пожалуйста, попробуйте снова.',
+    },
+  },
   repeat: 'Повторить',
   cancel: 'Отменить',
 };
