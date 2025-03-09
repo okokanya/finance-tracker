@@ -1,7 +1,5 @@
-import LogoutButton from '@/components/LogoutButton';
+import LogoutButton from '@/components/logout-button';
 import MainWrap from '@/components/mainWrap';
-
-Profile.title = 'Профиль';
 
 export default function Profile() {
   return (
@@ -10,4 +8,12 @@ export default function Profile() {
       <LogoutButton />
     </MainWrap>
   );
+}
+
+export async function getServerSideProps() {
+  return {
+    props: {
+      title: 'Профиль',
+    },
+  };
 }

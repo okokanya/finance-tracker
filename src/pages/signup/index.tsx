@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -26,8 +26,6 @@ const schema = z
 
 // типизация формы
 type FormData = z.infer<typeof schema>;
-
-Signup.title = 'Регистрация';
 
 export default function Signup() {
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -130,4 +128,13 @@ export default function Signup() {
       </FormWrap>
     </MainWrap>
   );
+}
+
+export async function getServerSideProps() {
+  return {
+    props: {
+      hideHeader: true,
+      title: 'Регистрация',
+    },
+  };
 }

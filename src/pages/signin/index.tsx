@@ -1,4 +1,3 @@
-import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useMutation } from '@tanstack/react-query';
@@ -52,6 +51,7 @@ const Signin = () => {
         <form
           className="flex w-full flex-col flex-wrap justify-between"
           onSubmit={handleSubmit(onSubmit)}
+          autoComplete="on"
         >
           <Input
             label="Email"
@@ -84,5 +84,13 @@ const Signin = () => {
   );
 };
 
-Signin.title = 'Вход';
+export async function getServerSideProps() {
+  return {
+    props: {
+      hideHeader: true,
+      title: 'Вход',
+    },
+  };
+}
+
 export default Signin;

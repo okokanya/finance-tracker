@@ -4,6 +4,7 @@ import { eq } from 'drizzle-orm';
 import { db } from '@/db';
 import { categories } from '@/db/schema';
 import { Category } from '@/models';
+import { getUser } from '@/utils/get-user';
 
 type CategoryResponse = {
   data?: Category[];
@@ -25,7 +26,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 const GET = async (req: NextApiRequest, res: NextApiResponse<CategoryResponse>) => {
   try {
     // TODO: получения пользователя из токена
-    const { userId } = req.query;
+
+    const userId = getUser(req);
 
     if (userId) {
       const data = await db
