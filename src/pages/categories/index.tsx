@@ -5,9 +5,8 @@ import { OptionType } from '@/components/select/option-type';
 import Select from '@/components/select/select';
 import Text from '@/components/text/text';
 import Title from '@/components/title/title';
+import { BALANCE_OPTIONS, Period, PERIOD_OPTIONS } from '@/features/category/category.constants';
 import { CategoryType } from '@/types/enums';
-
-import { BALANCE_OPTIONS, Period, PERIOD_OPTIONS } from './constants';
 
 Categories.title = 'Категории';
 
