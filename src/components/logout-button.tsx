@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useLogout } from '@/hooks/useLogout';
+import { useLogout } from '@/hooks/use-logout';
 
 import Button from './button';
 

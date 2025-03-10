@@ -9,8 +9,6 @@ import { useAccountsController } from '@/features/accounts/controllers/accounts.
 import { useAddAccountController } from '@/features/accounts/controllers/add-account.controller';
 import { useManageAccountController } from '@/features/accounts/controllers/manage-account.controller';
 
-Accounts.title = texts.accounts.title;
-
 export default function Accounts() {
   const { accountsData, isAccountsLoading, accountsError } = useAccountsController();
   const { isAddAccountLoading, setAddAccountModalOpen } = useAddAccountController();
@@ -51,4 +49,12 @@ export default function Accounts() {
       <AccountsModals />
     </>
   );
+}
+
+export async function getServerSideProps() {
+  return {
+    props: {
+      title: texts.accounts.title,
+    },
+  };
 }

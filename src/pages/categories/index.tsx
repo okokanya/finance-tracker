@@ -1,15 +1,13 @@
 import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
 import Button from '@/components/button';
 import { OptionType } from '@/components/select/option-type';
 import Select from '@/components/select/select';
 import Text from '@/components/text/text';
 import Title from '@/components/title/title';
+import { BALANCE_OPTIONS, Period, PERIOD_OPTIONS } from '@/features/category/category.constants';
 import { CategoryType } from '@/types/enums';
-
-import { BALANCE_OPTIONS, Period, PERIOD_OPTIONS } from './constants';
-
-Categories.title = 'Категории';
 
 export default function Categories() {
   const [isEditMode, setIsEditMode] = useState(false);
@@ -17,6 +15,13 @@ export default function Categories() {
     BALANCE_OPTIONS[0]
   );
   const [selectedPeriod, setSelectedPeriod] = useState<OptionType<Period>>(PERIOD_OPTIONS[0]);
+
+  const { data } = useQuery({
+    queryKey: ['categories'],
+    queryFn: () => fetch('/api/categories').then(res => res.json()),
+  });
+
+  console.log({ data });
 
   const handleMainButtonClick = (save?: boolean) => {
     if (save) {
@@ -66,4 +71,12 @@ export default function Categories() {
       </div>
     </section>
   );
+}
+
+export async function getServerSideProps() {
+  return {
+    props: {
+      title: 'Категории',
+    },
+  };
 }
