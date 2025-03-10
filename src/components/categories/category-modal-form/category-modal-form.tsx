@@ -33,12 +33,14 @@ const CategoryModalForm: React.FC<CategoryModalProps> = ({ isEdit, onClose, onSu
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)}>
       <Input
-        /* label={texts.form.name} */ placeholder={texts.form.namePlaceholder}
+        label={texts.form.name}
+        placeholder={texts.form.namePlaceholder}
         {...register('name')}
         errorText={errors?.name?.message}
       />
       <Input
-        /* label={texts.form.description} */ placeholder={texts.form.descriptionPlaceholder}
+        label={texts.form.description}
+        placeholder={texts.form.descriptionPlaceholder}
         {...register('description')}
         errorText={errors?.description?.message}
       />

@@ -22,7 +22,9 @@ const CategoryModal: React.FC<CategoryModalProps> = ({ isEdit, isOpen, onClose, 
     return texts.modal.new;
   }, [categoryName, isEdit]);
 
-  const handleSubmitForm = (data: CategoryForm) => {};
+  const handleSubmitForm = (data: CategoryForm) => {
+    console.log(data);
+  };
 
   return (
     <Modal title={modalTitle} isOpen={isOpen} onClose={onClose}>

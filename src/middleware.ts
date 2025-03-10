@@ -1,13 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function middleware(req: NextRequest) {
-  const { pathname } = req.nextUrl;
-
-  // Игнорируем проверку для страницы входа
-  if (pathname.startsWith('/signin') || pathname.startsWith('/signup')) {
-    return NextResponse.next();
-  }
-
   // Получаем куки из запроса
   const cookies = req.cookies;
   const token = cookies.get('token');
@@ -30,6 +23,6 @@ export const config = {
      * - Статические файлы (если нужно)
      * - Страница входа (/signin)
      */
-    '/((?!api|_next/static|_next/image|favicon.ico|signin).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|signin|signup).*)',
   ],
 };
