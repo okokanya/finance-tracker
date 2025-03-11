@@ -23,6 +23,7 @@ export const config = {
      * - Статические файлы (если нужно)
      * - Страница входа (/signin)
      */
-    '/((?!api|_next/static|_next/image|favicon.ico|signin|signup).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|bg.png|logo.svg|txt-logo.svg|signin|signup).*)',
+    // '/((?!api|_next/static|_next/image|favicon.ico|signin|signup).*)',
   ],
 };

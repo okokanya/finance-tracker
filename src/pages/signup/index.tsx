@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import Image from 'next/image';
+
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -76,6 +78,7 @@ export default function Signup() {
   return (
     <MainWrap>
       <FormWrap>
+        <Image src="/txt-logo.svg" alt="Логотип трекера" width={300} height={50}/>
         <h1 className="ml-0 mr-auto">Регистрация</h1>
         <form className="flex w-full flex-wrap justify-between" onSubmit={handleSubmit(onSubmit)}>
           <Input
