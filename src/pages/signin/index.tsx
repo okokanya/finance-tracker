@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import Image from 'next/image';
+import logo from '../../../public/txt-logo.svg';
 import { useRouter } from 'next/router';
 import { useMutation } from '@tanstack/react-query';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -46,6 +48,7 @@ const Signin = () => {
 
   return (
     <MainWrap>
+      <Image src={logo} alt="Логотип трекера" width={300} height={50} className="mb-6"/>
       <FormWrap>
         <h1 className="ml-0 mr-auto">Вход в аккаунт</h1>
         <form
