@@ -57,7 +57,7 @@ const Signin = () => {
 
   return (
     <MainWrap>
-      <Image src={logo} alt="Логотип трекера" width={300} height={50} className="mb-6"/>
+      <Image src={logo} alt="Логотип трекера" width={300} height={50} className="mb-6 sm:block hidden"/>
       <FormWrap>
         <h1 className="ml-0 mr-auto">Вход в аккаунт</h1>
         <form
