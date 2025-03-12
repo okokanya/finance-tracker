@@ -11,6 +11,7 @@ import {
   AccountFormSuccessResult,
   AccountsResponse,
   AccountTransaction,
+  AddAccountTransactionFormSuccessResult,
 } from '@/features/accounts/accounts.types';
 import { apiFetch } from '@/utils/api-fetch';
 
@@ -50,10 +51,10 @@ export const useUpdateAccount = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, ...account }: AccountFormSuccessResult & { id: string }) =>
+    mutationFn: ({ id, ...data }: AccountFormSuccessResult & { id: string }) =>
       apiFetch(`${ACCOUNTS_QUERY_PATH}/${id}`, {
         method: 'PUT',
-        fetchBody: account,
+        fetchBody: data,
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ACCOUNTS_QUERY_KEY });
@@ -85,8 +86,50 @@ export const useDeleteAccount = () => {
       apiFetch(`${ACCOUNTS_QUERY_PATH}/${accountId}`, {
         method: 'DELETE',
       }),
-    onSuccess: () => {
+    onSuccess: (_, accountId) => {
       queryClient.invalidateQueries({ queryKey: ACCOUNTS_QUERY_KEY });
+
+      const queries = queryClient.getQueryCache().findAll({
+        predicate: query => query.queryKey.includes(ACCOUNT_TRANSACTIONS_QUERY_KEY),
+      });
+
+      queries.forEach(query => {
+        const transactions = query.state.data as AccountTransaction[] | undefined;
+
+        if (
+          transactions?.some(
+            transaction =>
+              transaction.accountId === accountId || transaction.targetAccountId === accountId
+          )
+        ) {
+          queryClient.invalidateQueries({ queryKey: query.queryKey });
+        }
+      });
+    },
+  });
+};
+
+export const useAddAccountTransaction = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, ...data }: AddAccountTransactionFormSuccessResult & { id: string }) =>
+      apiFetch(`${ACCOUNTS_QUERY_PATH}/${id}/${TRANSACTIONS_QUERY_PATH}`, {
+        method: 'PUT',
+        fetchBody: data,
+      }),
+    onSuccess: (_, data) => {
+      queryClient.invalidateQueries({ queryKey: ACCOUNTS_QUERY_KEY });
+
+      queryClient.invalidateQueries({
+        queryKey: [ACCOUNT_TRANSACTIONS_QUERY_KEY, data.id],
+      });
+
+      if (data.targetAccountId) {
+        queryClient.invalidateQueries({
+          queryKey: [ACCOUNT_TRANSACTIONS_QUERY_KEY, data.targetAccountId],
+        });
+      }
     },
   });
 };

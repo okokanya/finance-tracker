@@ -33,7 +33,7 @@ const Signin = () => {
       return response.json();
     },
     onSuccess: () => {
-      router.push('/profile');
+      router.push('/accounts');
     },
     onError: () => {
       alert('Неверный email или пароль');

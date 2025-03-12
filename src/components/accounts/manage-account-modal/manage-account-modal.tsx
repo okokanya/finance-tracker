@@ -14,14 +14,17 @@ import {
   AccountForm,
   accountFormSchema,
   AccountFormSuccessResult,
+  AccountResponse,
 } from '@/features/accounts/accounts.types';
-import { hasAccountChanges } from '@/features/accounts/accounts.utils';
 import { useManageAccountController } from '@/features/accounts/controllers/manage-account.controller';
-import { Account } from '@/models';
 import { AccountType } from '@/types/enums';
 
 type ManageAccountModalProps = Omit<ModalProps, 'title' | 'children'> & {
-  account: Account;
+  account: AccountResponse;
+  hasAccountDataChanged: (
+    currentAccount: AccountResponse,
+    formData: AccountFormSuccessResult
+  ) => boolean;
   onUpdate: (account: AccountFormSuccessResult) => void;
   onDelete: () => void;
   onArchive: () => void;
@@ -30,6 +33,7 @@ type ManageAccountModalProps = Omit<ModalProps, 'title' | 'children'> & {
 const ManageAccountModal: React.FC<ManageAccountModalProps> = ({
   account,
   isOpen,
+  hasAccountDataChanged,
   onClose,
   onUpdate,
   onDelete,
@@ -57,7 +61,7 @@ const ManageAccountModal: React.FC<ManageAccountModalProps> = ({
   });
 
   const formValues = watch();
-  const hasChanges = hasAccountChanges(account, {
+  const isDataChanged = hasAccountDataChanged(account, {
     name: formValues.name,
     description: formValues.description,
     type: selectedType.value,
@@ -128,7 +132,7 @@ const ManageAccountModal: React.FC<ManageAccountModalProps> = ({
           />
         </div>
         <div className="flex w-full flex-col gap-2">
-          <Button type="submit" className="w-full" disabled={!hasChanges}>
+          <Button type="submit" className="w-full" disabled={!isDataChanged}>
             {texts.manageAccount.action.updateAccount}
           </Button>
           <div className="flex w-full gap-2">

@@ -12,12 +12,11 @@ import {
   useIsRepeatDeleteAccountModalOpen,
   useIsRepeatUpdateAccountModalOpen,
 } from '@/features/accounts/accounts.store';
-import { AccountFormSuccessResult } from '@/features/accounts/accounts.types';
-import { Account } from '@/models';
+import { AccountFormSuccessResult, AccountResponse } from '@/features/accounts/accounts.types';
 
 export const useManageAccountController = () => {
   const {
-    setManageAccountModalOpen: setManageModalOpen,
+    setManageAccountModalOpen,
     setAccountToManage,
     setAccountFormData,
     setRepeatUpdateAccountModalOpen,
@@ -44,13 +43,25 @@ export const useManageAccountController = () => {
   const isRepeatDeleteAccountModalOpen = useIsRepeatDeleteAccountModalOpen();
   const isRepeatUpdateAccountModalOpen = useIsRepeatUpdateAccountModalOpen();
 
-  const onManageAccountClicked = (account: Account) => {
+  const onManageAccountClicked = (account: AccountResponse) => {
     setAccountToManage(account);
-    setManageModalOpen(true);
+    setManageAccountModalOpen(true);
+  };
+
+  const hasAccountDataChanged = (
+    currentAccount: AccountResponse,
+    formData: AccountFormSuccessResult
+  ): boolean => {
+    return (
+      currentAccount.name !== formData.name ||
+      currentAccount.type !== formData.type ||
+      currentAccount.balance !== formData.balance ||
+      (formData.description?.trim() !== '' && currentAccount.description !== formData.description)
+    );
   };
 
   const onUpdateAccount = (data: AccountFormSuccessResult) => {
-    setManageModalOpen(false);
+    setManageAccountModalOpen(false);
 
     if (!accountToManage) return;
 
@@ -70,12 +81,12 @@ export const useManageAccountController = () => {
   };
 
   const onCloseManageAccountModal = () => {
-    setManageModalOpen(false);
+    setManageAccountModalOpen(false);
     setAccountToManage(null);
   };
 
   const onDeleteAccount = () => {
-    setManageModalOpen(false);
+    setManageAccountModalOpen(false);
 
     if (!accountToManage) return;
 
@@ -90,7 +101,7 @@ export const useManageAccountController = () => {
   };
 
   const onArchiveAccount = () => {
-    setManageModalOpen(false);
+    setManageAccountModalOpen(false);
 
     if (!accountToManage) return;
 
@@ -148,6 +159,7 @@ export const useManageAccountController = () => {
     isUpdateAccountLoading: isUpdateAccountLoading || isDeleteAccountLoading,
     isManageAccountModalOpen,
     onManageAccountClicked,
+    hasAccountDataChanged,
     accountToManage,
     onUpdateAccount,
     onCloseManageAccountModal,
