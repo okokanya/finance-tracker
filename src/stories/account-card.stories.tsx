@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
 
-import AccountCard from '@/components/accounts/account-card/account-card';
+import AccountCard from '@/components/accounts/account-card';
 
 const meta = {
   title: 'Components/AccountCard',

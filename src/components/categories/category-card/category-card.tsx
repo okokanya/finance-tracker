@@ -1,10 +1,9 @@
 import { FC, useMemo } from 'react';
 
+import Text from '@/components/text/text';
+import Title from '@/components/title/title';
 import { CategoryType } from '@/types/enums';
 import { cn } from '@/utils/cn';
-
-import Text from '../text/text';
-import Title from '../title/title';
 
 type CategoryCardProps = {
   category: string;
