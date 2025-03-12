@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import Image from 'next/image';
-import logo from '../../../public/txt-logo.svg';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -13,6 +12,8 @@ import FormWrap from '@/components/formWrap';
 import Input from '@/components/input/input';
 import MainWrap from '@/components/mainWrap';
 import Modal from '@/components/modal/modal';
+
+import logo from '../../../public/txt-logo.svg';
 
 const schema = z
   .object({
@@ -84,7 +85,13 @@ export default function Signup() {
 
   return (
     <MainWrap>
-      <Image src={logo} alt="Логотип трекера" width={300} height={50} className="mb-6 sm:block hidden" />
+      <Image
+        src={logo}
+        alt="Логотип трекера"
+        width={300}
+        height={50}
+        className="mb-6 hidden sm:block"
+      />
       <FormWrap width="36.25rem">
         <h1 className="ml-0 mr-auto">Регистрация</h1>
         <form className="flex w-full flex-wrap justify-between" onSubmit={handleSubmit(onSubmit)}>

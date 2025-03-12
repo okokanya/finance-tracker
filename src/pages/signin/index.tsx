@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
-import logo from '../../../public/txt-logo.svg';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useMutation } from '@tanstack/react-query';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -11,6 +10,8 @@ import FormWrap from '@/components/formWrap';
 import Input from '@/components/input/input';
 import MainWrap from '@/components/mainWrap';
 import Modal from '@/components/modal/modal';
+
+import logo from '../../../public/txt-logo.svg';
 
 const Signin = () => {
   const [isModalOpen, setIsModalOpen] = useState(false); // успешный вход
@@ -57,7 +58,13 @@ const Signin = () => {
 
   return (
     <MainWrap>
-      <Image src={logo} alt="Логотип трекера" width={300} height={50} className="mb-6 sm:block hidden"/>
+      <Image
+        src={logo}
+        alt="Логотип трекера"
+        width={300}
+        height={50}
+        className="mb-6 hidden sm:block"
+      />
       <FormWrap>
         <h1 className="ml-0 mr-auto">Вход в аккаунт</h1>
         <form
@@ -94,11 +101,7 @@ const Signin = () => {
       </FormWrap>
 
       {/* модальное окно для успешного входа */}
-      <Modal
-        title="Успешный вход"
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      >
+      <Modal title="Успешный вход" isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <p>Вы успешно вошли в систему!</p>
       </Modal>
 
