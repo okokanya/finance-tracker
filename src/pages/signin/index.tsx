@@ -1,3 +1,4 @@
+import { useState } from 'react'; // Добавьте этот импорт
 import Link from 'next/link';
 import Image from 'next/image';
 import logo from '../../../public/txt-logo.svg';
@@ -9,8 +10,12 @@ import Button from '@/components/button';
 import FormWrap from '@/components/formWrap';
 import Input from '@/components/input/input';
 import MainWrap from '@/components/mainWrap';
+import Modal from '@/components/modal/modal';
 
 const Signin = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false); // успешный вход
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false); // ошибка входа
+
   const {
     register,
     handleSubmit,
@@ -35,10 +40,14 @@ const Signin = () => {
       return response.json();
     },
     onSuccess: () => {
-      router.push('/profile');
+      setIsModalOpen(true); // меняем состояние на удачном входе
+      setTimeout(() => {
+        setIsModalOpen(false);
+        router.push('/profile');
+      }, 2000);
     },
     onError: () => {
-      alert('Неверный email или пароль');
+      setIsErrorModalOpen(true); // модальное окно с ошибкой
     },
   });
 
@@ -83,6 +92,24 @@ const Signin = () => {
           </Link>
         </p>
       </FormWrap>
+
+      {/* модальное окно для успешного входа */}
+      <Modal
+        title="Успешный вход"
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      >
+        <p>Вы успешно вошли в систему!</p>
+      </Modal>
+
+      {/* модальное окно для ошибки входа */}
+      <Modal
+        title="Ошибка входа"
+        isOpen={isErrorModalOpen}
+        onClose={() => setIsErrorModalOpen(false)}
+      >
+        <p>Неправильный email или пароль</p>
+      </Modal>
     </MainWrap>
   );
 };
