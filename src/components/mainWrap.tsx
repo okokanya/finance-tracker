@@ -1,12 +1,11 @@
 import { ReactNode } from 'react';
+import bg from '@public/bg.png';
 
-import bg from '../../public/bg.png';
-
-type FullScreenBackgroundProps = {
+type props = {
   children?: ReactNode;
 };
 
-const MainWrap = ({ children }: FullScreenBackgroundProps) => {
+const MainWrap = ({ children }: props) => {
   return (
     <div
       className="flex h-screen w-screen flex-col items-center justify-center bg-cover bg-center"

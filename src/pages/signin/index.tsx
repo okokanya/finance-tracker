@@ -11,7 +11,7 @@ import Input from '@/components/input/input';
 import MainWrap from '@/components/mainWrap';
 import Modal from '@/components/modal/modal';
 
-import logo from '../../../public/txt-logo.svg';
+import logo from '@public/txt-logo.svg';
 
 const Signin = () => {
   const [isModalOpen, setIsModalOpen] = useState(false); // успешный вход
