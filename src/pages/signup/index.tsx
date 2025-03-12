@@ -89,18 +89,21 @@ export default function Signup() {
         <h1 className="ml-0 mr-auto">Регистрация</h1>
         <form className="flex w-full flex-wrap justify-between" onSubmit={handleSubmit(onSubmit)}>
           <Input
+            wrapperClassName="w-full sm:w-[48%]"
             label="Имя"
             placeholder="Имя"
             {...register('firstName')}
             errorText={errors.firstName?.message}
           />
           <Input
+            wrapperClassName="w-full sm:w-[48%]"
             label="Фамилия"
             placeholder="Фамилия"
             {...register('lastName')}
             errorText={errors.lastName?.message}
           />
           <Input
+            wrapperClassName="w-full"
             label="Email"
             type="email"
             placeholder="Email"
@@ -108,6 +111,7 @@ export default function Signup() {
             errorText={errors.email?.message}
           />
           <Input
+            wrapperClassName="w-full sm:w-[48%]"
             label="Придумайте пароль"
             type="password"
             placeholder="Пароль"
@@ -115,6 +119,7 @@ export default function Signup() {
             errorText={errors.password?.message}
           />
           <Input
+            wrapperClassName="w-full sm:w-[48%] "
             label="Повторите пароль"
             type="password"
             placeholder="Повторите пароль"
