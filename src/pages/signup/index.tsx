@@ -12,6 +12,7 @@ import Button from '@/components/button';
 import FormWrap from '@/components/formWrap';
 import Input from '@/components/input/input';
 import MainWrap from '@/components/mainWrap';
+import Modal from '@/components/modal/modal';
 
 const schema = z
   .object({
@@ -31,6 +32,8 @@ type FormData = z.infer<typeof schema>;
 
 export default function Signup() {
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false); // управление модальным окном
+
   const {
     register,
     handleSubmit,
@@ -64,7 +67,11 @@ export default function Signup() {
     },
     onSuccess: () => {
       setSubmitError(null);
-      router.push('/signin');
+      setIsModalOpen(true); // модальное окно
+      setTimeout(() => {
+        setIsModalOpen(false); // закрываем модальное окно через 2 секунды
+        router.push('/signin');
+      }, 2000);
     },
     onError: () => {
       setSubmitError('Произошла ошибка при регистрации. Попробуйте еще раз.');
@@ -77,7 +84,7 @@ export default function Signup() {
 
   return (
     <MainWrap>
-        <Image src={logo} alt="Логотип трекера" width={300} height={50} className="mb-6"/>
+      <Image src={logo} alt="Логотип трекера" width={300} height={50} className="mb-6" />
       <FormWrap>
         <h1 className="ml-0 mr-auto">Регистрация</h1>
         <form className="flex w-full flex-wrap justify-between" onSubmit={handleSubmit(onSubmit)}>
@@ -129,6 +136,15 @@ export default function Signup() {
           </Link>
         </p>
       </FormWrap>
+
+      {/* Модальное окно для успешной регистрации */}
+      <Modal
+        title="Успешная регистрация"
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      >
+        <p>Вы успешно зарегистрировались!</p>
+      </Modal>
     </MainWrap>
   );
 }

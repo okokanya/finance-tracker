@@ -1,4 +1,4 @@
-import { useState } from 'react'; // Добавьте этот импорт
+import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import logo from '../../../public/txt-logo.svg';
@@ -13,7 +13,7 @@ import MainWrap from '@/components/mainWrap';
 import Modal from '@/components/modal/modal';
 
 const Signin = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false); // успешный вход
+  const [isModalOpen, setIsModalOpen] = useState(true); // успешный вход
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false); // ошибка входа
 
   const {
