@@ -85,7 +85,7 @@ export default function Signup() {
   return (
     <MainWrap>
       <Image src={logo} alt="Логотип трекера" width={300} height={50} className="mb-6" />
-      <FormWrap>
+      <FormWrap width="36.25rem">
         <h1 className="ml-0 mr-auto">Регистрация</h1>
         <form className="flex w-full flex-wrap justify-between" onSubmit={handleSubmit(onSubmit)}>
           <Input

@@ -13,7 +13,7 @@ import MainWrap from '@/components/mainWrap';
 import Modal from '@/components/modal/modal';
 
 const Signin = () => {
-  const [isModalOpen, setIsModalOpen] = useState(true); // успешный вход
+  const [isModalOpen, setIsModalOpen] = useState(false); // успешный вход
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false); // ошибка входа
 
   const {
