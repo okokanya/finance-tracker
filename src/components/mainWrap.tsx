@@ -1,11 +1,11 @@
 import { ReactNode } from 'react';
 import bg from '@public/bg.png';
 
-type props = {
+type Props = {
   children?: ReactNode;
 };
 
-const MainWrap = ({ children }: props) => {
+const MainWrap = ({ children }: Props) => {
   return (
     <div
       className="flex h-screen w-screen flex-col items-center justify-center bg-cover bg-center"
