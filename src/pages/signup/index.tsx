@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { zodResolver } from '@hookform/resolvers/zod';
+import logo from '@public/txt-logo.svg';
 import { useMutation } from '@tanstack/react-query';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -12,7 +13,6 @@ import FormWrap from '@/components/formWrap';
 import Input from '@/components/input/input';
 import MainWrap from '@/components/mainWrap';
 import Modal from '@/components/modal/modal';
-import logo from '@public/txt-logo.svg';
 
 const schema = z
   .object({

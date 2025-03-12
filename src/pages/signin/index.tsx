@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import logo from '@public/txt-logo.svg';
 import { useMutation } from '@tanstack/react-query';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
@@ -10,8 +11,6 @@ import FormWrap from '@/components/formWrap';
 import Input from '@/components/input/input';
 import MainWrap from '@/components/mainWrap';
 import Modal from '@/components/modal/modal';
-
-import logo from '@public/txt-logo.svg';
 
 const Signin = () => {
   const [isModalOpen, setIsModalOpen] = useState(false); // успешный вход
