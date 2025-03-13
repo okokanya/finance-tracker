@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { zodResolver } from '@hookform/resolvers/zod';
-import logo from '@public/txt-logo.svg';
+import LogoTitle from '@/components/logo-title'
 import { useMutation } from '@tanstack/react-query';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -84,13 +84,7 @@ export default function Signup() {
 
   return (
     <MainWrap>
-      <Image
-        src={logo}
-        alt="Логотип трекера"
-        width={300}
-        height={50}
-        className="mb-6 hidden sm:block"
-      />
+      <LogoTitle/>
       <FormWrap width="36.25rem">
         <h1 className="ml-0 mr-auto">Регистрация</h1>
         <form className="flex w-full flex-wrap justify-between" onSubmit={handleSubmit(onSubmit)}>

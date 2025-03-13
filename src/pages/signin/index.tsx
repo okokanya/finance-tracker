@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import logo from '@public/txt-logo.svg';
+import LogoTitle from '@/components/logo-title'
 import { useMutation } from '@tanstack/react-query';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
@@ -57,13 +56,7 @@ const Signin = () => {
 
   return (
     <MainWrap>
-      <Image
-        src={logo}
-        alt="Логотип трекера"
-        width={300}
-        height={50}
-        className="mb-6 hidden sm:block"
-      />
+      <LogoTitle/>
       <FormWrap>
         <h1 className="ml-0 mr-auto">Вход в аккаунт</h1>
         <form
