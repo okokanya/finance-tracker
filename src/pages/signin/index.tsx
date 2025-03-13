@@ -6,9 +6,9 @@ import { useMutation } from '@tanstack/react-query';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 import Button from '@/components/button';
-import FormWrap from '@/components/formWrap';
+import FormWrap from '@/components/form-wrap';
 import Input from '@/components/input/input';
-import MainWrap from '@/components/mainWrap';
+import MainWrap from '@/components/main-wrap';
 import Modal from '@/components/modal/modal';
 
 const Signin = () => {
