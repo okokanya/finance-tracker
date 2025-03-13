@@ -1,15 +1,18 @@
 import { useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { zodResolver } from '@hookform/resolvers/zod';
+import LogoTitle from '@/components/logo-title'
 import { useMutation } from '@tanstack/react-query';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import Button from '@/components/button';
-import FormWrap from '@/components/formWrap';
+import FormWrap from '@/components/form-wrap';
 import Input from '@/components/input/input';
-import MainWrap from '@/components/mainWrap';
+import MainWrap from '@/components/main-wrap';
+import Modal from '@/components/modal/modal';
 
 const schema = z
   .object({
@@ -29,6 +32,8 @@ type FormData = z.infer<typeof schema>;
 
 export default function Signup() {
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false); // управление модальным окном
+
   const {
     register,
     handleSubmit,
@@ -62,7 +67,11 @@ export default function Signup() {
     },
     onSuccess: () => {
       setSubmitError(null);
-      router.push('/signin');
+      setIsModalOpen(true); // модальное окно
+      setTimeout(() => {
+        setIsModalOpen(false); // закрываем модальное окно через 2 секунды
+        router.push('/signin');
+      }, 2000);
     },
     onError: () => {
       setSubmitError('Произошла ошибка при регистрации. Попробуйте еще раз.');
@@ -75,22 +84,26 @@ export default function Signup() {
 
   return (
     <MainWrap>
-      <FormWrap>
+      <LogoTitle/>
+      <FormWrap width="33rem">
         <h1 className="ml-0 mr-auto">Регистрация</h1>
         <form className="flex w-full flex-wrap justify-between" onSubmit={handleSubmit(onSubmit)}>
           <Input
+            wrapperClassName="w-full sm:w-[48%]"
             label="Имя"
             placeholder="Имя"
             {...register('firstName')}
             errorText={errors.firstName?.message}
           />
           <Input
+            wrapperClassName="w-full sm:w-[48%]"
             label="Фамилия"
             placeholder="Фамилия"
             {...register('lastName')}
             errorText={errors.lastName?.message}
           />
           <Input
+            wrapperClassName="w-full"
             label="Email"
             type="email"
             placeholder="Email"
@@ -98,6 +111,7 @@ export default function Signup() {
             errorText={errors.email?.message}
           />
           <Input
+            wrapperClassName="w-full sm:w-[48%]"
             label="Придумайте пароль"
             type="password"
             placeholder="Пароль"
@@ -105,6 +119,7 @@ export default function Signup() {
             errorText={errors.password?.message}
           />
           <Input
+            wrapperClassName="w-full sm:w-[48%] "
             label="Повторите пароль"
             type="password"
             placeholder="Повторите пароль"
@@ -126,6 +141,15 @@ export default function Signup() {
           </Link>
         </p>
       </FormWrap>
+
+      {/* Модальное окно для успешной регистрации */}
+      <Modal
+        title="Успешная регистрация"
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      >
+        <p>Вы успешно зарегистрировались!</p>
+      </Modal>
     </MainWrap>
   );
 }

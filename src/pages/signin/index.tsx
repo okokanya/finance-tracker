@@ -1,14 +1,20 @@
+import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import LogoTitle from '@/components/logo-title'
 import { useMutation } from '@tanstack/react-query';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 import Button from '@/components/button';
-import FormWrap from '@/components/formWrap';
+import FormWrap from '@/components/form-wrap';
 import Input from '@/components/input/input';
-import MainWrap from '@/components/mainWrap';
+import MainWrap from '@/components/main-wrap';
+import Modal from '@/components/modal/modal';
 
 const Signin = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false); // успешный вход
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false); // ошибка входа
+
   const {
     register,
     handleSubmit,
@@ -33,10 +39,14 @@ const Signin = () => {
       return response.json();
     },
     onSuccess: () => {
-      router.push('/accounts');
+      setIsModalOpen(true); // меняем состояние на удачном входе
+      setTimeout(() => {
+        setIsModalOpen(false);
+        router.push('/accounts');
+      }, 2000);
     },
     onError: () => {
-      alert('Неверный email или пароль');
+      setIsErrorModalOpen(true); // модальное окно с ошибкой
     },
   });
 
@@ -46,6 +56,7 @@ const Signin = () => {
 
   return (
     <MainWrap>
+      <LogoTitle/>
       <FormWrap>
         <h1 className="ml-0 mr-auto">Вход в аккаунт</h1>
         <form
@@ -80,6 +91,20 @@ const Signin = () => {
           </Link>
         </p>
       </FormWrap>
+
+      {/* модальное окно для успешного входа */}
+      <Modal title="Успешный вход" isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <p>Вы успешно вошли в систему!</p>
+      </Modal>
+
+      {/* модальное окно для ошибки входа */}
+      <Modal
+        title="Ошибка входа"
+        isOpen={isErrorModalOpen}
+        onClose={() => setIsErrorModalOpen(false)}
+      >
+        <p>Неправильный email или пароль</p>
+      </Modal>
     </MainWrap>
   );
 };

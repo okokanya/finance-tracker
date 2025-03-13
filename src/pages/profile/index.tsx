@@ -1,5 +1,5 @@
 import LogoutButton from '@/components/logout-button';
-import MainWrap from '@/components/mainWrap';
+import MainWrap from '@/components/main-wrap';
 
 export default function Profile() {
   return (
