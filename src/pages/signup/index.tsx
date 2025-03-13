@@ -84,7 +84,7 @@ export default function Signup() {
   return (
     <MainWrap>
       <LogoTitle/>
-      <FormWrap width="33rem">
+      <FormWrap  widthLg="33rem">
         <h1 className="ml-0 mr-auto">Регистрация</h1>
         <form className="flex w-full flex-wrap justify-between" onSubmit={handleSubmit(onSubmit)}>
           <Input
