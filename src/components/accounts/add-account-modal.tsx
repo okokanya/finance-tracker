@@ -16,11 +16,11 @@ import {
 } from '@/features/accounts/accounts.types';
 import { AccountType } from '@/types/enums';
 
-type AddAccountModalProps = Omit<ModalProps, 'title' | 'children'> & {
+type Props = Omit<ModalProps, 'title' | 'children'> & {
   onSuccess: (account: AccountFormSuccessResult) => void;
 };
 
-const AddAccountModal: React.FC<AddAccountModalProps> = ({ isOpen, onClose, onSuccess }) => {
+export default function AddAccountModal({ isOpen, onClose, onSuccess }: Props) {
   const [selectedType, setSelectedType] = useState<OptionType<AccountType>>(ACCOUNT_OPTIONS[0]);
 
   const {
@@ -96,6 +96,4 @@ const AddAccountModal: React.FC<AddAccountModalProps> = ({ isOpen, onClose, onSu
       </form>
     </Modal>
   );
-};
-
-export default AddAccountModal;
+}

@@ -6,19 +6,19 @@ import Button from '@/components/button';
 import texts from '@/features/accounts/accounts.texts';
 import { AccountTransaction } from '@/features/accounts/accounts.types';
 
-interface TransactionListProps {
+type Props = {
   transactions?: AccountTransaction[];
   isLoading: boolean;
   isError: boolean;
   repeatOnError: () => void;
-}
+};
 
-const TransactionList: React.FC<TransactionListProps> = ({
+export default function TransactionList({
   transactions,
   isLoading,
   isError,
   repeatOnError,
-}) => {
+}: Props) {
   const textClasses =
     'my-1 block h-10 w-full px-3.5 py-2.5 font-inter text-sm font-normal text-blue-500';
 
@@ -56,6 +56,4 @@ const TransactionList: React.FC<TransactionListProps> = ({
       </Accordion>
     </TopBottomBorder>
   );
-};
-
-export default TransactionList;
+}

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import TotalBalance from '@/components/accounts/total-balance/total-balance';
+import TotalBalance from '@/components/accounts/total-balance';
 
 const meta = {
   title: 'Components/TotalBalance',

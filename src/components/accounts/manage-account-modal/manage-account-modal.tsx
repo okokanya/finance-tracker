@@ -19,7 +19,7 @@ import {
 import { useManageAccountController } from '@/features/accounts/controllers/manage-account.controller';
 import { AccountType } from '@/types/enums';
 
-type ManageAccountModalProps = Omit<ModalProps, 'title' | 'children'> & {
+type Props = Omit<ModalProps, 'title' | 'children'> & {
   account: AccountResponse;
   hasAccountDataChanged: (
     currentAccount: AccountResponse,
@@ -30,7 +30,7 @@ type ManageAccountModalProps = Omit<ModalProps, 'title' | 'children'> & {
   onArchive: () => void;
 };
 
-const ManageAccountModal: React.FC<ManageAccountModalProps> = ({
+export default function ManageAccountModal({
   account,
   isOpen,
   hasAccountDataChanged,
@@ -38,7 +38,7 @@ const ManageAccountModal: React.FC<ManageAccountModalProps> = ({
   onUpdate,
   onDelete,
   onArchive,
-}) => {
+}: Props) {
   const [selectedType, setSelectedType] = useState<OptionType<AccountType>>(
     ACCOUNT_OPTIONS.find(option => option.value == account.type) ?? ACCOUNT_OPTIONS[0]
   );
@@ -147,6 +147,4 @@ const ManageAccountModal: React.FC<ManageAccountModalProps> = ({
       </form>
     </Modal>
   );
-};
-
-export default ManageAccountModal;
+}

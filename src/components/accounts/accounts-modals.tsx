@@ -1,5 +1,5 @@
-import ActionModal from '@/components/accounts/action-modal/action-modal';
-import AddAccountModal from '@/components/accounts/add-account-modal/add-account-modal';
+import ActionModal from '@/components/accounts/action-modal';
+import AddAccountModal from '@/components/accounts/add-account-modal';
 import AddAccountTransactionModal from '@/components/accounts/add-account-transaction-modal';
 import ManageAccountModal from '@/components/accounts/manage-account-modal/manage-account-modal';
 import texts from '@/features/accounts/accounts.texts';
@@ -7,7 +7,7 @@ import { useAddAccountTransactionController } from '@/features/accounts/controll
 import { useAddAccountController } from '@/features/accounts/controllers/add-account.controller';
 import { useManageAccountController } from '@/features/accounts/controllers/manage-account.controller';
 
-const AccountsModals: React.FC = () => {
+export default function AccountsModals() {
   const {
     isAddAccountModalOpen,
     setAddAccountModalOpen,
@@ -136,6 +136,4 @@ const AccountsModals: React.FC = () => {
       )}
     </>
   );
-};
-
-export default AccountsModals;
+}

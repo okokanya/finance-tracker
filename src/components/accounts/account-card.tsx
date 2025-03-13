@@ -9,17 +9,13 @@ import { AccountResponse } from '@/features/accounts/accounts.types';
 import { cn } from '@/utils/cn';
 import { getDisplayAmount } from '@/utils/format-amount';
 
-type AccountCardProps = {
+type Props = {
   account: AccountResponse;
   onAddTransactionClick: () => void;
   onManageClick: () => void;
 };
 
-const AccountCard: React.FC<AccountCardProps> = ({
-  account,
-  onManageClick,
-  onAddTransactionClick,
-}) => {
+export default function AccountCard({ account, onManageClick, onAddTransactionClick }: Props) {
   const getVariantStyles = () => {
     switch (account.type) {
       case 'savings':
@@ -76,6 +72,4 @@ const AccountCard: React.FC<AccountCardProps> = ({
       </div>
     </div>
   );
-};
-
-export default AccountCard;
+}
