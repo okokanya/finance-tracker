@@ -1,6 +1,7 @@
 import logo from '@public/logo.svg';
-import Title from '@/components/title/title'
+import Title from '@components/title/title'
 import Image from 'next/image';
+import React from 'react';
 
 const LogoTitle = () => {
 return (
