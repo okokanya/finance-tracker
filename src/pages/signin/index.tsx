@@ -42,7 +42,7 @@ const Signin = () => {
       setIsModalOpen(true); // меняем состояние на удачном входе
       setTimeout(() => {
         setIsModalOpen(false);
-        router.push('/profile');
+        router.push('/accounts');
       }, 2000);
     },
     onError: () => {
