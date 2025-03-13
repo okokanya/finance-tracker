@@ -1,11 +1,13 @@
-import ActionModal from '@/components/accounts/action-modal/action-modal';
-import AddAccountModal from '@/components/accounts/add-account-modal/add-account-modal';
+import ActionModal from '@/components/accounts/action-modal';
+import AddAccountModal from '@/components/accounts/add-account-modal';
+import AddAccountTransactionModal from '@/components/accounts/add-account-transaction-modal';
 import ManageAccountModal from '@/components/accounts/manage-account-modal/manage-account-modal';
 import texts from '@/features/accounts/accounts.texts';
+import { useAddAccountTransactionController } from '@/features/accounts/controllers/add-account-transaction.controller';
 import { useAddAccountController } from '@/features/accounts/controllers/add-account.controller';
 import { useManageAccountController } from '@/features/accounts/controllers/manage-account.controller';
 
-const AccountsModals: React.FC = () => {
+export default function AccountsModals() {
   const {
     isAddAccountModalOpen,
     setAddAccountModalOpen,
@@ -17,6 +19,7 @@ const AccountsModals: React.FC = () => {
 
   const {
     isManageAccountModalOpen,
+    hasAccountDataChanged,
     accountToManage,
     onUpdateAccount,
     onCloseManageAccountModal,
@@ -32,6 +35,26 @@ const AccountsModals: React.FC = () => {
     onRepeatArchiveAccount,
     onCloseRepeatArchiveAccountModal,
   } = useManageAccountController();
+
+  const {
+    isAddAccountTransactionModalOpen,
+    accountToAddTransaction,
+    accountsForTransfer,
+    onAddAccountTransaction,
+    onCloseAddAccountTransactionModal,
+    isRepeatAddAccountTransactionModalOpen,
+    onRepeatAddAccountTransaction,
+    onCloseRepeatAddAccountTransactionModal,
+    isShowTransactionAmountTitle,
+    isTransferOperation,
+    submitButtonText,
+    isTransactionValid,
+  } = useAddAccountTransactionController();
+
+  const isShowManageAccountModal = isManageAccountModalOpen && accountToManage;
+
+  const isShowAddAccountTransactionModal =
+    isAddAccountTransactionModalOpen && accountToAddTransaction && accountsForTransfer;
 
   return (
     <>
@@ -51,10 +74,11 @@ const AccountsModals: React.FC = () => {
           onSuccess={onRepeatAddAccount}
         />
       )}
-      {isManageAccountModalOpen && accountToManage && (
+      {isShowManageAccountModal && (
         <ManageAccountModal
           account={accountToManage}
           isOpen={isManageAccountModalOpen}
+          hasAccountDataChanged={hasAccountDataChanged}
           onClose={onCloseManageAccountModal}
           onUpdate={onUpdateAccount}
           onDelete={onDeleteAccount}
@@ -88,8 +112,28 @@ const AccountsModals: React.FC = () => {
           onSuccess={onRepeatArchiveAccount}
         />
       )}
+      {isShowAddAccountTransactionModal && (
+        <AddAccountTransactionModal
+          account={accountToAddTransaction}
+          accounts={accountsForTransfer}
+          isShowTransactionAmountTitle={isShowTransactionAmountTitle}
+          isTransferOperation={isTransferOperation}
+          submitButtonText={submitButtonText}
+          isTransactionValid={isTransactionValid}
+          isOpen={isAddAccountTransactionModalOpen}
+          onClose={onCloseAddAccountTransactionModal}
+          onSuccess={onAddAccountTransaction}
+        />
+      )}
+      {isRepeatAddAccountTransactionModalOpen && (
+        <ActionModal
+          title={texts.accountTransaction.repeatAction.title}
+          description={texts.accountTransaction.repeatAction.description}
+          isOpen={isRepeatAddAccountTransactionModalOpen}
+          onClose={onCloseRepeatAddAccountTransactionModal}
+          onSuccess={onRepeatAddAccountTransaction}
+        />
+      )}
     </>
   );
-};
-
-export default AccountsModals;
+}

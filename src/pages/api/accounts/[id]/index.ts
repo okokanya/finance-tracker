@@ -3,8 +3,9 @@ import { and, eq, ne, or, sql } from 'drizzle-orm';
 
 import { db } from '@/db';
 import { accounts, transactions } from '@/db/schema';
-import { FAKE_USER_ID } from '@/features/accounts/accounts.constants';
+import { accountBaseSchema } from '@/features/accounts/accounts.types';
 import { accountSchema } from '@/models';
+import { getUser } from '@/utils/get-user';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {
@@ -19,9 +20,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 async function PUT(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const userId = FAKE_USER_ID;
+    const userId = await getUser(req);
     const { id } = req.query;
-    const { name, description, type, balance, isArchived } = req.body;
+    const { name, description, type, balance, isArchived } = accountBaseSchema.parse(req.body);
 
     const existingAccount = await db
       .select()
@@ -33,7 +34,7 @@ async function PUT(req: NextApiRequest, res: NextApiResponse) {
       return res.status(404).json({ error: 'Account not found' });
     }
 
-    if (existingAccount[0].userId !== userId) {
+    if (existingAccount[0].userId !== String(userId)) {
       return res.status(403).json({ error: 'Not authorized to update this account' });
     }
 
@@ -63,7 +64,7 @@ async function PUT(req: NextApiRequest, res: NextApiResponse) {
 
 async function DELETE(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const userId = FAKE_USER_ID;
+    const userId = await getUser(req);
     const { id } = req.query;
 
     const existingAccount = await db
@@ -76,7 +77,7 @@ async function DELETE(req: NextApiRequest, res: NextApiResponse) {
       return res.status(404).json({ error: 'Account not found' });
     }
 
-    if (existingAccount[0].userId !== userId) {
+    if (existingAccount[0].userId !== String(userId)) {
       return res.status(403).json({ error: 'Not authorized to delete this account' });
     }
 

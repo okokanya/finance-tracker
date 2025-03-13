@@ -4,8 +4,9 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { db } from '@/db';
 import { accounts } from '@/db/schema';
-import { FAKE_USER_ID } from '@/features/accounts/accounts.constants';
+import { accountBaseSchema, accountResponseSchema } from '@/features/accounts/accounts.types';
 import { accountSchema } from '@/models';
+import { getUser } from '@/utils/get-user';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {
@@ -20,25 +21,41 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 async function GET(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const userId = FAKE_USER_ID;
+    const userId = await getUser(req);
 
-    const accountsQuery = userId
-      ? db
-          .select()
-          .from(accounts)
-          .where(and(eq(accounts.userId, String(userId)), eq(accounts.isArchived, false)))
-      : db.select().from(accounts);
+    const accountsQuery = db
+      .select({
+        id: accounts.id,
+        name: accounts.name,
+        description: accounts.description,
+        type: accounts.type,
+        balance: accounts.balance,
+        displayBalance: sql<number>`
+              CASE
+                WHEN ${accounts.type} = 'debt_i_owe' THEN -${accounts.balance}
+                ELSE ${accounts.balance}
+              END
+            `,
+        isArchived: accounts.isArchived,
+      })
+      .from(accounts)
+      .where(and(eq(accounts.userId, String(userId)), eq(accounts.isArchived, false)));
 
-    const totalBalanceQuery = userId
-      ? db
-          .select({ total: sql`sum(balance)` })
-          .from(accounts)
-          .where(and(eq(accounts.userId, String(userId)), eq(accounts.isArchived, false)))
-      : db.select({ total: sql`sum(balance)` }).from(accounts);
+    const totalBalanceQuery = db
+      .select({
+        total: sql`sum(
+              CASE
+                WHEN type = 'debt_i_owe' THEN -balance
+                ELSE balance
+              END
+            )`,
+      })
+      .from(accounts)
+      .where(and(eq(accounts.userId, String(userId)), eq(accounts.isArchived, false)));
 
     const [accountsData, [totalBalance]] = await Promise.all([accountsQuery, totalBalanceQuery]);
 
-    const parsedAccounts = accountSchema.array().parse(accountsData);
+    const parsedAccounts = accountResponseSchema.array().parse(accountsData);
     const finalTotalBalance = Number(totalBalance?.total) ?? 0;
 
     return res.status(200).json({
@@ -53,8 +70,8 @@ async function GET(req: NextApiRequest, res: NextApiResponse) {
 
 async function POST(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const userId = FAKE_USER_ID;
-    const { name, description, type, balance } = req.body;
+    const userId = await getUser(req);
+    const { name, description, type, balance } = accountBaseSchema.parse(req.body);
 
     const newAccount = {
       id: uuidv4(),

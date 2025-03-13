@@ -1,11 +1,12 @@
-import AccountCard from '@/components/accounts/account-card/account-card';
-import AccountsModals from '@/components/accounts/accounts-modals/accounts-modals';
-import TotalBalance from '@/components/accounts/total-balance/total-balance';
+import AccountCard from '@/components/accounts/account-card';
+import AccountsModals from '@/components/accounts/accounts-modals';
+import TotalBalance from '@/components/accounts/total-balance';
 import Button from '@/components/button';
 import Text from '@/components/text/text';
 import Title from '@/components/title/title';
 import texts from '@/features/accounts/accounts.texts';
 import { useAccountsController } from '@/features/accounts/controllers/accounts.controller';
+import { useAddAccountTransactionController } from '@/features/accounts/controllers/add-account-transaction.controller';
 import { useAddAccountController } from '@/features/accounts/controllers/add-account.controller';
 import { useManageAccountController } from '@/features/accounts/controllers/manage-account.controller';
 
@@ -13,8 +14,14 @@ export default function Accounts() {
   const { accountsData, isAccountsLoading, accountsError } = useAccountsController();
   const { isAddAccountLoading, setAddAccountModalOpen } = useAddAccountController();
   const { isUpdateAccountLoading, onManageAccountClicked } = useManageAccountController();
+  const { isAddAccountTransactionLoading, onAddAccountTransactionClicked } =
+    useAddAccountTransactionController();
 
-  const isLoading = isAccountsLoading || isAddAccountLoading || isUpdateAccountLoading;
+  const isLoading =
+    isAccountsLoading ||
+    isAddAccountLoading ||
+    isUpdateAccountLoading ||
+    isAddAccountTransactionLoading;
 
   if (isLoading) return <span>Загрузка...</span>;
 
@@ -41,7 +48,9 @@ export default function Accounts() {
           <AccountCard
             key={account.id}
             account={account}
-            onTransactionClick={() => alert('Not implemented yet')}
+            onAddTransactionClick={() =>
+              onAddAccountTransactionClicked(account, accountsData.accounts)
+            }
             onManageClick={() => onManageAccountClicked(account)}
           />
         ))}

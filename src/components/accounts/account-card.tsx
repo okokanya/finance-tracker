@@ -5,21 +5,17 @@ import Text from '@/components/text/text';
 import Title from '@/components/title/title';
 import { CARD_SHADOW_CLASS } from '@/components/util/common-classes';
 import texts from '@/features/accounts/accounts.texts';
-import { Account } from '@/models';
+import { AccountResponse } from '@/features/accounts/accounts.types';
 import { cn } from '@/utils/cn';
 import { getDisplayAmount } from '@/utils/format-amount';
 
-type AccountCardProps = {
-  account: Omit<Account, 'id' | 'userId' | 'createdAt' | 'updatedAt' | 'isArchived'>;
-  onTransactionClick: () => void;
+type Props = {
+  account: AccountResponse;
+  onAddTransactionClick: () => void;
   onManageClick: () => void;
 };
 
-const AccountCard: React.FC<AccountCardProps> = ({
-  account,
-  onManageClick,
-  onTransactionClick,
-}) => {
+export default function AccountCard({ account, onManageClick, onAddTransactionClick }: Props) {
   const getVariantStyles = () => {
     switch (account.type) {
       case 'savings':
@@ -46,7 +42,7 @@ const AccountCard: React.FC<AccountCardProps> = ({
     }
   };
 
-  const displayAmount = getDisplayAmount(account.balance);
+  const displayAmount = getDisplayAmount(account.displayBalance);
 
   return (
     <div
@@ -60,7 +56,7 @@ const AccountCard: React.FC<AccountCardProps> = ({
           {account.name}
         </Text>
         <div className="flex items-center gap-1">
-          <HeadlessButton title={texts.accountCard.transaction} onClick={onTransactionClick}>
+          <HeadlessButton title={texts.accountCard.transaction} onClick={onAddTransactionClick}>
             <ArrowsRightLeftIcon className="size-5 text-gray-500" />
           </HeadlessButton>
           <HeadlessButton title={texts.accountCard.manage} onClick={onManageClick}>
@@ -76,6 +72,4 @@ const AccountCard: React.FC<AccountCardProps> = ({
       </div>
     </div>
   );
-};
-
-export default AccountCard;
+}
