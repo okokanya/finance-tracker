@@ -2,9 +2,9 @@ import React, { ErrorInfo, PropsWithChildren } from 'react';
 
 import { cn } from '@/utils/cn';
 
-import Button from '../button';
-import Text from '../text/text';
-import Title from '../title/title';
+import Text from '../base/text';
+import Title from '../base/title';
+import Button from './button';
 
 type ErrorBoundaryProps = PropsWithChildren<{
   error?: Error;

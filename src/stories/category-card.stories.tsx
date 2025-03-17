@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react';
 
-import CategoryCard from '@/components/categories/category-card/category-card';
+import CategoryCard from '@/components/categories/category-card';
 
 const meta = {
   title: 'Components/CategoryCard',

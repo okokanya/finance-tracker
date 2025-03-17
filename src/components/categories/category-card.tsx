@@ -1,13 +1,13 @@
 import { FC, useMemo } from 'react';
 
-import Text from '@/components/text/text';
-import Title from '@/components/title/title';
+import Text from '@/components/base/text';
+import Title from '@/components/base/title';
 import { CategoryType } from '@/types/enums';
 import { cn } from '@/utils/cn';
 
 type CategoryCardProps = {
   category: string;
-  description?: string;
+  description?: string | null;
   value: number;
   isEdit?: boolean;
   type?: CategoryType;

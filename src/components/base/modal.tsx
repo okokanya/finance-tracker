@@ -1,7 +1,7 @@
 import { Button, Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 
-import Title from '@/components/title/title';
+import Title from '@/components/base/title';
 import { cn } from '@/utils/cn';
 
 export type ModalProps = {

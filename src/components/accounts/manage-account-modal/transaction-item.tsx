@@ -1,4 +1,4 @@
-import Text from '@/components/text/text';
+import Text from '@/components/base/text';
 import { getAmountStyle } from '@/components/util/amount-style';
 import { AccountTransaction } from '@/features/accounts/accounts.types';
 import { getDisplayAmount } from '@/utils/format-amount';

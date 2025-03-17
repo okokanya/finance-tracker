@@ -1,16 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { eq } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 
 import { db } from '@/db';
-import { categories } from '@/db/schema';
-import { Category } from '@/models';
+import { categories, transactions } from '@/db/schema';
+import { CategoryResponse } from '@/features/category/category.types';
 import { getUser } from '@/utils/get-user';
-
-type CategoryResponse = {
-  data?: Category[];
-  status: number;
-  error?: string;
-};
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<CategoryResponse>) {
   switch (req.method) {
@@ -25,16 +19,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
 const GET = async (req: NextApiRequest, res: NextApiResponse<CategoryResponse>) => {
   try {
-    // TODO: получения пользователя из токена
-
-    const userId = getUser(req);
+    const userId = await getUser(req);
 
     if (userId) {
       const data = await db
-        .select()
+        .select({
+          category: categories,
+          total: sql<number>`COALESCE(SUM(${transactions.amount}), 0)`.as('total'),
+        })
         .from(categories)
-        .where(eq(categories.userId, String(userId)));
-      return res.status(200).json({ status: 200, data });
+        .leftJoin(
+          transactions,
+          and(
+            eq(transactions.categoryId, categories.id),
+            eq(transactions.userId, String(userId)) // Фильтр транзакций пользователя
+          )
+        )
+        .where(eq(categories.userId, String(userId)))
+        .groupBy(categories.id);
+
+      const preparedData = data.map(item => ({ ...item.category, totalAmount: item.total }));
+
+      return res.status(200).json({ status: 200, data: preparedData });
     }
 
     return res.status(404).json({ status: 404, error: 'Пользователь не найден' });

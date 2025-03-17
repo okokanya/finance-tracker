@@ -1,4 +1,4 @@
-import { OptionType } from '@/components/select/option-type';
+import { OptionType } from '@/components/base/select/option-type';
 import texts from '@/features/accounts/accounts.texts';
 import { AccountTransactionType } from '@/features/accounts/accounts.types';
 import { ACCOUNT_TYPES, AccountType } from '@/types/enums';

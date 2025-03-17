@@ -1,19 +1,20 @@
 import { useMemo } from 'react';
 
-import Modal from '@/components/modal/modal';
+import Modal from '@/components/base/modal';
+import { useIsCategoryEdit } from '@/features/category/category.store';
 import { texts } from '@/features/category/category.texts';
 import { CategoryForm } from '@/features/category/category.types';
 
-import CategoryModalForm from '../category-modal-form/category-modal-form';
+import CategoryModalForm from './category-modal-form';
 
 type CategoryModalProps = {
-  isEdit?: boolean;
   isOpen: boolean;
   onClose: () => void;
   categoryName?: string;
 };
 
-const CategoryModal: React.FC<CategoryModalProps> = ({ isEdit, isOpen, onClose, categoryName }) => {
+const CategoryModal: React.FC<CategoryModalProps> = ({ isOpen, onClose, categoryName }) => {
+  const isEdit = useIsCategoryEdit();
   const modalTitle = useMemo(() => {
     if (isEdit) {
       return `${texts.modal.edit} ${categoryName ?? ''}`;

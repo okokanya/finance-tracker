@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-import { OptionType } from '@/components/select/option-type';
+import { OptionType } from '@/components/base/select/option-type';
 import {
   AccountFormSuccessResult,
   AccountResponse,

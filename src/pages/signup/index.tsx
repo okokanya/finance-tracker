@@ -1,18 +1,17 @@
 import { useState } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { zodResolver } from '@hookform/resolvers/zod';
-import LogoTitle from '@/components/logo-title'
 import { useMutation } from '@tanstack/react-query';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import Button from '@/components/button';
+import Button from '@/components/base/button';
+import Input from '@/components/base/input';
+import Modal from '@/components/base/modal';
 import FormWrap from '@/components/form-wrap';
-import Input from '@/components/input/input';
+import LogoTitle from '@/components/logo-title';
 import MainWrap from '@/components/main-wrap';
-import Modal from '@/components/modal/modal';
 
 const schema = z
   .object({
@@ -84,7 +83,7 @@ export default function Signup() {
 
   return (
     <MainWrap>
-      <LogoTitle/>
+      <LogoTitle />
       <FormWrap width="33rem">
         <h1 className="ml-0 mr-auto">Регистрация</h1>
         <form className="flex w-full flex-wrap justify-between" onSubmit={handleSubmit(onSubmit)}>

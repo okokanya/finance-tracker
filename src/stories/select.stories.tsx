@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { OptionType } from '@/components/select/option-type';
-import Select from '@/components/select/select';
+import { OptionType } from '@/components/base/select/option-type';
+import Select from '@/components/base/select/select';
 
 const options = [
   { title: '1 опция', value: '1' },

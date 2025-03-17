@@ -3,11 +3,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
 import TransactionList from '@/components/accounts/manage-account-modal/transaction-list';
-import Button from '@/components/button';
-import Input from '@/components/input/input';
-import Modal, { ModalProps } from '@/components/modal/modal';
-import { OptionType } from '@/components/select/option-type';
-import Select from '@/components/select/select';
+import Button from '@/components/base/button';
+import Input from '@/components/base/input';
+import Modal, { ModalProps } from '@/components/base/modal';
+import { OptionType } from '@/components/base/select/option-type';
+import Select from '@/components/base/select/select';
 import { ACCOUNT_OPTIONS } from '@/features/accounts/accounts.constants';
 import texts from '@/features/accounts/accounts.texts';
 import {

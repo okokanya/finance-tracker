@@ -1,4 +1,4 @@
-import { OptionType } from '@/components/select/option-type';
+import { OptionType } from '@/components/base/select/option-type';
 import { useAddAccountTransaction } from '@/features/accounts/accounts.queries';
 import {
   useAccountsForTransfer,
