@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import MainWrap from '@/components/main-wrap';
+import Spinner from '@/components/base/spinner/spinner';
 
 export default function Transactions() {
   const [transactions, setTransactions] = useState([]);
@@ -32,7 +33,7 @@ export default function Transactions() {
   }, [transactions]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Spinner />;;
   }
 
   if (error) {
