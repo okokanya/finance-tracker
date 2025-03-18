@@ -6,9 +6,9 @@ export async function middleware(req: NextRequest) {
   const token = cookies.get('token');
 
   // Если токен отсутствует или истек, выполняем редирект на /signin
-  if (!token) {
-    return NextResponse.redirect(new URL('/signin', req.url));
-  }
+  // if (!token) {
+  //   return NextResponse.redirect(new URL('/signin', req.url));
+  // }
   // Если токен валиден, продолжаем выполнение запроса
 
   return NextResponse.next();
