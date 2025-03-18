@@ -7,6 +7,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 import ErrorBoundary from '@/components/base/error-boundary';
 import Layout from '@/components/base/layout';
+import { Notification } from '@/components/notification/notification';
 
 const queryClient = new QueryClient();
 
@@ -19,6 +20,7 @@ export default function App({ Component, pageProps }: AppProps) {
         </Head>
         <Layout pageProps={pageProps}>
           <Component {...pageProps} />
+          <Notification />
         </Layout>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>

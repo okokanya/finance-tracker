@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 
 import Modal from '@/components/base/modal';
-import { useIsCategoryEdit } from '@/features/category/category.store';
 import { texts } from '@/features/category/category.texts';
 import { CategoryForm } from '@/features/category/category.types';
+import useAddCategory from '@/features/category/controllers/add-category';
 
 import CategoryModalForm from './category-modal-form';
 
@@ -14,22 +14,25 @@ type CategoryModalProps = {
 };
 
 const CategoryModal: React.FC<CategoryModalProps> = ({ isOpen, onClose, categoryName }) => {
-  const isEdit = useIsCategoryEdit();
-  const modalTitle = useMemo(() => {
-    if (isEdit) {
-      return `${texts.modal.edit} ${categoryName ?? ''}`;
-    }
+  const isNew = useMemo(() => !categoryName, [categoryName]);
 
-    return texts.modal.new;
-  }, [categoryName, isEdit]);
+  const modalTitle = useMemo(() => {
+    return isNew ? `${texts.modal.new} ${categoryName}` : texts.modal.new;
+  }, [categoryName, isNew]);
+
+  const { mutate: mutateAdd } = useAddCategory();
 
   const handleSubmitForm = (data: CategoryForm) => {
-    console.log(data);
+    mutateAdd(data, {
+      onSettled: () => {
+        onClose();
+      },
+    });
   };
 
   return (
     <Modal title={modalTitle} isOpen={isOpen} onClose={onClose}>
-      <CategoryModalForm isEdit={isEdit} onClose={onClose} onSuccess={handleSubmitForm} />
+      <CategoryModalForm isEdit={!isNew} onClose={onClose} onSuccess={handleSubmitForm} />
     </Modal>
   );
 };

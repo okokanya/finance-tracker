@@ -91,7 +91,7 @@ export default function Categories() {
         )}
         {isEdit ? <NewCategory onClick={() => setIsCreateModalOpen(true)} /> : null}
       </div>
-      <CategoryModal isOpen={isCreateModalOpen} onClose={() => setIsCreateModalOpen(true)} />
+      <CategoryModal isOpen={isCreateModalOpen} onClose={() => setIsCreateModalOpen(false)} />
     </section>
   );
 }

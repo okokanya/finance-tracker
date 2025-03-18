@@ -1,9 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { and, eq, sql } from 'drizzle-orm';
+import { v4 as uuidv4 } from 'uuid';
 
 import { db } from '@/db';
 import { categories, transactions } from '@/db/schema';
-import { CategoryResponse } from '@/features/category/category.types';
+import { categoryFormSchema, CategoryResponse } from '@/features/category/category.types';
+import { categorySchema } from '@/models';
 import { getUser } from '@/utils/get-user';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<CategoryResponse>) {
@@ -52,6 +54,24 @@ const GET = async (req: NextApiRequest, res: NextApiResponse<CategoryResponse>) 
 
 const POST = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
+    const userId = await getUser(req);
+    const { name, description } = categoryFormSchema.parse(req.body);
+
+    const newCategoryData = {
+      id: uuidv4(),
+      name,
+      description,
+      userId,
+      type: 'expense',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    const parsedCategory = categorySchema.parse(newCategoryData);
+
+    await db.insert(categories).values(parsedCategory);
+
+    return res.status(201).json(parsedCategory);
   } catch (error) {
     console.error('Error creating category:', error);
     return res.status(500).json({ status: 500, error: 'Ошибка в создании категории' });
