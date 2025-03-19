@@ -1,8 +1,8 @@
 import { Button as HeadlessButton } from '@headlessui/react';
 import { ArrowsRightLeftIcon, Cog6ToothIcon } from '@heroicons/react/24/outline';
 
-import Text from '@/components/text/text';
-import Title from '@/components/title/title';
+import Text from '@/components/base/text';
+import Title from '@/components/base/title';
 import { CARD_SHADOW_CLASS } from '@/components/util/common-classes';
 import texts from '@/features/accounts/accounts.texts';
 import { AccountResponse } from '@/features/accounts/accounts.types';

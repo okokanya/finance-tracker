@@ -1,16 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { eq } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
+import { v4 as uuidv4 } from 'uuid';
 
 import { db } from '@/db';
-import { categories } from '@/db/schema';
-import { Category } from '@/models';
+import { categories, transactions } from '@/db/schema';
+import { categoryFormSchema, CategoryResponse } from '@/features/category/category.types';
+import { categorySchema } from '@/models';
 import { getUser } from '@/utils/get-user';
-
-type CategoryResponse = {
-  data?: Category[];
-  status: number;
-  error?: string;
-};
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<CategoryResponse>) {
   switch (req.method) {
@@ -25,16 +21,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
 const GET = async (req: NextApiRequest, res: NextApiResponse<CategoryResponse>) => {
   try {
-    // TODO: получения пользователя из токена
-
-    const userId = getUser(req);
+    const userId = await getUser(req);
 
     if (userId) {
       const data = await db
-        .select()
+        .select({
+          category: categories,
+          total: sql<number>`COALESCE(SUM(${transactions.amount}), 0)`.as('total'),
+        })
         .from(categories)
-        .where(eq(categories.userId, String(userId)));
-      return res.status(200).json({ status: 200, data });
+        .leftJoin(
+          transactions,
+          and(
+            eq(transactions.categoryId, categories.id),
+            eq(transactions.userId, String(userId)) // Фильтр транзакций пользователя
+          )
+        )
+        .where(eq(categories.userId, String(userId)))
+        .groupBy(categories.id);
+
+      const preparedData = data.map(item => ({ ...item.category, totalAmount: item.total }));
+
+      return res.status(200).json({ status: 200, data: preparedData });
     }
 
     return res.status(404).json({ status: 404, error: 'Пользователь не найден' });
@@ -46,6 +54,24 @@ const GET = async (req: NextApiRequest, res: NextApiResponse<CategoryResponse>) 
 
 const POST = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
+    const userId = await getUser(req);
+    const { name, description } = categoryFormSchema.parse(req.body);
+
+    const newCategoryData = {
+      id: uuidv4(),
+      name,
+      description,
+      userId,
+      type: 'expense',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    const parsedCategory = categorySchema.parse(newCategoryData);
+
+    await db.insert(categories).values(parsedCategory);
+
+    return res.status(201).json(parsedCategory);
   } catch (error) {
     console.error('Error creating category:', error);
     return res.status(500).json({ status: 500, error: 'Ошибка в создании категории' });

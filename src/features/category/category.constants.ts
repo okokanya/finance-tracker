@@ -1,4 +1,4 @@
-import { OptionType } from '@/components/select/option-type';
+import { OptionType } from '@/components/base/select/option-type';
 import { CategoryType } from '@/types/enums';
 
 export const BALANCE_OPTIONS: OptionType<CategoryType>[] = [
@@ -24,3 +24,6 @@ export const PERIOD_OPTIONS: OptionType<Period>[] = [
     value: 'thisMonth',
   },
 ];
+
+export const CATEGORIES_QUERY_KEY = 'categories';
+export const CATEGORIES_QUERY_PATH = '/api/categories';

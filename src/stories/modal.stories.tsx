@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
 
-import Input from '@/components/input/input';
-import Modal from '@/components/modal/modal';
+import Input from '@/components/base/input';
+import Modal from '@/components/base/modal';
 
 const meta = {
   title: 'Components/Modal',

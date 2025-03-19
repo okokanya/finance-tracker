@@ -1,8 +1,8 @@
-import Accordion from '@/components/accordion/accordion';
 import TransactionItem from '@/components/accounts/manage-account-modal/transaction-item';
-import Spinner from '@/components/base/spinner/spinner';
-import TopBottomBorder from '@/components/base/top-bottom-border/top-bottom-border';
-import Button from '@/components/button';
+import Accordion from '@/components/base/accordion';
+import Button from '@/components/base/button';
+import Spinner from '@/components/base/spinner';
+import TopBottomBorder from '@/components/base/top-bottom-border';
 import texts from '@/features/accounts/accounts.texts';
 import { AccountTransaction } from '@/features/accounts/accounts.types';
 

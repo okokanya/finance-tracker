@@ -1,9 +1,9 @@
 import AccountCard from '@/components/accounts/account-card';
 import AccountsModals from '@/components/accounts/accounts-modals';
 import TotalBalance from '@/components/accounts/total-balance';
-import Button from '@/components/button';
-import Text from '@/components/text/text';
-import Title from '@/components/title/title';
+import Button from '@/components/base/button';
+import Text from '@/components/base/text';
+import Title from '@/components/base/title';
 import texts from '@/features/accounts/accounts.texts';
 import { useAccountsController } from '@/features/accounts/controllers/accounts.controller';
 import { useAddAccountTransactionController } from '@/features/accounts/controllers/add-account-transaction.controller';

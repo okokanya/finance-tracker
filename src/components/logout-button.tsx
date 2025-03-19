@@ -2,7 +2,7 @@ import React from 'react';
 
 import { useLogout } from '@/hooks/use-logout';
 
-import Button from './button';
+import Button from './base/button';
 
 const LogoutButton: React.FC = () => {
   const logout = useLogout();

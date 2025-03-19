@@ -1,6 +1,6 @@
-import Button from '@/components/button';
-import Modal, { ModalProps } from '@/components/modal/modal';
-import Text from '@/components/text/text';
+import Button from '@/components/base/button';
+import Modal, { ModalProps } from '@/components/base/modal';
+import Text from '@/components/base/text';
 import texts from '@/features/accounts/accounts.texts';
 
 type Props = Omit<ModalProps, 'children'> & {

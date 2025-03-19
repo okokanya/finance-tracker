@@ -1,4 +1,4 @@
-import Title from '@/components/title/title';
+import Title from '@/components/base/title';
 import { getAmountStyle } from '@/components/util/amount-style';
 import { getDisplayAmount } from '@/utils/format-amount';
 
