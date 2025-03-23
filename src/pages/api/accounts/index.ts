@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { db } from '@/db';
 import { accounts } from '@/db/schema';
+import { ACCOUNT_LIMITS } from '@/features/accounts/accounts.constants';
 import { accountBaseSchema, accountResponseSchema } from '@/features/accounts/accounts.types';
 import { accountSchema } from '@/models';
 import { getUser } from '@/utils/get-user';
@@ -43,15 +44,29 @@ async function GET(req: NextApiRequest, res: NextApiResponse) {
 
     const totalBalanceQuery = db
       .select({
-        total: sql`sum(
-              CASE
-                WHEN type = 'debt_i_owe' THEN -balance
-                ELSE balance
-              END
-            )`,
+        total: sql`
+          CASE
+            WHEN subquery.total_balance > ${ACCOUNT_LIMITS.MAX_TOTAL_BALANCE}
+              THEN ${ACCOUNT_LIMITS.EXCEEDED_TOTAL_BALANCE}
+            WHEN subquery.total_balance < ${ACCOUNT_LIMITS.MAX_NEGATIVE_TOTAL_BALANCE}
+              THEN ${ACCOUNT_LIMITS.EXCEEDED_NEGATIVE_TOTAL_BALANCE}
+            ELSE subquery.total_balance
+          END
+        `,
       })
-      .from(accounts)
-      .where(and(eq(accounts.userId, String(userId)), eq(accounts.isArchived, false)));
+      .from(
+        sql`(
+          SELECT sum(
+            CASE
+              WHEN type = 'debt_i_owe' THEN -balance
+              ELSE balance
+            END
+          ) as total_balance
+          FROM accounts
+          WHERE userId = ${String(userId)}
+          AND isArchived = false
+        ) as subquery`
+      );
 
     const [accountsData, [totalBalance]] = await Promise.all([accountsQuery, totalBalanceQuery]);
 

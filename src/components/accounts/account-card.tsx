@@ -7,7 +7,7 @@ import { CARD_SHADOW_CLASS } from '@/components/util/common-classes';
 import texts from '@/features/accounts/accounts.texts';
 import { AccountResponse } from '@/features/accounts/accounts.types';
 import { cn } from '@/utils/cn';
-import { getDisplayAmount } from '@/utils/format-amount';
+import { useDisplayAmountHelper } from '@/utils/format-amount';
 
 type Props = {
   account: AccountResponse;
@@ -42,7 +42,11 @@ export default function AccountCard({ account, onManageClick, onAddTransactionCl
     }
   };
 
-  const displayAmount = getDisplayAmount(account.displayBalance);
+  const { getDisplayAmount } = useDisplayAmountHelper({});
+  const displayAmount = getDisplayAmount({
+    amount: account.displayBalance,
+    maxNumberPartLength: 16,
+  });
 
   return (
     <div

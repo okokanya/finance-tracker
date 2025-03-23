@@ -5,11 +5,13 @@ import { z } from 'zod';
 
 import { db } from '@/db';
 import { accounts, categories, transactions } from '@/db/schema';
-import { ACCOUNT_TRANSACTION_TYPES } from '@/features/accounts/accounts.constants';
+import { ACCOUNT_LIMITS, ACCOUNT_TRANSACTION_TYPES } from '@/features/accounts/accounts.constants';
 import {
   accountTransactionSchema,
   addAccountTransactionFormSuccessResultSchema,
 } from '@/features/accounts/accounts.types';
+import { getChangeAccountBalanceOperator } from '@/features/accounts/accounts.utils';
+import { AccountType } from '@/models';
 import { getUser } from '@/utils/get-user';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -94,6 +96,12 @@ async function PUT(req: NextApiRequest, res: NextApiResponse) {
       return res.status(400).json({ error: 'Invalid transaction type' });
     }
 
+    if (amount < ACCOUNT_LIMITS.MIN_TRANSACTION) {
+      return res
+        .status(400)
+        .json({ error: 'Transaction amount must be equals or greater than minimum allowed' });
+    }
+
     const result = await db.transaction(async tx => {
       if (type === 'transfer' && targetAccountId) {
         const [sourceAccount, targetAccount] = await Promise.all([
@@ -117,6 +125,16 @@ async function PUT(req: NextApiRequest, res: NextApiResponse) {
           throw new Error('Cannot repay more than the current debt amount');
         }
 
+        const sourceNewBalance = sourceAccount.balance + amount;
+        if (sourceAccount.type === 'debt_i_owe' && sourceNewBalance > ACCOUNT_LIMITS.MAX_VALUE) {
+          throw new Error('Cannot repay more than the current debt amount');
+        }
+
+        const targetNewBalance = targetAccount.balance + amount;
+        if (targetNewBalance > ACCOUNT_LIMITS.MAX_VALUE) {
+          throw new Error('Operation would exceed maximum allowed balance');
+        }
+
         const restrictedTypes = ['savings', 'debt_i_owe', 'debt_they_owe'];
         if (restrictedTypes.includes(sourceAccount.type) && targetAccount.type !== 'regular') {
           throw new Error(
@@ -128,13 +146,13 @@ async function PUT(req: NextApiRequest, res: NextApiResponse) {
           tx
             .update(accounts)
             .set({
-              balance: getBalanceUpdateQuery(sourceAccount.type, amount, true),
+              balance: getUpdateBalanceQuery(sourceAccount.type, amount, true),
             })
             .where(eq(accounts.id, String(accountId))),
           tx
             .update(accounts)
             .set({
-              balance: getBalanceUpdateQuery(targetAccount.type, amount, false),
+              balance: getUpdateBalanceQuery(targetAccount.type, amount, false),
             })
             .where(eq(accounts.id, targetAccountId)),
         ]);
@@ -151,10 +169,15 @@ async function PUT(req: NextApiRequest, res: NextApiResponse) {
           throw new Error('Cannot repay more than the current debt amount');
         }
 
+        const newBalance = account.balance + amount;
+        if (newBalance > ACCOUNT_LIMITS.MAX_VALUE) {
+          throw new Error('Operation would exceed maximum allowed balance');
+        }
+
         await tx
           .update(accounts)
           .set({
-            balance: getBalanceUpdateQuery(account.type, amount, false),
+            balance: getUpdateBalanceQuery(account.type, amount, false),
           })
           .where(eq(accounts.id, String(accountId)));
       }
@@ -183,7 +206,7 @@ async function PUT(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-const getBalanceUpdateQuery = (accountType: string, amount: number, isDecrease: boolean) => {
-  const operator = accountType === 'debt_i_owe' ? (isDecrease ? '+' : '-') : isDecrease ? '-' : '+';
+const getUpdateBalanceQuery = (accountType: AccountType, amount: number, isDecrease: boolean) => {
+  const operator = getChangeAccountBalanceOperator(accountType, isDecrease);
   return sql`balance ${sql.raw(operator)} ${amount}`;
 };

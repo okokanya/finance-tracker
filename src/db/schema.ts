@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm';
-import { blob, integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { blob, check, integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { v4 as uuid } from 'uuid';
 
 import { ACCOUNT_TYPES, CATEGORY_TYPES, TRANSACTION_TYPES } from '@/types/enums';
@@ -25,18 +25,22 @@ export const users = sqliteTable('users', {
   ...timestamps,
 });
 
-export const accounts = sqliteTable('accounts', {
-  id: text('id').primaryKey().$defaultFn(uuid),
-  userId: text('userId')
-    .notNull()
-    .references(() => users.id),
-  name: text('name', { length: 30 }).notNull(),
-  description: text('description', { length: 200 }),
-  type: text('type', { enum: ACCOUNT_TYPES }).notNull(),
-  balance: integer('balance', { mode: 'number' }).notNull().default(0),
-  isArchived: integer('isArchived', { mode: 'boolean' }).notNull(),
-  ...timestamps,
-});
+export const accounts = sqliteTable(
+  'accounts',
+  {
+    id: text('id').primaryKey().$defaultFn(uuid),
+    userId: text('userId')
+      .notNull()
+      .references(() => users.id),
+    name: text('name', { length: 30 }).notNull(),
+    description: text('description', { length: 200 }),
+    type: text('type', { enum: ACCOUNT_TYPES }).notNull(),
+    balance: integer('balance', { mode: 'number' }).notNull().default(0),
+    isArchived: integer('isArchived', { mode: 'boolean' }).notNull(),
+    ...timestamps,
+  },
+  table => [check('balance', sql`${table.balance} >= 0.00 AND ${table.balance} <= 999999999999.99`)]
+);
 
 export const categories = sqliteTable('categories', {
   id: text('id').primaryKey().$defaultFn(uuid),
@@ -49,18 +53,22 @@ export const categories = sqliteTable('categories', {
   ...timestamps,
 });
 
-export const transactions = sqliteTable('transactions', {
-  id: text('id').primaryKey().$defaultFn(uuid),
-  userId: text('userId')
-    .notNull()
-    .references(() => users.id),
-  accountId: text('accountId')
-    .notNull()
-    .references(() => accounts.id),
-  categoryId: text('categoryId').references(() => categories.id),
-  targetAccountId: text('targetAccountId').references(() => accounts.id),
-  type: text('type', { enum: TRANSACTION_TYPES }).notNull(),
-  amount: integer('amount', { mode: 'number' }).notNull(),
-  comment: text('comment', { length: 200 }),
-  ...timestamps,
-});
+export const transactions = sqliteTable(
+  'transactions',
+  {
+    id: text('id').primaryKey().$defaultFn(uuid),
+    userId: text('userId')
+      .notNull()
+      .references(() => users.id),
+    accountId: text('accountId')
+      .notNull()
+      .references(() => accounts.id),
+    categoryId: text('categoryId').references(() => categories.id),
+    targetAccountId: text('targetAccountId').references(() => accounts.id),
+    type: text('type', { enum: TRANSACTION_TYPES }).notNull(),
+    amount: integer('amount', { mode: 'number' }).notNull(),
+    comment: text('comment', { length: 200 }),
+    ...timestamps,
+  },
+  table => [check('amount', sql`${table.amount} >= 0.01 AND ${table.amount} <= 999999999999.99`)]
+);

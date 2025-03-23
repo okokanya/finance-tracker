@@ -11,6 +11,7 @@ export type InputProps = HeadlessInputProps & {
   label?: string;
   errorText?: string;
   wrapperClassName?: string;
+  currencySumbol?: string;
 };
 
 const Input: React.FC<InputProps> = ({
@@ -19,6 +20,7 @@ const Input: React.FC<InputProps> = ({
   errorText,
   disabled,
   wrapperClassName,
+  currencySumbol,
   ...props
 }) => {
   const inputClasses: InputProps['className'] = cn(
@@ -27,6 +29,7 @@ const Input: React.FC<InputProps> = ({
       ['bg-gray-200 cursor-not-allowed hover:bg-gray-200 text-gray-400']: disabled,
       ['border-red-500 mb-1']: Boolean(errorText),
     },
+    currencySumbol && 'pr-8',
     className
   );
 
@@ -34,7 +37,14 @@ const Input: React.FC<InputProps> = ({
     <div className={cn('block h-auto w-auto', wrapperClassName)}>
       <Field className="mb-3 flex flex-col gap-0.5">
         {label && <Label className="text-xs text-gray-500">{label}</Label>}
-        <HeadlessInput className={inputClasses} disabled={disabled} {...props} />
+        <div className="relative">
+          <HeadlessInput className={inputClasses} disabled={disabled} {...props} />
+          {currencySumbol && (
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
+              {currencySumbol}
+            </span>
+          )}
+        </div>
       </Field>
       {errorText ? <p className="-mt-4 text-xs font-normal text-red-500">{errorText}</p> : null}
     </div>

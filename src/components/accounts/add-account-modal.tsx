@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
+import AmountInput from '@/components/base/amount-input';
 import Button from '@/components/base/button';
 import Input from '@/components/base/input';
 import Modal, { ModalProps } from '@/components/base/modal';
@@ -28,8 +29,12 @@ export default function AddAccountModal({ isOpen, onClose, onSuccess }: Props) {
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
   } = useForm<AccountForm>({
     resolver: zodResolver(accountFormSchema),
+    defaultValues: {
+      balance: NaN,
+    },
   });
 
   const onSubmit = (data: AccountForm) => {
@@ -75,14 +80,14 @@ export default function AddAccountModal({ isOpen, onClose, onSuccess }: Props) {
             type="text"
             {...register('description')}
           />
-          <Input
+          <AmountInput
             label={texts.accountParams.balanceTitle}
             placeholder={texts.accountParams.balancePlaceholder}
             wrapperClassName="w-full"
             className="w-full"
             errorText={errors?.balance?.message}
             type="text"
-            {...register('balance', { valueAsNumber: true })}
+            onAmountChanged={value => setValue('balance', value)}
           />
         </div>
         <div className="flex w-full gap-2">

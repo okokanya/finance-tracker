@@ -3,8 +3,10 @@ import { and, eq, ne, or, sql } from 'drizzle-orm';
 
 import { db } from '@/db';
 import { accounts, transactions } from '@/db/schema';
+import { ACCOUNT_LIMITS } from '@/features/accounts/accounts.constants';
 import { accountBaseSchema } from '@/features/accounts/accounts.types';
-import { accountSchema } from '@/models';
+import { getChangeAccountBalanceOperator } from '@/features/accounts/accounts.utils';
+import { accountSchema, AccountType } from '@/models';
 import { getUser } from '@/utils/get-user';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -93,19 +95,29 @@ async function DELETE(req: NextApiRequest, res: NextApiResponse) {
         switch (transaction.type) {
           case 'transfer':
             if (transaction.accountId === id && transaction.targetAccountId) {
+              const [targetAccount] = await tx
+                .select()
+                .from(accounts)
+                .where(eq(accounts.id, transaction.targetAccountId));
+
               await tx
                 .update(accounts)
                 .set({
-                  balance: sql`balance - ${transaction.amount}`,
+                  balance: getDeleteBalanceQuery(targetAccount.type, transaction.amount, true),
                 })
                 .where(and(eq(accounts.id, transaction.targetAccountId), ne(accounts.id, id)));
             }
 
             if (transaction.targetAccountId === id) {
+              const [sourceAccount] = await tx
+                .select()
+                .from(accounts)
+                .where(eq(accounts.id, transaction.accountId));
+
               await tx
                 .update(accounts)
                 .set({
-                  balance: sql`balance + ${transaction.amount}`,
+                  balance: getDeleteBalanceQuery(sourceAccount.type, transaction.amount, false),
                 })
                 .where(and(eq(accounts.id, transaction.accountId), ne(accounts.id, id)));
             }
@@ -129,3 +141,11 @@ async function DELETE(req: NextApiRequest, res: NextApiResponse) {
     return res.status(500).json({ error: 'Failed to delete account' });
   }
 }
+
+const getDeleteBalanceQuery = (accountType: AccountType, amount: number, isDecrease: boolean) => {
+  const operator = getChangeAccountBalanceOperator(accountType, isDecrease);
+  return sql`MIN(
+    MAX(balance ${sql.raw(operator)} ${amount}, ${ACCOUNT_LIMITS.MIN_VALUE}),
+    ${ACCOUNT_LIMITS.MAX_VALUE}
+  )`;
+};
