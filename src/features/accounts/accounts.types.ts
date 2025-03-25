@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
-import { ACCOUNT_TRANSACTION_TYPES } from '@/features/accounts/accounts.constants';
+import { ACCOUNT_LIMITS, ACCOUNT_TRANSACTION_TYPES } from '@/features/accounts/accounts.constants';
+import texts from '@/features/accounts/accounts.texts';
 import { accountSchema } from '@/models';
 
 export const accountResponseSchema = accountSchema
@@ -10,7 +11,7 @@ export const accountResponseSchema = accountSchema
     updatedAt: true,
   })
   .extend({
-    displayBalance: z.number(),
+    displayBalance: z.number().min(ACCOUNT_LIMITS.MAX_NEGATIVE_VALUE).max(ACCOUNT_LIMITS.MAX_VALUE),
   });
 
 export const accountBaseSchema = accountSchema.omit({
@@ -30,16 +31,18 @@ export const accountTransactionSchema = z.object({
   accountId: z.string().uuid(),
   targetAccountId: z.string().uuid().nullable(),
   description: z.string().nullable(),
-  amount: z.number(),
+  amount: z.number().min(ACCOUNT_LIMITS.MAX_NEGATIVE_VALUE).max(ACCOUNT_LIMITS.MAX_VALUE),
 });
 
-export const accountTransactionFormSchema = z.object({
-  amount: z.number(),
+export const addAccountTransactionFormSchema = z.object({
+  amount: z
+    .number({ message: texts.inputError.empty })
+    .min(ACCOUNT_LIMITS.MIN_TRANSACTION, texts.inputError.minTransaction)
+    .max(ACCOUNT_LIMITS.MAX_VALUE, texts.inputError.maxAmount),
 });
 
-export const addAccountTransactionFormSuccessResultSchema = z.object({
+export const addAccountTransactionFormSuccessResultSchema = addAccountTransactionFormSchema.extend({
   type: z.enum(ACCOUNT_TRANSACTION_TYPES),
-  amount: z.number(),
   targetAccountId: z.string().uuid().nullable(),
 });
 
@@ -58,8 +61,13 @@ export type AccountTransaction = z.infer<typeof accountTransactionSchema>;
 
 export type AccountTransactionType = (typeof ACCOUNT_TRANSACTION_TYPES)[number];
 
-export type AccountTransactionForm = z.infer<typeof accountTransactionFormSchema>;
+export type AddAccountTransactionForm = z.infer<typeof addAccountTransactionFormSchema>;
 
 export type AddAccountTransactionFormSuccessResult = z.infer<
   typeof addAccountTransactionFormSuccessResultSchema
 >;
+
+export type TransactionValidationResult = {
+  isValid: boolean;
+  error?: string;
+};

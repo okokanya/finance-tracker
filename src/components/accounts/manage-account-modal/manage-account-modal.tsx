@@ -3,6 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
 import TransactionList from '@/components/accounts/manage-account-modal/transaction-list';
+import AmountInput from '@/components/base/amount-input';
 import Button from '@/components/base/button';
 import Input from '@/components/base/input';
 import Modal, { ModalProps } from '@/components/base/modal';
@@ -51,6 +52,7 @@ export default function ManageAccountModal({
     formState: { errors },
     reset,
     watch,
+    setValue,
   } = useForm<AccountForm>({
     resolver: zodResolver(accountFormSchema),
     defaultValues: {
@@ -115,14 +117,15 @@ export default function ManageAccountModal({
             type="text"
             {...register('description')}
           />
-          <Input
+          <AmountInput
             label={texts.accountParams.balanceTitle}
             placeholder={texts.accountParams.balancePlaceholder}
             wrapperClassName="w-full"
             className="w-full"
             errorText={errors?.balance?.message}
             type="text"
-            {...register('balance', { valueAsNumber: true })}
+            initAmount={formValues.balance}
+            onAmountChanged={value => setValue('balance', value)}
           />
           <TransactionList
             transactions={transactions}

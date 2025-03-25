@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
+import AmountInput from '@/components/base/amount-input';
 import Button from '@/components/base/button';
-import Input from '@/components/base/input';
 import Modal, { ModalProps } from '@/components/base/modal';
 import { OptionType } from '@/components/base/select/option-type';
 import Select from '@/components/base/select/select';
@@ -13,13 +13,14 @@ import { ACCOUNT_TRANSACTION_OPTIONS } from '@/features/accounts/accounts.consta
 import texts from '@/features/accounts/accounts.texts';
 import {
   AccountResponse,
-  AccountTransactionForm,
-  accountTransactionFormSchema,
   AccountTransactionType,
+  AddAccountTransactionForm,
+  addAccountTransactionFormSchema,
   AddAccountTransactionFormSuccessResult,
+  TransactionValidationResult,
 } from '@/features/accounts/accounts.types';
 import { cn } from '@/utils/cn';
-import { getDisplayAmount } from '@/utils/format-amount';
+import { useDisplayAmountHelper } from '@/utils/format-amount';
 
 type Props = Omit<ModalProps, 'title' | 'children'> & {
   account: AccountResponse;
@@ -31,7 +32,7 @@ type Props = Omit<ModalProps, 'title' | 'children'> & {
     type: AccountTransactionType,
     amount: number,
     targetAccountId: string
-  ) => boolean;
+  ) => TransactionValidationResult;
   onSuccess: (data: AddAccountTransactionFormSuccessResult) => void;
 };
 
@@ -53,25 +54,38 @@ export default function AddAccountTransactionModal({
   const isTransfer = isTransferOperation(selectedType.value);
 
   const {
-    register,
     handleSubmit,
     formState: { errors },
     reset,
     watch,
-  } = useForm<AccountTransactionForm>({
-    resolver: zodResolver(accountTransactionFormSchema),
+    setValue,
+    setError,
+    clearErrors,
+  } = useForm<AddAccountTransactionForm>({
+    resolver: zodResolver(addAccountTransactionFormSchema),
+    defaultValues: {
+      amount: NaN,
+    },
   });
 
   const amount = watch('amount');
   const amountToDisplay = isNaN(amount) ? 0 : isTransfer ? -amount : amount;
+  const { getDisplayAmount } = useDisplayAmountHelper({});
 
-  const isTransactionValidated = isTransactionValid(
-    selectedType.value,
-    amount,
-    selectedAccount.value
+  const { isValid, error } = useMemo(
+    () => isTransactionValid(selectedType.value, amount, selectedAccount.value),
+    [selectedType.value, amount, selectedAccount.value, isTransactionValid]
   );
 
-  const onSubmit = (data: AccountTransactionForm) => {
+  useEffect(() => {
+    if (!isValid && error) {
+      setError('amount', { message: error });
+    } else {
+      clearErrors('amount');
+    }
+  }, [isValid, error, setError, clearErrors]);
+
+  const onSubmit = (data: AddAccountTransactionForm) => {
     onSuccess({
       type: selectedType.value,
       amount: data.amount,
@@ -89,10 +103,12 @@ export default function AddAccountTransactionModal({
       <form onSubmit={handleSubmit(onSubmit)} className="flex w-full flex-col gap-6">
         <div className="mt-1 flex w-full flex-col gap-3">
           <div className="flex w-full flex-wrap justify-stretch gap-2">
-            <Title className="line-clamp-1">{getDisplayAmount(account.displayBalance)}</Title>
+            <Title className="line-clamp-1">
+              {getDisplayAmount({ amount: account.displayBalance })}
+            </Title>
             {isShowTransactionAmountTitle(amount) && (
               <Title className={cn('line-clamp-1', getAmountStyle(amountToDisplay))}>
-                {getDisplayAmount(amountToDisplay, true)}
+                {getDisplayAmount({ amount: amountToDisplay, isAddPlusSign: true })}
               </Title>
             )}
           </div>
@@ -106,14 +122,14 @@ export default function AddAccountTransactionModal({
               }
               wrapperClassName="w-full min-w-[262px] flex-1"
             />
-            <Input
+            <AmountInput
               label={texts.accountTransaction.action.amount}
               placeholder={texts.accountTransaction.action.amountPlaceholder}
               wrapperClassName="w-full min-w-[262px] flex-1"
               className="w-full"
               errorText={errors?.amount?.message}
               type="text"
-              {...register('amount', { valueAsNumber: true })}
+              onAmountChanged={value => setValue('amount', value)}
             />
           </div>
           {isTransfer && (
@@ -126,7 +142,7 @@ export default function AddAccountTransactionModal({
           )}
         </div>
         <div className="flex w-full gap-2">
-          <Button type="submit" className="w-4/5" disabled={!isTransactionValidated}>
+          <Button type="submit" className="w-4/5" disabled={!isValid}>
             {submitButtonText(selectedType.value)}
           </Button>
           <Button variant="secondary" onClick={onClose}>

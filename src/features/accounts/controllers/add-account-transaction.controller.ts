@@ -1,4 +1,5 @@
 import { OptionType } from '@/components/base/select/option-type';
+import { ACCOUNT_LIMITS } from '@/features/accounts/accounts.constants';
 import { useAddAccountTransaction } from '@/features/accounts/accounts.queries';
 import {
   useAccountsForTransfer,
@@ -14,6 +15,7 @@ import {
   AccountResponse,
   AccountTransactionType,
   AddAccountTransactionFormSuccessResult,
+  TransactionValidationResult,
 } from '@/features/accounts/accounts.types';
 import { ACCOUNT_TYPES } from '@/types/enums';
 
@@ -122,27 +124,46 @@ export const useAddAccountTransactionController = () => {
     type: AccountTransactionType,
     amount: number,
     targetAccountId: string
-  ): boolean => {
-    if (!accountToAddTransaction) return false;
+  ): TransactionValidationResult => {
+    if (!accountToAddTransaction) return { isValid: false };
 
     if (type === 'transfer') {
       if (amount > accountToAddTransaction.balance && accountToAddTransaction.type !== 'debt_i_owe')
-        return false;
+        return { isValid: false, error: texts.inputError.insufficientFundsForTransfer };
 
       const targetAccount = allAccountsForTransfer?.get(targetAccountId);
-      if (targetAccount && targetAccount.type === 'debt_i_owe' && amount > targetAccount.balance)
-        return false;
+      if (!targetAccount) return { isValid: false };
+
+      if (targetAccount.type === 'debt_i_owe' && amount > targetAccount.balance)
+        return { isValid: false, error: texts.inputError.cannotRepayMoreThanDebt };
+
+      const sourceNewBalance = accountToAddTransaction.balance + amount;
+      if (
+        accountToAddTransaction.type === 'debt_i_owe' &&
+        sourceNewBalance > ACCOUNT_LIMITS.MAX_VALUE
+      ) {
+        return { isValid: false, error: texts.inputError.cannotRepayMoreThanDebt };
+      }
+
+      const targetNewBalance = targetAccount.balance + amount;
+      if (targetNewBalance > ACCOUNT_LIMITS.MAX_VALUE)
+        return { isValid: false, error: texts.inputError.exceedsMaxBalance };
     }
 
-    if (
-      type === 'topup' &&
-      accountToAddTransaction.type === 'debt_i_owe' &&
-      amount > accountToAddTransaction.balance
-    ) {
-      return false;
+    if (type === 'topup') {
+      if (
+        accountToAddTransaction.type === 'debt_i_owe' &&
+        amount > accountToAddTransaction.balance
+      ) {
+        return { isValid: false, error: texts.inputError.cannotRepayMoreThanDebt };
+      }
+
+      const newBalance = accountToAddTransaction.balance + amount;
+      if (newBalance > ACCOUNT_LIMITS.MAX_VALUE)
+        return { isValid: false, error: texts.inputError.exceedsMaxBalance };
     }
 
-    return true;
+    return { isValid: true };
   };
 
   return {

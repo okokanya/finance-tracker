@@ -1,15 +1,17 @@
 import Title from '@/components/base/title';
 import { getAmountStyle } from '@/components/util/amount-style';
-import { getDisplayAmount } from '@/utils/format-amount';
+import { useDisplayAmountHelper } from '@/utils/format-amount';
 
 type Props = {
   amount: number;
 };
 
 export default function TotalBalance({ amount }: Props) {
+  const { getDisplayAmount } = useDisplayAmountHelper({});
+
   return (
     <Title className={getAmountStyle(amount)} variant="h1">
-      {getDisplayAmount(amount)}
+      {getDisplayAmount({ amount: amount })}
     </Title>
   );
 }
