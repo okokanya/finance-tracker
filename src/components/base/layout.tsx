@@ -11,10 +11,10 @@ type Props = PropsWithChildren<{
 
 const Layout: FC<Props> = ({ children, pageProps }) => {
   return (
-    <div className="flex h-[100vh] flex-col overflow-hidden">
+    <div className="flex h-[100dvh] flex-col overflow-hidden bg-gray-100">
       {pageProps.hideHeader ? null : <Header />}
-      <div className="h-full overflow-auto bg-gray-100">
-        <main className="flex w-full max-w-[1180px] flex-grow columns-4 flex-col items-center gap-5 md:mx-auto md:my-0 md:columns-12 md:p-0">
+      <div className="h-full overflow-auto">
+        <main className="flex w-full max-w-[1228px] flex-grow columns-4 flex-col items-center gap-4 px-5 md:mx-auto md:my-0 md:columns-12 md:gap-5 md:px-6">
           {children}
         </main>
       </div>

@@ -8,6 +8,7 @@ import Input from '@/components/base/input';
 import Modal, { ModalProps } from '@/components/base/modal';
 import { OptionType } from '@/components/base/select/option-type';
 import Select from '@/components/base/select/select';
+import { MODAL_CONTENT_CLASS } from '@/components/util/common-classes';
 import { ACCOUNT_OPTIONS } from '@/features/accounts/accounts.constants';
 import texts from '@/features/accounts/accounts.texts';
 import {
@@ -51,13 +52,13 @@ export default function AddAccountModal({ isOpen, onClose, onSuccess }: Props) {
 
   return (
     <Modal title={texts.addAccount.action.title} isOpen={isOpen} onClose={onClose}>
-      <form onSubmit={handleSubmit(onSubmit)} className="flex w-full flex-col gap-6">
-        <div className="mt-3 flex w-full flex-col gap-4">
-          <div className="flex w-full flex-wrap justify-stretch gap-4">
+      <form onSubmit={handleSubmit(onSubmit)} className={MODAL_CONTENT_CLASS}>
+        <div className="mt-1 flex w-full flex-col gap-2 md:mt-3 md:gap-4">
+          <div className="flex w-full flex-col flex-wrap justify-stretch gap-2 md:flex-row md:gap-4">
             <Input
               label={texts.accountParams.nameTitle}
               placeholder={texts.accountParams.namePlaceholder}
-              wrapperClassName="w-full min-w-[262px] flex-1"
+              wrapperClassName="w-full md:min-w-[262px] flex-1"
               className="w-full"
               errorText={errors?.name?.message}
               type="text"
@@ -68,7 +69,7 @@ export default function AddAccountModal({ isOpen, onClose, onSuccess }: Props) {
               selected={selectedType}
               options={ACCOUNT_OPTIONS}
               onChangeOption={selected => setSelectedType(selected as OptionType<AccountType>)}
-              wrapperClassName="w-full min-w-[262px] flex-1"
+              wrapperClassName="w-full md:min-w-[262px] flex-1"
             />
           </div>
           <Input
@@ -90,8 +91,8 @@ export default function AddAccountModal({ isOpen, onClose, onSuccess }: Props) {
             onAmountChanged={value => setValue('balance', value)}
           />
         </div>
-        <div className="flex w-full gap-2">
-          <Button type="submit" className="w-4/5">
+        <div className="flex w-full flex-col gap-2 md:flex-row">
+          <Button type="submit" className="md:w-4/5">
             {texts.addAccount.action.create}
           </Button>
           <Button variant="secondary" onClick={onClose}>

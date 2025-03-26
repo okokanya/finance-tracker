@@ -29,11 +29,19 @@ export default function Accounts() {
 
   return (
     <>
-      <section className="mt-10 w-full">
-        <div className="flex w-full flex-wrap items-baseline justify-between gap-2">
-          <Title variant="h1">{texts.accounts.title}</Title>
-          <div className="flex flex-wrap items-baseline gap-2">
-            <Text className="mb-0.5 text-gray-500">{texts.accounts.totalAmount}</Text>
+      <section className="mt-5 w-full md:mt-10">
+        <div className="flex w-full flex-col flex-wrap items-baseline justify-between gap-4 md:flex-row md:gap-2">
+          <Title className="inline md:hidden">{texts.accounts.title}</Title>
+          <Title variant="h1" className="hidden md:inline">
+            {texts.accounts.title}
+          </Title>
+          <div className="flex flex-col-reverse flex-wrap items-baseline gap-0.5 md:flex-row md:gap-2">
+            <Text variant="sm" className="inline text-gray-500 md:mb-0.5 md:hidden">
+              {texts.accounts.totalAmount}
+            </Text>
+            <Text className="hidden text-gray-500 md:mb-0.5 md:inline">
+              {texts.accounts.totalAmount}
+            </Text>
             <TotalBalance amount={accountsData?.totalBalance ?? 0} />
           </div>
         </div>
@@ -43,7 +51,7 @@ export default function Accounts() {
           {texts.accounts.addAccount}
         </Button>
       </section>
-      <section className="flex w-full flex-wrap gap-2">
+      <section className="flex w-full flex-wrap gap-2 pb-7">
         {accountsData?.accounts.map(account => (
           <AccountCard
             key={account.id}

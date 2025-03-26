@@ -1,6 +1,7 @@
 import Button from '@/components/base/button';
 import Modal, { ModalProps } from '@/components/base/modal';
 import Text from '@/components/base/text';
+import { MODAL_CONTENT_CLASS } from '@/components/util/common-classes';
 import texts from '@/features/accounts/accounts.texts';
 
 type Props = Omit<ModalProps, 'children'> & {
@@ -21,11 +22,11 @@ export default function ActionModal({
 }: Props) {
   return (
     <Modal title={title} isOpen={isOpen} onClose={onClose}>
-      <div className="flex w-full flex-col gap-6">
-        <div className="mt-3 w-full">
+      <div className={MODAL_CONTENT_CLASS}>
+        <div className="mt-1 w-full md:mt-3">
           <Text className="text-gray-500">{description}</Text>
         </div>
-        <div className="flex w-full gap-2">
+        <div className="flex w-full flex-col gap-2 md:flex-row">
           <Button onClick={onSuccess} className="w-full">
             {submit}
           </Button>

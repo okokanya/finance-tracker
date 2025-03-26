@@ -29,7 +29,7 @@ export default function AccountCard({ account, onManageClick, onAddTransactionCl
     }
   };
 
-  const getAmountStyles = () => {
+  const getAmountStyle = () => {
     switch (account.type) {
       case 'savings':
         return 'text-emerald-500';
@@ -47,16 +47,20 @@ export default function AccountCard({ account, onManageClick, onAddTransactionCl
     amount: account.displayBalance,
     maxNumberPartLength: 16,
   });
+  const amountStyle = getAmountStyle();
 
   return (
     <div
       className={cn(
-        `flex h-[118px] w-[289px] flex-col items-start justify-between gap-2 rounded-lg px-6 py-4`,
+        `flex h-[68px] w-[335px] min-w-[335px] flex-col items-start justify-between gap-1 rounded-lg px-4 py-2 md:h-[118px] md:w-[289px] md:min-w-[289px] md:gap-2 md:px-6 md:py-4`,
         `${getVariantStyles()} ${CARD_SHADOW_CLASS}`
       )}
     >
       <div className="flex w-full justify-between gap-1">
-        <Text isBold={true} className="line-clamp-1 text-left text-gray-800">
+        <Text variant="sm" className="line-clamp-1 inline text-left text-gray-800 md:hidden">
+          {account.name}
+        </Text>
+        <Text isBold={true} className="line-clamp-1 hidden text-left text-gray-800 md:inline">
           {account.name}
         </Text>
         <div className="flex items-center gap-1">
@@ -68,11 +72,14 @@ export default function AccountCard({ account, onManageClick, onAddTransactionCl
           </HeadlessButton>
         </div>
       </div>
-      <div className="flex w-full flex-col items-start gap-0.5 self-stretch">
-        <Text variant="sm" className="line-clamp-1 text-left text-gray-500">
+      <div className="flex w-full items-baseline justify-between gap-0.5 md:flex-col">
+        <Text variant="sm" className="m-0 line-clamp-1 flex-1 text-gray-500">
           {account.description}
         </Text>
-        <Title className={cn(getAmountStyles(), 'line-clamp-1 text-left')}>{displayAmount}</Title>
+        <Title variant="h3" className={cn(amountStyle, 'line-clamp-1 inline md:hidden')}>
+          {displayAmount}
+        </Title>
+        <Title className={cn(amountStyle, 'line-clamp-1 hidden md:inline')}>{displayAmount}</Title>
       </div>
     </div>
   );

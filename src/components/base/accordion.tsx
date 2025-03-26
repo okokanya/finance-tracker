@@ -19,7 +19,7 @@ const Accordion: React.FC<AccordionProps> = ({
   ...otherProps
 }) => {
   const mainButtonClassNames = cn(
-    'inline-flex h-10 w-full items-center justify-between gap-3 bg-white px-3.5 py-2.5',
+    'inline-flex h-10 w-full items-center justify-between gap-3 px-3.5 py-2.5',
     'focus:outline-2 focus:-outline-offset-2 focus:outline-blue-500',
     className
   );

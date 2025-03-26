@@ -56,7 +56,7 @@ export const useManageAccountController = () => {
       currentAccount.name !== formData.name ||
       currentAccount.type !== formData.type ||
       currentAccount.balance !== formData.balance ||
-      (formData.description?.trim() !== '' && currentAccount.description !== formData.description)
+      currentAccount.description !== formData.description
     );
   };
 
