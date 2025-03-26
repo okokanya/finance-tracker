@@ -11,23 +11,23 @@ export default function Transactions() {
   useEffect(() => {
     async function fetchData() {
       try {
-        // получение транзакций
+        // Получение транзакций
         const transactionsResponse = await fetch('/api/transactions');
         if (!transactionsResponse.ok) {
           throw new Error('Failed to fetch transactions');
         }
         const transactionsData = await transactionsResponse.json();
-        setTransactions(transactionsData);
+        setTransactions(transactionsData.data);
 
-        //  получение категорий
-        const categoriesResponse = await fetch('/api/categories', {
+        // Получение категорий
+        const categoriesResponse = await fetch('/api/transactions-list', {
           method: 'GET',
         });
         if (!categoriesResponse.ok) {
           throw new Error('Failed to fetch categories');
         }
         const categoriesData = await categoriesResponse.json();
-        console.log('Categories:', categoriesData); // Выводим все данные категорий в консоль
+        console.log('Categories:', categoriesData.data); // Выводим все данные категорий в консоль
       } catch (err) {
         setError(err.message);
       } finally {
@@ -37,12 +37,6 @@ export default function Transactions() {
 
     fetchData();
   }, []);
-
-  useEffect(() => {
-    if (transactions.length > 0) {
-      console.log('Transactions:', transactions);
-    }
-  }, [transactions]);
 
   if (loading) {
     return <Spinner />;
@@ -55,10 +49,10 @@ export default function Transactions() {
   return (
     <MainWrap>
       <h1>Операции</h1>
-      <TransactiosTable
+      {/* <TransactiosTable
         transactions={transactions}
         className="my-custom-class"
-      />
+      /> */}
     </MainWrap>
   );
 }
