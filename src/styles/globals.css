@@ -13,6 +13,26 @@ body {
   font-family: 'Inter', sans-serif;
 }
 
+h1 {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.5rem; /* 24px */
+  font-weight: 700;
+  line-height: 2rem; /* 32px */
+  margin-bottom: 1.5rem;
+}
+
+input::placeholder {
+  color: #9ca3af;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.input-txt {
+  border-color: #d1d5db;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
 .label {
   @apply relative mb-4 flex w-full flex-col;
 }
