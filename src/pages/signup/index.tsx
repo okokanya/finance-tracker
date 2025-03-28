@@ -9,10 +9,10 @@ import { z } from 'zod';
 import Button from '@/components/base/button';
 import Input from '@/components/base/input';
 import Modal from '@/components/base/modal';
+import Title from '@/components/base/title';
 import FormWrap from '@/components/form-wrap';
 import LogoTitle from '@/components/logo-title';
 import MainWrap from '@/components/main-wrap';
-import Title from '@/components/base/title';
 
 const schema = z
   .object({
@@ -86,7 +86,14 @@ export default function Signup() {
     <MainWrap>
       <LogoTitle />
       <FormWrap smWidth="sm:w-[32rem]">
-      <Title variant="h1" className="text-left w-full my-4" id="main-title" aria-label="Главный заголовок">Регистрация</Title>
+        <Title
+          variant="h1"
+          className="my-4 w-full text-left"
+          id="main-title"
+          aria-label="Главный заголовок"
+        >
+          Регистрация
+        </Title>
         <form className="flex w-full flex-wrap justify-between" onSubmit={handleSubmit(onSubmit)}>
           <Input
             wrapperClassName="w-full sm:w-1/2"

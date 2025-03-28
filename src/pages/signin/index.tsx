@@ -7,10 +7,10 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import Button from '@/components/base/button';
 import Input from '@/components/base/input';
 import Modal from '@/components/base/modal';
+import Title from '@/components/base/title';
 import FormWrap from '@/components/form-wrap';
 import LogoTitle from '@/components/logo-title';
 import MainWrap from '@/components/main-wrap';
-import Title from '@/components/base/title';
 
 interface SignInData {
   email: string;
@@ -64,7 +64,7 @@ const Signin = () => {
     },
   });
 
-  const onSubmit: SubmitHandler<SignInData> = (data) => {
+  const onSubmit: SubmitHandler<SignInData> = data => {
     mutation.mutate(data);
   };
 
@@ -72,7 +72,14 @@ const Signin = () => {
     <MainWrap>
       <LogoTitle />
       <FormWrap>
-        <Title variant="h1" className="text-left w-full my-4" id="main-title" aria-label="Главный заголовок">Вход</Title>
+        <Title
+          variant="h1"
+          className="my-4 w-full text-left"
+          id="main-title"
+          aria-label="Главный заголовок"
+        >
+          Вход
+        </Title>
         <form
           className="flex w-full flex-col flex-wrap justify-between"
           onSubmit={handleSubmit(onSubmit)}
