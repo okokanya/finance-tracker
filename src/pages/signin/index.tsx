@@ -10,6 +10,7 @@ import Modal from '@/components/base/modal';
 import FormWrap from '@/components/form-wrap';
 import LogoTitle from '@/components/logo-title';
 import MainWrap from '@/components/main-wrap';
+import Title from '@/components/base/title';
 
 interface SignInData {
   email: string;
@@ -71,7 +72,7 @@ const Signin = () => {
     <MainWrap>
       <LogoTitle />
       <FormWrap>
-        <h1 className="ml-0 mr-auto">Вход в аккаунт</h1>
+        <Title variant="h1" className="text-left w-full my-4" id="main-title" aria-label="Главный заголовок">Вход</Title>
         <form
           className="flex w-full flex-col flex-wrap justify-between"
           onSubmit={handleSubmit(onSubmit)}
@@ -80,16 +81,16 @@ const Signin = () => {
           <Input
             label="Email"
             type="email"
-            className="mb-4"
-            placeholder="Email"
+            className="mb-4 w-full"
+            placeholder="example@ex.com"
             {...register('email', { required: 'Email обязателен' })}
             errorText={errors.email?.message}
           />
           <Input
             label="Пароль"
             type="password"
-            className="mb-4"
-            placeholder="Пароль"
+            className="mb-4 w-full"
+            placeholder="pass123"
             {...register('password', { required: 'Пароль обязателен' })}
             errorText={errors.password?.message}
           />
