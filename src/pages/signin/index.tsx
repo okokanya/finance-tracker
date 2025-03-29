@@ -89,7 +89,7 @@ const Signin = () => {
             label="Email"
             type="email"
             className="mb-4 w-full"
-            placeholder="example@ex.com"
+            placeholder="ivanov@ya.com"
             {...register('email', { required: 'Email обязателен' })}
             errorText={errors.email?.message}
           />
@@ -97,7 +97,7 @@ const Signin = () => {
             label="Пароль"
             type="password"
             className="mb-4 w-full"
-            placeholder="pass123"
+            placeholder="*******"
             {...register('password', { required: 'Пароль обязателен' })}
             errorText={errors.password?.message}
           />

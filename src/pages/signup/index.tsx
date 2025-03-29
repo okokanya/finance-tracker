@@ -98,14 +98,14 @@ export default function Signup() {
           <Input
             wrapperClassName="w-full sm:w-1/2"
             label="Имя"
-            placeholder="Ivan"
+            placeholder="Ярополк"
             {...register('firstName')}
             errorText={errors.firstName?.message}
           />
           <Input
             wrapperClassName="w-full sm:w-1/2"
             label="Фамилия"
-            placeholder="Ivanov"
+            placeholder="Иванов"
             {...register('lastName')}
             errorText={errors.lastName?.message}
           />
@@ -113,7 +113,7 @@ export default function Signup() {
             wrapperClassName="w-full"
             label="Email"
             type="email"
-            placeholder="example@email.com"
+            placeholder="ivanov@ya.com"
             {...register('email')}
             errorText={errors.email?.message}
           />
@@ -121,7 +121,7 @@ export default function Signup() {
             wrapperClassName="w-full sm:w-1/2"
             label="Придумайте пароль"
             type="password"
-            placeholder="pass123"
+            placeholder="******"
             {...register('password')}
             errorText={errors.password?.message}
           />
@@ -129,7 +129,7 @@ export default function Signup() {
             wrapperClassName="w-full sm:w-1/2"
             label="Повторите пароль"
             type="password"
-            placeholder="pass123"
+            placeholder="******"
             {...register('passwordCheck')}
             errorText={errors.passwordCheck?.message}
           />
