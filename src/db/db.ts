@@ -7,7 +7,7 @@ import '../../env-config';
 
 const client = createClient({
   url: process.env.DATABASE_URL!,
-  authToken: process.env.AUTH_TOKEN!,
+  authToken: process.env.DATABASE_AUTH_TOKEN!,
 });
 
 export const db = drizzle(client, { schema });
