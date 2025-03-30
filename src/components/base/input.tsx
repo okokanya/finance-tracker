@@ -35,7 +35,7 @@ const Input: React.FC<InputProps> = ({
 
   return (
     <div className={cn('block h-auto w-auto', wrapperClassName)}>
-      <Field className="mb-3 flex flex-col gap-0.5">
+      <Field className="flex flex-col gap-0.5">
         {label && <Label className="text-xs text-gray-500">{label}</Label>}
         <div className="relative">
           <HeadlessInput className={inputClasses} disabled={disabled} {...props} />
@@ -46,7 +46,7 @@ const Input: React.FC<InputProps> = ({
           )}
         </div>
       </Field>
-      {errorText ? <p className="-mt-4 text-xs font-normal text-red-500">{errorText}</p> : null}
+      {errorText ? <p className="text-xs font-normal text-red-500">{errorText}</p> : null}
     </div>
   );
 };

@@ -12,8 +12,8 @@ export default function TransactionItem({ transaction }: Props) {
 
   return (
     <div className="px-3.5">
-      <div className="flex justify-between border-b border-gray-100 py-3 first:border-t last:border-b-0">
-        <Text variant={'xs'} className="text-gray-500">
+      <div className="flex justify-between gap-0.5 border-b border-gray-100 py-3 first:border-t last:border-b-0">
+        <Text variant={'xs'} className="line-clamp-1 text-gray-500">
           {transaction.description}
         </Text>
         <Text variant={'xs'} className={getAmountStyle(transaction.amount)}>

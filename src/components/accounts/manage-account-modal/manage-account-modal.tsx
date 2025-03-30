@@ -9,6 +9,7 @@ import Input from '@/components/base/input';
 import Modal, { ModalProps } from '@/components/base/modal';
 import { OptionType } from '@/components/base/select/option-type';
 import Select from '@/components/base/select/select';
+import { MODAL_CONTENT_CLASS } from '@/components/util/common-classes';
 import { ACCOUNT_OPTIONS } from '@/features/accounts/accounts.constants';
 import texts from '@/features/accounts/accounts.texts';
 import {
@@ -88,13 +89,13 @@ export default function ManageAccountModal({
       isOpen={isOpen}
       onClose={onClose}
     >
-      <form onSubmit={handleSubmit(onSubmit)} className="flex w-full flex-col gap-6">
-        <div className="mt-3 flex w-full flex-col gap-4">
-          <div className="flex w-full flex-wrap justify-stretch gap-4">
+      <form onSubmit={handleSubmit(onSubmit)} className={MODAL_CONTENT_CLASS}>
+        <div className="mt-1 flex w-full flex-col gap-2 md:mt-3 md:gap-4">
+          <div className="flex w-full flex-col flex-wrap justify-stretch gap-2 md:flex-row md:gap-4">
             <Input
               label={texts.accountParams.nameTitle}
               placeholder={texts.accountParams.namePlaceholder}
-              wrapperClassName="w-full min-w-[262px] flex-1"
+              wrapperClassName="w-full md:min-w-[262px] flex-1"
               className="w-full"
               errorText={errors?.name?.message}
               type="text"
@@ -105,7 +106,7 @@ export default function ManageAccountModal({
               selected={selectedType}
               options={ACCOUNT_OPTIONS}
               onChangeOption={selected => setSelectedType(selected as OptionType<AccountType>)}
-              wrapperClassName="w-full min-w-[262px] flex-1"
+              wrapperClassName="w-full md:min-w-[262px] flex-1"
             />
           </div>
           <Input
@@ -138,7 +139,7 @@ export default function ManageAccountModal({
           <Button type="submit" className="w-full" disabled={!isDataChanged}>
             {texts.manageAccount.action.updateAccount}
           </Button>
-          <div className="flex w-full gap-2">
+          <div className="flex w-full flex-col gap-2 md:flex-row">
             <Button variant="error" onClick={onDelete} className="w-full">
               {texts.manageAccount.action.deleteAccount}
             </Button>

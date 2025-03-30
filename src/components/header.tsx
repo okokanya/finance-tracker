@@ -1,105 +1,87 @@
 import Image from 'next/image';
 import Link from 'next/link';
-// import { CreditCardIcon, XCircleIcon } from '@heroicons/react@2.2.0/24/outline/ems';
-// import { XCircleIcon } from '@heroicons/react/16/solid';
+import { usePathname } from 'next/navigation';
 import {
   CreditCardIcon,
   DocumentCurrencyDollarIcon,
   PresentationChartLineIcon,
   Squares2X2Icon,
-  UserIcon,
+  UserCircleIcon,
 } from '@heroicons/react/24/outline';
 
-const items = [
-  {
-    link: 'accounts',
-    text: 'счета',
-    icon: 'CreditCardIcon',
-    image: '/logo',
-    isImage: false,
-  },
-  {
-    link: 'categories',
-    text: 'категории',
-    icon: 'Squares2X2Icon',
-    image: '/logo',
-    isImage: false,
-  },
-  {
-    link: 'operations',
-    text: 'операции',
-    icon: 'DocumentCurrencyDollarIcon',
-    image: '/logo',
-    isImage: false,
-  },
-  {
-    link: 'reports',
-    text: 'отчеты',
-    icon: 'PresentationChartLineIcon',
-    image: '/logo',
-    isImage: false,
-  },
-  {
-    link: 'profile',
-    text: 'профиль',
-    icon: 'UserIcon',
-    image: '/avatar.png',
-    isImage: true,
-  },
-];
+import { cn } from '@/utils/cn';
 
-const iconComponents: Record<string, React.ElementType> = {
-  CreditCardIcon,
-  Squares2X2Icon,
-  DocumentCurrencyDollarIcon,
-  PresentationChartLineIcon,
-  UserIcon,
+const mainMenu = {
+  items: [
+    {
+      link: 'accounts',
+      text: 'Счета',
+      icon: CreditCardIcon,
+    },
+    {
+      link: 'categories',
+      text: 'Категории',
+      icon: Squares2X2Icon,
+    },
+    {
+      link: 'operations',
+      text: 'Операции',
+      icon: DocumentCurrencyDollarIcon,
+    },
+    {
+      link: 'reports',
+      text: 'Отчеты',
+      icon: PresentationChartLineIcon,
+    },
+  ],
+  defaultProfile: {
+    link: 'profile',
+    text: 'Профиль',
+    icon: UserCircleIcon,
+  },
 };
 
-export function getIconElement(icon: string) {
-  const IconComponent = iconComponents[icon];
-  return IconComponent ? <IconComponent className="size-4" /> : null;
-}
+export default function Header() {
+  const pathname = usePathname();
 
-const Header: React.FC = () => {
+  const linkClassNames = (link: string): string => {
+    return cn('text-gray-800 hover:text-blue-600', {
+      ['text-blue-700']: pathname.includes(link),
+    });
+  };
+
   return (
-    <header className="max-w-[1180px]p-4 order-last mx-auto inline-flex w-full shadow-md md:order-first">
-      <div className="container mx-auto flex max-w-[1440px] items-center justify-between max-md:w-full max-md:justify-center">
+    <header className="order-last mx-auto inline-flex w-full min-w-[375px] border-t-[1px] border-t-gray-300 bg-white px-6 py-2 md:order-first md:border-b-[1px] md:border-t-0 md:border-b-gray-300 md:py-4">
+      <div className="container mx-auto flex max-w-[1340px] items-center justify-between max-md:w-full max-md:justify-center">
         {/* Логотип */}
-        <Link href="/" className="hidden md:inline">
+        <Link href="/accounts" className="hidden md:inline">
           <Image src="/logo.svg" alt="Logo" width={40} height={40} className="cursor-pointer" />
         </Link>
         {/* Навигация */}
         <nav>
-          <ul className="flex flex-nowrap max-md:w-full">
-            {items.map((item, index) => (
+          <ul className="flex flex-nowrap items-center gap-8 max-md:w-full">
+            {mainMenu.items.map((item, index) => (
               <li key={index}>
                 <Link
                   href={`/${item.link}`}
-                  className="flex items-center space-x-2 rounded-lg p-2 hover:bg-gray-100"
+                  className={cn('flex items-center space-x-1', linkClassNames(item.link))}
                 >
-                  {item.isImage ? (
-                    <Image
-                      src={item.image}
-                      alt={item.text}
-                      width={32}
-                      height={32}
-                      className="rounded-full"
-                    />
-                  ) : (
-                    <>
-                      {getIconElement(item.icon)}
-                      <span className="hidden md:inline">{item.text}</span>
-                    </>
-                  )}
+                  <item.icon className="size-8" />
+                  <span className="hidden md:inline">{item.text}</span>
                 </Link>
               </li>
             ))}
+            <li key={50}>
+              <Link
+                href={`/${mainMenu.defaultProfile.link}`}
+                className={linkClassNames(mainMenu.defaultProfile.link)}
+              >
+                <mainMenu.defaultProfile.icon className="size-8 rounded-full" />
+              </Link>
+            </li>
           </ul>
         </nav>
       </div>
     </header>
   );
-};
-
-export default Header;
+}
