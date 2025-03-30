@@ -9,6 +9,7 @@ import { z } from 'zod';
 import Button from '@/components/base/button';
 import Input from '@/components/base/input';
 import Modal from '@/components/base/modal';
+import Title from '@/components/base/title';
 import FormWrap from '@/components/form-wrap';
 import LogoTitle from '@/components/logo-title';
 import MainWrap from '@/components/main-wrap';
@@ -84,20 +85,27 @@ export default function Signup() {
   return (
     <MainWrap>
       <LogoTitle />
-      <FormWrap width="33rem">
-        <h1 className="ml-0 mr-auto">Регистрация</h1>
+      <FormWrap smWidth="sm:w-[32rem]">
+        <Title
+          variant="h1"
+          className="my-4 w-full text-left"
+          id="main-title"
+          aria-label="Главный заголовок"
+        >
+          Регистрация
+        </Title>
         <form className="flex w-full flex-wrap justify-between" onSubmit={handleSubmit(onSubmit)}>
           <Input
-            wrapperClassName="w-full sm:w-[48%]"
+            wrapperClassName="w-full sm:w-1/2"
             label="Имя"
-            placeholder="Имя"
+            placeholder="Ярополк"
             {...register('firstName')}
             errorText={errors.firstName?.message}
           />
           <Input
-            wrapperClassName="w-full sm:w-[48%]"
+            wrapperClassName="w-full sm:w-1/2"
             label="Фамилия"
-            placeholder="Фамилия"
+            placeholder="Иванов"
             {...register('lastName')}
             errorText={errors.lastName?.message}
           />
@@ -105,32 +113,30 @@ export default function Signup() {
             wrapperClassName="w-full"
             label="Email"
             type="email"
-            placeholder="Email"
+            placeholder="ivanov@ya.com"
             {...register('email')}
             errorText={errors.email?.message}
           />
           <Input
-            wrapperClassName="w-full sm:w-[48%]"
+            wrapperClassName="w-full sm:w-1/2"
             label="Придумайте пароль"
             type="password"
-            placeholder="Пароль"
+            placeholder="******"
             {...register('password')}
             errorText={errors.password?.message}
           />
           <Input
-            wrapperClassName="w-full sm:w-[48%] "
+            wrapperClassName="w-full sm:w-1/2"
             label="Повторите пароль"
             type="password"
-            placeholder="Повторите пароль"
+            placeholder="******"
             {...register('passwordCheck')}
             errorText={errors.passwordCheck?.message}
           />
 
           {submitError && <span className="errorSpan">{submitError}</span>}
 
-          <Button>
-            <input type="submit" value="Зарегистрироваться" />
-          </Button>
+          <Button type="submit">Зарегистрироваться</Button>
         </form>
 
         <p className="ml-0 mr-auto mt-10">

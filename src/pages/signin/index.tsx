@@ -7,9 +7,23 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import Button from '@/components/base/button';
 import Input from '@/components/base/input';
 import Modal from '@/components/base/modal';
+import Title from '@/components/base/title';
 import FormWrap from '@/components/form-wrap';
 import LogoTitle from '@/components/logo-title';
 import MainWrap from '@/components/main-wrap';
+
+interface SignInData {
+  email: string;
+  password: string;
+}
+
+interface AuthResponse {
+  token?: string;
+  user?: {
+    id: string;
+    email: string;
+  };
+}
 
 const Signin = () => {
   const [isModalOpen, setIsModalOpen] = useState(false); // успешный вход
@@ -19,11 +33,11 @@ const Signin = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<{ email: string; password: string }>();
+  } = useForm<SignInData>();
 
   const router = useRouter();
-  const mutation = useMutation({
-    mutationFn: async data => {
+  const mutation = useMutation<AuthResponse, Error, SignInData>({
+    mutationFn: async (data: SignInData) => {
       const response = await fetch('/api/auth/signin', {
         method: 'POST',
         headers: {
@@ -50,7 +64,7 @@ const Signin = () => {
     },
   });
 
-  const onSubmit: SubmitHandler<{ email: string; password: string }> = data => {
+  const onSubmit: SubmitHandler<SignInData> = data => {
     mutation.mutate(data);
   };
 
@@ -58,7 +72,14 @@ const Signin = () => {
     <MainWrap>
       <LogoTitle />
       <FormWrap>
-        <h1 className="ml-0 mr-auto">Вход в аккаунт</h1>
+        <Title
+          variant="h1"
+          className="my-4 w-full text-left"
+          id="main-title"
+          aria-label="Главный заголовок"
+        >
+          Вход
+        </Title>
         <form
           className="flex w-full flex-col flex-wrap justify-between"
           onSubmit={handleSubmit(onSubmit)}
@@ -67,22 +88,20 @@ const Signin = () => {
           <Input
             label="Email"
             type="email"
-            className="mb-4"
-            placeholder="Email"
-            {...register('email', { required: true })}
+            className="mb-4 w-full"
+            placeholder="ivanov@ya.com"
+            {...register('email', { required: 'Email обязателен' })}
             errorText={errors.email?.message}
           />
           <Input
             label="Пароль"
             type="password"
-            className="mb-4"
-            placeholder="Пароль"
-            {...register('password', { required: true })}
+            className="mb-4 w-full"
+            placeholder="*******"
+            {...register('password', { required: 'Пароль обязателен' })}
             errorText={errors.password?.message}
           />
-          <Button>
-            <input type="submit" />
-          </Button>
+          <Button type="submit">Войти</Button>
         </form>
         <p className="ml-0 mr-auto mt-10">
           У вас еще нет аккаунта?{' '}
