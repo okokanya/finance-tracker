@@ -19,13 +19,12 @@ export default function TransactionList({
   isError,
   repeatOnError,
 }: Props) {
-  const textClasses =
-    'my-1 block h-10 w-full px-3.5 py-2.5 font-inter text-sm font-normal text-blue-500';
+  const textClasses = 'my-1 block h-10 w-full px-3.5 py-2.5 text-sm font-normal text-blue-500';
 
   if (isLoading)
     return (
       <TopBottomBorder className="flex items-center justify-between">
-        <span className={textClasses}>{texts.manageAccount.action.accountOperations}</span>
+        <p className={textClasses}>{texts.manageAccount.action.accountOperations}</p>
         <Spinner />
       </TopBottomBorder>
     );
@@ -33,7 +32,7 @@ export default function TransactionList({
   if (isError)
     return (
       <TopBottomBorder className="flex justify-between">
-        <span className={textClasses}>{texts.manageAccount.action.transactionsError}</span>
+        <p className={textClasses}>{texts.manageAccount.action.transactionsError}</p>
         <Button className="my-1" variant="secondary" onClick={repeatOnError}>
           {texts.repeat}
         </Button>
@@ -43,7 +42,7 @@ export default function TransactionList({
   if (transactions?.length === 0)
     return (
       <TopBottomBorder>
-        <span className={textClasses}>{texts.manageAccount.action.noTransactions}</span>
+        <p className={textClasses}>{texts.manageAccount.action.noTransactions}</p>
       </TopBottomBorder>
     );
 

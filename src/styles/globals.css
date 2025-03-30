@@ -1,14 +1,69 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer components {
-  .button {
-    @apply whitespace-nowrap rounded-lg px-4 py-2 font-medium text-white transition-colors hover:bg-red-400 hover:transition-colors disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-gray-300;
+@layer base {
+  body {
+    font-family: 'Inter', sans-serif;
   }
 }
 
-.link {
-  @apply font-bold text-[#2563EB];
+@layer components {
+  .uikit-button {
+    @apply whitespace-nowrap rounded-lg border-2 border-transparent px-4 py-2 font-bold transition-colors disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-gray-300;
+  }
+
+  .uikit-button-primary {
+    @apply bg-blue-500 text-gray-100 hover:bg-blue-600 active:bg-blue-700 active:text-white;
+  }
+
+  .uikit-button-base-secondary {
+    @apply bg-white ring-2 ring-gray-300 hover:bg-white disabled:bg-white;
+  }
+
+  .uikit-button-secondary {
+    @apply uikit-button-base-secondary text-gray-800 hover:text-blue-600 disabled:text-gray-400;
+  }
+
+  .uikit-button-error {
+    @apply uikit-button-base-secondary text-red-500 hover:text-red-700 disabled:text-red-100;
+  }
+
+  .uikit-button-warning {
+    @apply uikit-button-base-secondary text-yellow-500 hover:text-yellow-600 disabled:text-yellow-100;
+  }
+}
+
+@layer utilities {
+  .uikit-show-mobile {
+    @apply inline md:hidden;
+  }
+
+  .uikit-show-desktop {
+    @apply hidden md:inline;
+  }
+
+  .uikit-error {
+    @apply text-xs font-normal text-red-500;
+  }
+
+  .uikit-link {
+    @apply font-bold text-blue-500 hover:text-blue-600;
+  }
+
+  .uikit-card-shadow {
+    @apply shadow-[0px_4px_8px_0px_rgba(229,231,235,1.00)];
+  }
+
+  .uikit-modal-shadow {
+    @apply shadow-[0px_8px_18px_0px_rgba(229,231,235,1.00)];
+  }
+
+  .uikit-disabled-field {
+    @apply disabled:cursor-not-allowed disabled:border-gray-300 disabled:bg-gray-100 disabled:text-gray-300 disabled:hover:border-gray-300;
+  }
+
+  .uikit-modal-content {
+    @apply flex min-h-[calc(100dvh-var(--modal-header-height)-40px)] w-full flex-col justify-between gap-6 md:min-h-fit;
+  }
 }

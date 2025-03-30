@@ -8,7 +8,6 @@ import {
 } from '@headlessui/react';
 import { CheckIcon, ChevronDownIcon } from '@heroicons/react/24/solid';
 
-import { CARD_SHADOW_CLASS, DISABLED_CLASSES } from '@/components/util/common-classes';
 import { cn } from '@/utils/cn';
 
 import { OptionType } from './option-type';
@@ -46,19 +45,22 @@ const Select: React.FC<SelectProps> = ({
                 'relative block h-10 w-full rounded border border-gray-300 bg-white py-2.5 pl-3.5 pr-11 text-left',
                 'hover:border-blue-600 hover:bg-gray-100',
                 'focus:bg-gray-100 focus:outline-none focus:outline-2 focus:-outline-offset-2 focus:outline-blue-500',
-                { [DISABLED_CLASSES]: disabled },
+                {
+                  ['uikit-disabled-field']: disabled,
+                  ['bg-gray-100 outline-none outline-2 -outline-offset-2 outline-blue-500']: open,
+                },
                 className
               )}
               {...props}
             >
-              <span
+              <p
                 title={selected.title}
-                className={cn('line-clamp-1 font-inter text-sm font-normal text-gray-800', {
+                className={cn('line-clamp-1 text-sm font-normal text-gray-800', {
                   ['text-gray-300']: disabled,
                 })}
               >
                 {selected.title}
-              </span>
+              </p>
               <ChevronDownIcon
                 className={cn(
                   'group pointer-events-none absolute right-3.5 top-2.5 size-5 transform fill-gray-500 transition-transform duration-200',
@@ -72,8 +74,7 @@ const Select: React.FC<SelectProps> = ({
               transition
               className={cn(
                 'w-[var(--button-width)] rounded border border-gray-300 bg-white [--anchor-gap:1px] focus:outline-none',
-                'transition duration-100 ease-in data-[leave]:data-[closed]:opacity-0',
-                CARD_SHADOW_CLASS
+                'uikit-card-shadow transition duration-100 ease-in data-[leave]:data-[closed]:opacity-0'
               )}
             >
               {options.map(option => (
@@ -85,12 +86,9 @@ const Select: React.FC<SelectProps> = ({
                   {checked && (
                     <CheckIcon className="invisible size-4 fill-gray-500 group-data-[selected]:visible" />
                   )}
-                  <span
-                    title={option.title}
-                    className="font-inter text-sm font-normal text-gray-800"
-                  >
+                  <p title={option.title} className="text-sm font-normal text-gray-800">
                     {option.title}
-                  </span>
+                  </p>
                 </ListboxOption>
               ))}
             </ListboxOptions>

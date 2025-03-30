@@ -9,7 +9,6 @@ import { OptionType } from '@/components/base/select/option-type';
 import Select from '@/components/base/select/select';
 import Title from '@/components/base/title';
 import { getAmountStyle } from '@/components/util/amount-style';
-import { MODAL_CONTENT_CLASS } from '@/components/util/common-classes';
 import { ACCOUNT_TRANSACTION_OPTIONS } from '@/features/accounts/accounts.constants';
 import texts from '@/features/accounts/accounts.texts';
 import {
@@ -101,7 +100,7 @@ export default function AddAccountTransactionModal({
       isOpen={isOpen}
       onClose={onClose}
     >
-      <form onSubmit={handleSubmit(onSubmit)} className={MODAL_CONTENT_CLASS}>
+      <form onSubmit={handleSubmit(onSubmit)} className="uikit-modal-content">
         <div className="mt-1 flex w-full flex-col gap-2 md:gap-4">
           <div className="flex w-full flex-wrap justify-stretch gap-2">
             <Title className="line-clamp-1">

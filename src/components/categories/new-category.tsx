@@ -13,7 +13,7 @@ export default function NewCategory({ onClick }: Props) {
     <div
       onClick={onClick}
       className={cn(
-        'shadow-def flex max-w-72 cursor-pointer flex-row gap-2 rounded-lg border border-blue-500 px-6 py-4 hover:border hover:border-blue-600 hover:bg-white'
+        'uikit-card-shadow flex max-w-72 cursor-pointer flex-row gap-2 rounded-lg border border-blue-500 px-6 py-4 hover:border hover:border-blue-600 hover:bg-white'
       )}
     >
       <div className={cn('flex w-full max-w-[210px] flex-col bg-transparent')}>

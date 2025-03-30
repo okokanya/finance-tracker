@@ -14,8 +14,8 @@ export default function TotalBalance({ amount }: Props) {
 
   return (
     <>
-      <Title className={cn(amountStyle, 'inline md:hidden')}>{displayAmount}</Title>
-      <Title className={cn(amountStyle, 'hidden md:inline')} variant="h1">
+      <Title className={cn(amountStyle, 'uikit-show-mobile')}>{displayAmount}</Title>
+      <Title className={cn(amountStyle, 'uikit-show-desktop')} variant="h1">
         {displayAmount}
       </Title>
     </>
