@@ -5,7 +5,7 @@ import { apiFetch } from '@/utils/api-fetch';
 
 import { CATEGORIES_QUERY_KEY, CATEGORIES_QUERY_PATH } from '../category.constants';
 import { useCategoriesStore } from '../category.store';
-import { CategoryForm } from '../category.types';
+import { CategoryCreate } from '../category.types';
 
 export default function useAddCategory() {
   const queryClient = useQueryClient();
@@ -13,7 +13,7 @@ export default function useAddCategory() {
   const show = useNotificationStore(store => store.show);
 
   return useMutation({
-    mutationFn: (fetchBody: CategoryForm) =>
+    mutationFn: (fetchBody: CategoryCreate) =>
       apiFetch(CATEGORIES_QUERY_PATH, {
         method: 'POST',
         fetchBody,

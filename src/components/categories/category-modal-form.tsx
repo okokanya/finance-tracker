@@ -32,18 +32,20 @@ const CategoryModalForm: React.FC<CategoryModalProps> = ({ isEdit, onClose, onSu
   };
 
   return (
-    <form onSubmit={handleSubmit(handleFormSubmit)}>
+    <form onSubmit={handleSubmit(handleFormSubmit)} className={cn('flex flex-col gap-4')}>
       <Input
         label={texts.form.name}
         placeholder={texts.form.namePlaceholder}
         {...register('name')}
         errorText={errors?.name?.message}
+        className={cn('w-full')}
       />
       <Input
         label={texts.form.description}
         placeholder={texts.form.descriptionPlaceholder}
         {...register('description')}
         errorText={errors?.description?.message}
+        className={cn('w-full')}
       />
       <div className="flex gap-2">
         <Button variant="primary" type="submit" className={cn('w-full max-w-[420px]')}>

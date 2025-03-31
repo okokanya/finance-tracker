@@ -1,11 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { and, eq, sql } from 'drizzle-orm';
+import { and, eq, SQL, sql } from 'drizzle-orm';
 import { v4 as uuidv4 } from 'uuid';
 
 import { db } from '@/db';
 import { categories, transactions } from '@/db/schema';
-import { categoryFormSchema, CategoryResponse } from '@/features/category/category.types';
-import { categorySchema } from '@/models';
+import { categoryCreateSchema, CategoryResponse } from '@/features/category/category.types';
+import { categorySchema, CategoryType } from '@/models';
 import { getUser } from '@/utils/get-user';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<CategoryResponse>) {
@@ -24,6 +24,16 @@ const GET = async (req: NextApiRequest, res: NextApiResponse<CategoryResponse>) 
     const userId = await getUser(req);
 
     if (userId) {
+      const { period, type } = req.query;
+
+      let monthFilter: SQL | null = null;
+
+      if (period === 'thisMonth' || period === 'prevMonth') {
+        const currentMonth = sql`strftime('%Y-%m', 'now')`;
+        const prevMonth = sql`strftime('%Y-%m', 'now', '-1 month')`;
+        monthFilter = period === 'thisMonth' ? currentMonth : prevMonth;
+      }
+
       const data = await db
         .select({
           category: categories,
@@ -34,10 +44,18 @@ const GET = async (req: NextApiRequest, res: NextApiResponse<CategoryResponse>) 
           transactions,
           and(
             eq(transactions.categoryId, categories.id),
-            eq(transactions.userId, String(userId)) // Фильтр транзакций пользователя
+            eq(transactions.userId, String(userId)), // Фильтр транзакций пользователя
+            ...(monthFilter
+              ? [sql`strftime('%Y-%m', ${transactions.createdAt}, 'unixepoch') = ${monthFilter}`]
+              : [])
           )
         )
-        .where(eq(categories.userId, String(userId)))
+        .where(
+          and(
+            eq(categories.userId, String(userId)),
+            type ? eq(categories.type, String(type) as CategoryType) : undefined
+          )
+        )
         .groupBy(categories.id);
 
       const preparedData = data.map(item => ({ ...item.category, totalAmount: item.total }));
@@ -55,14 +73,14 @@ const GET = async (req: NextApiRequest, res: NextApiResponse<CategoryResponse>) 
 const POST = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const userId = await getUser(req);
-    const { name, description } = categoryFormSchema.parse(req.body);
+    const { name, description, type } = categoryCreateSchema.parse(req.body);
 
     const newCategoryData = {
       id: uuidv4(),
       name,
       description,
       userId,
-      type: 'expense',
+      type,
       createdAt: new Date(),
       updatedAt: new Date(),
     };

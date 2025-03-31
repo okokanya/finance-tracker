@@ -192,6 +192,17 @@ const main = async () => {
         createdAt: new Date('2025-03-01'),
         updatedAt: new Date('2025-03-01'),
       },
+      {
+        id: uuidv4(),
+        userId: user1Id,
+        accountId: account1Id,
+        categoryId: category3Id,
+        type: 'withdrawal',
+        amount: 5000,
+        comment: 'Такси',
+        createdAt: new Date('2025-03-28'),
+        updatedAt: new Date('2025-03-28'),
+      },
     ]);
     //#endregion
   } catch (error) {

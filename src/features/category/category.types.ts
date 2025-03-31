@@ -6,6 +6,14 @@ export const categoryFormSchema = categorySchema.pick({ name: true, description:
 
 export type CategoryForm = z.infer<typeof categoryFormSchema> & {};
 
+export const categoryCreateSchema = categorySchema.pick({
+  name: true,
+  description: true,
+  type: true,
+});
+
+export type CategoryCreate = z.infer<typeof categoryCreateSchema>;
+
 export type CategoryResponse = {
   data?: (Category & { totalAmount: number })[];
   status: number;

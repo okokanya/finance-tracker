@@ -22,9 +22,13 @@ export default function Categories() {
   const [selectedBalance, setSelectedBalance] = useState<OptionType<CategoryType>>(
     BALANCE_OPTIONS[0]
   );
-  const [selectedPeriod, setSelectedPeriod] = useState<OptionType<Period>>(PERIOD_OPTIONS[0]);
+  const [selectedPeriod, setSelectedPeriod] = useState<OptionType<Period>>(PERIOD_OPTIONS[1]);
 
-  const { data: categories, isPending, error } = useCategories();
+  const {
+    data: categories,
+    isPending,
+    error,
+  } = useCategories({ type: selectedBalance.value, period: selectedPeriod.value });
 
   const handleMainButtonClick = (save?: boolean) => {
     if (save) {
@@ -91,7 +95,11 @@ export default function Categories() {
         )}
         {isEdit ? <NewCategory onClick={() => setIsCreateModalOpen(true)} /> : null}
       </div>
-      <CategoryModal isOpen={isCreateModalOpen} onClose={() => setIsCreateModalOpen(false)} />
+      <CategoryModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        type={selectedBalance.value}
+      />
     </section>
   );
 }
