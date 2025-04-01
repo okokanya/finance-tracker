@@ -33,7 +33,7 @@ const Accordion: React.FC<AccordionProps> = ({
       {({ open }) => (
         <>
           <DisclosureButton className={mainButtonClassNames} {...otherProps}>
-            <span className="font-inter text-sm font-normal text-blue-500">{title}</span>
+            <p className="text-sm font-normal text-blue-500">{title}</p>
             <ChevronDownIcon
               className={cn('size-5 text-gray-500 transition-transform duration-200', {
                 'rotate-180 transform': open,

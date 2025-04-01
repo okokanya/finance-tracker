@@ -16,15 +16,6 @@ export default {
         background: 'var(--background)',
         foreground: 'var(--foreground)',
       },
-      fontFamily: {
-        inter: ['Inter', 'sans-serif'],
-        roboro: ['Roboto', 'sans-serif'],
-
-      },
-      boxShadow: {
-        thin: 'box-shadow: 0px 4px 8px 0px #E5E7EB',
-        def: 'box-shadow: 0px 8px 16px 0px #E5E7EB',
-      },
     },
   },
   plugins: [Forms],

@@ -30,9 +30,8 @@ const Modal: React.FC<ModalProps> = ({ title, isOpen, onClose, children }) => {
           <DialogPanel
             transition
             className={cn(
-              'data-[closed]:transform-[scale(95%)] min-h-dvh w-full md:min-h-fit md:w-[580px] md:rounded-xl',
-              'bg-gray-100 px-5 py-5 duration-300 ease-out data-[closed]:opacity-0 md:bg-white md:py-4',
-              'shadow-[0px_8px_18px_0px_rgba(229,231,235,1.00)]'
+              'uikit-modal-shadow data-[closed]:transform-[scale(95%)] min-h-dvh w-full md:min-h-fit md:w-[580px] md:rounded-xl',
+              'bg-gray-100 px-5 py-5 duration-300 ease-out data-[closed]:opacity-0 md:bg-white md:py-4'
             )}
           >
             <div
@@ -47,8 +46,8 @@ const Modal: React.FC<ModalProps> = ({ title, isOpen, onClose, children }) => {
                 )}
                 onClick={onClose}
               >
-                <ArrowLongLeftIcon className="inline size-7 self-start md:hidden" />
-                <XMarkIcon className="hidden size-7 md:inline" />
+                <ArrowLongLeftIcon className="uikit-show-mobile size-7 self-start" />
+                <XMarkIcon className="uikit-show-desktop size-7" />
               </Button>
               <Title>{title}</Title>
             </div>

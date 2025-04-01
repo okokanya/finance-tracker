@@ -24,9 +24,9 @@ const Input: React.FC<InputProps> = ({
   ...props
 }) => {
   const inputClasses: InputProps['className'] = cn(
-    'h-10 w-auto rounded-[4px] border border-gray-300 bg-white px-[14px] hover:border-gray-400 hover:bg-gray-100 focus:border-blue-500 focus:bg-gray-100 font-normal text-base',
+    'h-10 w-auto rounded-[4px] border border-gray-300 bg-white px-[14px] hover:border-blue-600 hover:bg-gray-100 focus:border-blue-500 focus:bg-gray-100 font-normal text-base text-gray-800 placeholder-gray-400',
     {
-      ['bg-gray-200 cursor-not-allowed hover:bg-gray-200 text-gray-400']: disabled,
+      ['uikit-disabled-field']: disabled,
       ['border-red-500 mb-1']: Boolean(errorText),
     },
     currencySumbol && 'pr-8',
@@ -40,13 +40,13 @@ const Input: React.FC<InputProps> = ({
         <div className="relative">
           <HeadlessInput className={inputClasses} disabled={disabled} {...props} />
           {currencySumbol && (
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
+            <p className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
               {currencySumbol}
-            </span>
+            </p>
           )}
         </div>
       </Field>
-      {errorText ? <p className="text-xs font-normal text-red-500">{errorText}</p> : null}
+      {errorText ? <p className="uikit-error">{errorText}</p> : null}
     </div>
   );
 };

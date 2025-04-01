@@ -15,18 +15,13 @@ const Button: React.FC<ButtonProps> = ({
   className,
   ...otherProps
 }) => {
-  const secondaryBaseClass = 'ring-2 ring-gray-300 bg-white hover:bg-white disabled:bg-white';
   const classNames = cn(
-    'button font-inter font-bold border-2 border-transparent',
+    'uikit-button',
     {
-      ['text-grey-100 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 active:text-white']:
-        variant === 'primary',
-      [`${secondaryBaseClass} text-gray-800 hover:text-blue-600 disabled:text-gray-400`]:
-        variant === 'secondary',
-      [`${secondaryBaseClass} text-red-500 hover:text-red-700 disabled:text-red-100`]:
-        variant === 'error',
-      [`${secondaryBaseClass} text-yellow-500 hover:text-yellow-600 disabled:text-yellow-100`]:
-        variant === 'warning',
+      ['uikit-button-primary']: variant === 'primary',
+      [`uikit-button-secondary`]: variant === 'secondary',
+      [`uikit-button-error`]: variant === 'error',
+      [`uikit-button-warning`]: variant === 'warning',
     },
     className
   );
