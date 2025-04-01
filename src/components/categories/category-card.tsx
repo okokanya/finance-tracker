@@ -11,9 +11,17 @@ type CategoryCardProps = {
   value: number;
   isEdit?: boolean;
   type?: CategoryType;
+  onClick: () => void;
 };
 
-const CategoryCard: FC<CategoryCardProps> = ({ category, description, value, isEdit, type }) => {
+const CategoryCard: FC<CategoryCardProps> = ({
+  category,
+  description,
+  value,
+  isEdit,
+  type,
+  onClick,
+}) => {
   const operationSign = useMemo(() => {
     switch (type) {
       case 'income':
@@ -28,11 +36,12 @@ const CategoryCard: FC<CategoryCardProps> = ({ category, description, value, isE
   return (
     <div
       className={cn(
-        'shadow-def flex max-w-72 flex-col gap-2 rounded-lg border border-transparent bg-white px-6 py-4 hover:border hover:border-gray-300 hover:bg-gray-100',
+        'shadow-def flex max-w-72 cursor-pointer flex-col gap-2 rounded-lg border border-transparent bg-white px-6 py-4 hover:border hover:border-gray-300 hover:bg-gray-100',
         {
-          ['cursor-pointer bg-blue-50']: isEdit,
+          ['bg-blue-50']: isEdit,
         }
       )}
+      onClick={onClick}
     >
       <Text isBold className="line-clamp-1">
         {category}

@@ -6,18 +6,26 @@ import Select from '@/components/base/select/select';
 import Text from '@/components/base/text';
 import Title from '@/components/base/title';
 import CategoryCard from '@/components/categories/category-card';
+import CategoryEditModal from '@/components/categories/category-edit-modal';
 import CategoryModal from '@/components/categories/category-modal';
 import NewCategory from '@/components/categories/new-category';
 import { BALANCE_OPTIONS, Period, PERIOD_OPTIONS } from '@/features/category/category.constants';
 import useCategories from '@/features/category/category.queries';
 import { useCategoriesStore } from '@/features/category/category.store';
+import { Category } from '@/models';
 import { CategoryType } from '@/types/enums';
 import { cn } from '@/utils/cn';
 
 export default function Categories() {
-  const { isEdit, setIsEdit, setIsCreateModalOpen, isCreateModalOpen } = useCategoriesStore(
-    store => store
-  );
+  const {
+    isEdit,
+    setIsEdit,
+    setIsCreateModalOpen,
+    isCreateModalOpen,
+    setIsEditModalOpen,
+    setSelectedCategory,
+    isEditModalOpen,
+  } = useCategoriesStore(store => store);
 
   const [selectedBalance, setSelectedBalance] = useState<OptionType<CategoryType>>(
     BALANCE_OPTIONS[0]
@@ -40,6 +48,23 @@ export default function Categories() {
 
   const handleCancel = () => {
     setIsEdit(false);
+  };
+
+  const handleEditCategory = (category: Category) => {
+    setIsEditModalOpen(true);
+    setSelectedCategory(category);
+  };
+
+  const handleCloseEditCategory = () => {
+    setSelectedCategory(null);
+    setIsEditModalOpen(false);
+  };
+
+  const handleCategoryClick = (category: Category) => {
+    if (isEdit) {
+      handleEditCategory(category);
+    } else {
+    }
   };
 
   if (isPending) return <span>Загрузка...</span>;
@@ -88,6 +113,7 @@ export default function Categories() {
               value={category.totalAmount}
               type={category.type}
               isEdit={isEdit}
+              onClick={() => handleCategoryClick(category)}
             />
           ))
         ) : (
@@ -100,6 +126,7 @@ export default function Categories() {
         onClose={() => setIsCreateModalOpen(false)}
         type={selectedBalance.value}
       />
+      <CategoryEditModal isOpen={isEditModalOpen} onClose={handleCloseEditCategory} />
     </section>
   );
 }
