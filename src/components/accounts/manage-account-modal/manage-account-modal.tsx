@@ -65,7 +65,7 @@ export default function ManageAccountModal({
   const formValues = watch();
   const isDataChanged = hasAccountDataChanged(account, {
     name: formValues.name,
-    description: formValues.description,
+    description: formValues.description || null,
     type: selectedType.value,
     balance: formValues.balance,
     isArchived: account.isArchived,
