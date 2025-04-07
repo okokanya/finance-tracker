@@ -27,8 +27,9 @@ export const useAccounts = () => {
 
   return {
     data: query.data,
-    error: query.error,
+    isError: query.isError,
     isPending: query.isPending,
+    refetch: query.refetch,
   };
 };
 
