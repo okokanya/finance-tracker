@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import Spinner from '@/components/base/spinner';
+import Title from '@/components/base/title';
+
 
 type Transaction = {
   date: string;
@@ -32,7 +34,6 @@ export default function TransactionsPage() {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        {/* Используем твой компонент Spinner */}
         <Spinner />
       </div>
     );
@@ -40,6 +41,9 @@ export default function TransactionsPage() {
 
   return (
     <main className="p-4">
+      <Title className="justify-self-start" variant="h1">
+        Категории
+      </Title>
       {/* Заголовки */}
       <div className="flex justify-between mb-4 text-sm font-semibold text-gray-600">
         <div className="flex-1">Дата</div>
@@ -50,9 +54,9 @@ export default function TransactionsPage() {
       </div>
 
       {/* Список транзакций */}
-      <div className="space-y-6">
+      <div>
         {transactions.map((tx, index) => (
-          <div key={index} className="flex flex-wrap gap-4 p-4 border rounded-lg shadow-md">
+          <div key={index} className="flex flex-wrap gap-2 p-4 border rounded-lg">
             <div className="flex-1">
               <div>{tx.date}</div>
             </div>
