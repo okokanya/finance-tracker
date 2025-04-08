@@ -9,7 +9,11 @@ type Transaction = {
   categoryName: string | null;
   comment: string | null;
   amount: number;
-  type: string | null; // добавляем type
+  type: string;
+};
+
+const formatNumber = (num: number) => {
+  return num.toLocaleString('ru-RU');
 };
 
 export default function TransactionsPage() {
@@ -47,41 +51,43 @@ export default function TransactionsPage() {
       </Title>
 
       <div className="flex justify-between font-semibold text-gray-700 mb-2">
-        <div className="w-[12%]">Дата</div>
-        <div className="w-[12%]">Счёт</div>
-        <div className="w-[25%]">Категория</div>
-        <div className="w-[37%]">Комментарий</div>
-        <div className="w-[12%]">Сумма</div>
+        <div className="flex w-[10%]">Дата</div>
+        <div className="flex w-[10%]">Счёт</div>
+        <div className="flex w-[25%]">Категория</div>
+        <div className="flex w-[37%]">Комментарий</div>
+        <div className="flex justify-end w-[10%]">Сумма</div>
       </div>
 
       <div>
         {transactions.map((tx, index) => {
-          // Определяем стиль для amount в зависимости от типа транзакции
           let amountStyle = '';
           if (tx.type === 'transfer' || tx.type === 'withdrawal') {
-            amountStyle = 'text-red-500';
+            amountStyle = 'text-red-500 negative-number';
           } else if (tx.type === 'topup') {
             amountStyle = 'text-emerald-500';
           } else {
             amountStyle = getAmountStyle(tx.amount);  // По умолчанию используем существующую логику
           }
 
+          // Форматируем количество с помощью `toLocaleString`
+          const formattedAmount = formatNumber(tx.amount);
+
           return (
             <div key={index} className="flex flex-wrap mb-2 rounded-lg bg-white hover:bg-gray-100 hover:shadow-lg transition-all duration-200">
-              <div className="w-[10%]">
+              <div className="flex w-[10%]">
                 <div>{tx.date}</div>
               </div>
-              <div className="w-[10%]">
+              <div className="flex w-[10%]">
                 <div>{tx.accountName ?? '—'}</div>
               </div>
-              <div className="w-[25%]">
+              <div className="flex w-[25%]">
                 <div>{tx.categoryName ?? '—'}</div>
               </div>
-              <div className="w-[37%]">
+              <div className="flex w-[37%]">
                 <div>{tx.comment ?? '—'}</div>
               </div>
-              <div className="w-[10%]">
-                <div className={`${amountStyle}`}>{tx.amount}</div>
+              <div className="flex w-[10%] justify-end">
+                <div className={`${amountStyle}`}>{formattedAmount}</div>
               </div>
             </div>
           );
