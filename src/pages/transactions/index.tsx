@@ -40,36 +40,36 @@ export default function TransactionsPage() {
   }
 
   return (
-    <main className="p-4">
+
+    <main className="w-full p-6">
       <Title className="justify-self-start" variant="h1">
-        Категории
+        Операции
       </Title>
-      {/* Заголовки */}
-      <div className="flex justify-between mb-4 text-sm font-semibold text-gray-600">
-        <div className="flex-1">Дата</div>
-        <div className="flex-1">Счёт</div>
-        <div className="flex-1">Категория</div>
-        <div className="flex-1">Комментарий</div>
-        <div className="flex-1">Сумма</div>
+
+      <div className="flex justify-between font-semibold text-gray-700 mb-2">
+        <div className="w-[12%]">Дата</div>
+        <div className="w-[12%]">Счёт</div>
+        <div className="w-[25%]">Категория</div>
+        <div className="w-[37%]">Комментарий</div>
+        <div className="w-[12%]">Сумма</div>
       </div>
 
-      {/* Список транзакций */}
       <div>
         {transactions.map((tx, index) => (
-          <div key={index} className="flex flex-wrap gap-2 p-4 border rounded-lg">
-            <div className="flex-1">
+          <div key={index} className="flex flex-wrap mb-2 rounded-lg  bg-white hover:bg-gray-100 hover:shadow-lg transition-all duration-200">
+            <div className="w-[10%]">
               <div>{tx.date}</div>
             </div>
-            <div className="flex-1">
+            <div className="w-[10%]">
               <div>{tx.accountName ?? '—'}</div>
             </div>
-            <div className="flex-1">
+            <div className="w-[25%]">
               <div>{tx.categoryName ?? '—'}</div>
             </div>
-            <div className="flex-1">
+            <div className="w-[37%]">
               <div>{tx.comment ?? '—'}</div>
             </div>
-            <div className="flex-1">
+            <div className="w-[10%]">
               <div>{tx.amount}</div>
             </div>
           </div>
