@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Spinner from '@/components/base/spinner';
 import Title from '@/components/base/title';
-
+import { getAmountStyle } from '@/components/util/amount-style';
 
 type Transaction = {
   date: string;
@@ -40,7 +40,6 @@ export default function TransactionsPage() {
   }
 
   return (
-
     <main className="w-full p-6">
       <Title className="justify-self-start" variant="h1">
         Операции
@@ -56,7 +55,7 @@ export default function TransactionsPage() {
 
       <div>
         {transactions.map((tx, index) => (
-          <div key={index} className="flex flex-wrap mb-2 rounded-lg  bg-white hover:bg-gray-100 hover:shadow-lg transition-all duration-200">
+          <div key={index} className="flex flex-wrap mb-2 rounded-lg bg-white hover:bg-gray-100 hover:shadow-lg transition-all duration-200">
             <div className="w-[10%]">
               <div>{tx.date}</div>
             </div>
@@ -70,7 +69,7 @@ export default function TransactionsPage() {
               <div>{tx.comment ?? '—'}</div>
             </div>
             <div className="w-[10%]">
-              <div>{tx.amount}</div>
+              <div className={getAmountStyle(tx.amount)}>{tx.amount}</div>
             </div>
           </div>
         ))}
