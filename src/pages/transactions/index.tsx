@@ -9,6 +9,7 @@ type Transaction = {
   categoryName: string | null;
   comment: string | null;
   amount: number;
+  type: string | null; // добавляем type
 };
 
 export default function TransactionsPage() {
@@ -54,25 +55,37 @@ export default function TransactionsPage() {
       </div>
 
       <div>
-        {transactions.map((tx, index) => (
-          <div key={index} className="flex flex-wrap mb-2 rounded-lg bg-white hover:bg-gray-100 hover:shadow-lg transition-all duration-200">
-            <div className="w-[10%]">
-              <div>{tx.date}</div>
+        {transactions.map((tx, index) => {
+          // Определяем стиль для amount в зависимости от типа транзакции
+          let amountStyle = '';
+          if (tx.type === 'transfer' || tx.type === 'withdrawal') {
+            amountStyle = 'text-red-500';
+          } else if (tx.type === 'topup') {
+            amountStyle = 'text-emerald-500';
+          } else {
+            amountStyle = getAmountStyle(tx.amount);  // По умолчанию используем существующую логику
+          }
+
+          return (
+            <div key={index} className="flex flex-wrap mb-2 rounded-lg bg-white hover:bg-gray-100 hover:shadow-lg transition-all duration-200">
+              <div className="w-[10%]">
+                <div>{tx.date}</div>
+              </div>
+              <div className="w-[10%]">
+                <div>{tx.accountName ?? '—'}</div>
+              </div>
+              <div className="w-[25%]">
+                <div>{tx.categoryName ?? '—'}</div>
+              </div>
+              <div className="w-[37%]">
+                <div>{tx.comment ?? '—'}</div>
+              </div>
+              <div className="w-[10%]">
+                <div className={`${amountStyle}`}>{tx.amount}</div>
+              </div>
             </div>
-            <div className="w-[10%]">
-              <div>{tx.accountName ?? '—'}</div>
-            </div>
-            <div className="w-[25%]">
-              <div>{tx.categoryName ?? '—'}</div>
-            </div>
-            <div className="w-[37%]">
-              <div>{tx.comment ?? '—'}</div>
-            </div>
-            <div className="w-[10%]">
-              <div className={getAmountStyle(tx.amount)}>{tx.amount}</div>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </main>
   );

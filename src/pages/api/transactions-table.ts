@@ -3,13 +3,13 @@ import { db } from '@/db';
 import { transactions, accounts, categories } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 
-// Тип данных, которые вернёт API
 type TransactionResult = {
   date: string;
   accountName: string | null;
   categoryName: string | null;
   comment: string | null;
   amount: number;
+  type: string;
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -21,6 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         categoryName: categories.name,
         comment: transactions.comment,
         amount: transactions.amount,
+        type: transactions.type, // Добавляем поле 'type'
       })
       .from(transactions)
       .leftJoin(accounts, eq(transactions.accountId, accounts.id))
@@ -34,6 +35,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       categoryName: tx.categoryName ?? null,
       comment: tx.comment ?? null,
       amount: tx.amount,
+      type: tx.type,
     }));
 
     res.status(200).json(result);
