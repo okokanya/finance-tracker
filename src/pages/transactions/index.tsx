@@ -50,12 +50,12 @@ export default function TransactionsPage() {
         Операции
       </Title>
 
-      <div className="flex justify-between font-semibold text-gray-700 mb-2">
-        <div className="flex w-[10%]">Дата</div>
-        <div className="flex w-[10%]">Счёт</div>
-        <div className="flex w-[25%]">Категория</div>
-        <div className="flex w-[37%]">Комментарий</div>
-        <div className="flex justify-end w-[10%]">Сумма</div>
+      <div className="flex font-semibold text-gray-700 mb-2">
+        <div className="flex p-2 items-center w-[10%]">Дата</div>
+        <div className="flex p-2 items-center w-[15%]">Счёт</div>
+        <div className="flex p-2 items-center w-[25%]">Категория</div>
+        <div className="flex p-2 items-center w-[37%]">Комментарий</div>
+        <div className="flex p-2 items-center justify-end w-[10%]">Сумма</div>
       </div>
 
       <div>
@@ -66,27 +66,26 @@ export default function TransactionsPage() {
           } else if (tx.type === 'topup') {
             amountStyle = 'text-emerald-500';
           } else {
-            amountStyle = getAmountStyle(tx.amount);  // По умолчанию используем существующую логику
+            amountStyle = getAmountStyle(tx.amount);
           }
 
-          // Форматируем количество с помощью `toLocaleString`
           const formattedAmount = formatNumber(tx.amount);
 
           return (
             <div key={index} className="flex flex-wrap mb-2 rounded-lg bg-white hover:bg-gray-100 hover:shadow-lg transition-all duration-200">
-              <div className="flex w-[10%]">
+              <div className="flex p-2 items-center w-[10%]">
                 <div>{tx.date}</div>
               </div>
-              <div className="flex w-[10%]">
+              <div className="flex p-2 items-center w-[15%]">
                 <div>{tx.accountName ?? '—'}</div>
               </div>
-              <div className="flex w-[25%]">
+              <div className="flex p-2 items-center w-[25%]">
                 <div>{tx.categoryName ?? '—'}</div>
               </div>
-              <div className="flex w-[37%]">
+              <div className="flex p-2 items-center w-[37%]">
                 <div>{tx.comment ?? '—'}</div>
               </div>
-              <div className="flex w-[10%] justify-end">
+              <div className="flex p-2 items-center w-[10%] justify-end">
                 <div className={`${amountStyle}`}>{formattedAmount}</div>
               </div>
             </div>
