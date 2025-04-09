@@ -21,7 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         categoryName: categories.name,
         comment: transactions.comment,
         amount: transactions.amount,
-        type: transactions.type, // Добавляем поле 'type'
+        type: transactions.type,
       })
       .from(transactions)
       .leftJoin(accounts, eq(transactions.accountId, accounts.id))
