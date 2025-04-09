@@ -12,6 +12,12 @@ type Transaction = {
   type: string;
 };
 
+
+type MonthYear = {
+  month: number;
+  year: number;
+};
+
 const formatNumber = (num: number) => {
   return num.toLocaleString('ru-RU');
 };
@@ -19,11 +25,42 @@ const formatNumber = (num: number) => {
 export default function TransactionsPage() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [monthYearList, setMonthYearList] = useState<MonthYear[]>([]);
+  const [selectedMonth, setSelectedMonth] = useState<number | null>(null);
+  const [selectedYear, setSelectedYear] = useState<number | null>(null);
+
+  useEffect(() => {
+    const fetchMonthYearList = async () => {
+      try {
+        const res = await fetch('/api/transactions/transactions-list');
+        const data = await res.json();
+
+        const timestamps = data.data;
+
+        // Преобразуем массив Unix timestamp в массив объектов с month и year
+        // const monthYearArray = timestamps.map((timestamp: number) => {
+        //   const date = new Date(timestamp * 1000); // Преобразуем Unix timestamp в миллисекунды
+        //   return { month: date.getMonth() + 1, year: date.getFullYear() }; // Месяцы с 1 (с 0 = январь)
+        // });
+
+        console.log(timestamps)
+
+        // Обновляем состояние с новым массивом
+        // setMonthYearList(monthYearArray);
+      } catch (error) {
+        console.error('Ошибка при загрузке месяцев и годов:', error);
+      }
+    };
+
+    fetchMonthYearList();
+  }, []);
+
+
 
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const res = await fetch('/api/transactions-table');
+        const res = await fetch('/api/transactions/transactions-table');
         const data = await res.json();
         setTransactions(data);
         setLoading(false);  // скрыть спиннер
