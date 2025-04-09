@@ -50,48 +50,50 @@ export default function TransactionsPage() {
         Операции
       </Title>
 
-      <div className="flex font-semibold text-gray-700 mb-2">
-        <div className="flex p-2 items-center w-[10%]">Дата</div>
-        <div className="flex p-2 items-center w-[15%]">Счёт</div>
-        <div className="flex p-2 items-center w-[25%]">Категория</div>
-        <div className="flex p-2 items-center w-[37%]">Комментарий</div>
-        <div className="flex p-2 items-center justify-end w-[10%]">Сумма</div>
-      </div>
-
       <div>
-        {transactions.map((tx, index) => {
-          let amountStyle = '';
-          if (tx.type === 'transfer' || tx.type === 'withdrawal') {
-            amountStyle = 'text-red-500 negative-number';
-          } else if (tx.type === 'topup') {
-            amountStyle = 'text-emerald-500';
-          } else {
-            amountStyle = getAmountStyle(tx.amount);
-          }
+  {transactions.length === 0 ? (
+    <div className="text-center text-gray-500 mt-8 text-lg">
+      В текущем месяце нет операций
+    </div>
+  ) : (
+    transactions.map((tx, index) => {
+      let amountStyle = '';
+      if (tx.type === 'transfer' || tx.type === 'withdrawal') {
+        amountStyle = 'text-red-500 negative-number';
+      } else if (tx.type === 'topup') {
+        amountStyle = 'text-emerald-500';
+      } else {
+        amountStyle = getAmountStyle(tx.amount);
+      }
 
-          const formattedAmount = formatNumber(tx.amount);
+      const formattedAmount = formatNumber(tx.amount);
 
-          return (
-            <div key={index} className="flex flex-wrap mb-2 rounded-lg bg-white hover:bg-gray-100 hover:shadow-lg transition-all duration-200">
-              <div className="flex p-2 items-center w-[10%]">
-                <div>{tx.date}</div>
-              </div>
-              <div className="flex p-2 items-center w-[15%]">
-                <div>{tx.accountName ?? '—'}</div>
-              </div>
-              <div className="flex p-2 items-center w-[25%]">
-                <div>{tx.categoryName ?? '—'}</div>
-              </div>
-              <div className="flex p-2 items-center w-[37%]">
-                <div>{tx.comment ?? '—'}</div>
-              </div>
-              <div className="flex p-2 items-center w-[10%] justify-end">
-                <div className={`${amountStyle}`}>{formattedAmount}</div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+      return (
+        <div
+          key={index}
+          className="flex flex-wrap mb-2 rounded-lg bg-white hover:bg-gray-100 hover:shadow-lg transition-all duration-200"
+        >
+          <div className="flex p-2 items-center w-[10%]">
+            <div>{tx.date}</div>
+          </div>
+          <div className="flex p-2 items-center w-[15%]">
+            <div>{tx.accountName ?? '—'}</div>
+          </div>
+          <div className="flex p-2 items-center w-[25%]">
+            <div>{tx.categoryName ?? '—'}</div>
+          </div>
+          <div className="flex p-2 items-center w-[37%]">
+            <div>{tx.comment ?? '—'}</div>
+          </div>
+          <div className="flex p-2 items-center w-[10%] justify-end">
+            <div className={`${amountStyle}`}>{formattedAmount}</div>
+          </div>
+        </div>
+      );
+    })
+  )}
+</div>
+
     </main>
   );
 }
