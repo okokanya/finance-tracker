@@ -11,17 +11,21 @@ interface CategoriesStore {
   setIsCreateModalOpen: (isOpen: boolean) => void;
   setIsEdit: (isEdit: boolean) => void;
   setSelectedCategory: (category: Category | null) => void;
+  isTransactionModalOpen: boolean;
+  setIsTransactionModalOpen: (isOpen: boolean) => void;
 }
 
 export const useCategoriesStore = create<CategoriesStore>(set => ({
   isEditModalOpen: false,
   isCreateModalOpen: false,
   isEdit: false,
+  isTransactionModalOpen: false,
   selectedCategory: null,
   setIsEditModalOpen: isOpen => set({ isEditModalOpen: isOpen }),
   setIsCreateModalOpen: isOpen => set({ isCreateModalOpen: isOpen }),
   setIsEdit: isEdit => set({ isEdit }),
   setSelectedCategory: (selectedCategory: Category | null) => set({ selectedCategory }),
+  setIsTransactionModalOpen: (isTransactionModalOpen: boolean) => set({ isTransactionModalOpen }),
 }));
 
 export const useIsEditModalOpen = () => useCategoriesStore(state => state.isEditModalOpen);

@@ -8,6 +8,7 @@ import Title from '@/components/base/title';
 import CategoryCard from '@/components/categories/category-card';
 import CategoryEditModal from '@/components/categories/category-edit-modal';
 import CategoryModal from '@/components/categories/category-modal';
+import CategoryTransactionModal from '@/components/categories/category-transaction-modal';
 import NewCategory from '@/components/categories/new-category';
 import { BALANCE_OPTIONS, Period, PERIOD_OPTIONS } from '@/features/category/category.constants';
 import useCategories from '@/features/category/category.queries';
@@ -25,6 +26,7 @@ export default function Categories() {
     setIsEditModalOpen,
     setSelectedCategory,
     isEditModalOpen,
+    setIsTransactionModalOpen,
   } = useCategoriesStore(store => store);
 
   const [selectedBalance, setSelectedBalance] = useState<OptionType<CategoryType>>(
@@ -38,11 +40,7 @@ export default function Categories() {
     error,
   } = useCategories({ type: selectedBalance.value, period: selectedPeriod.value });
 
-  const handleMainButtonClick = (save?: boolean) => {
-    if (save) {
-      // TODO: implement saving
-    }
-
+  const handleMainButtonClick = () => {
     setIsEdit(!isEdit);
   };
 
@@ -64,6 +62,8 @@ export default function Categories() {
     if (isEdit) {
       handleEditCategory(category);
     } else {
+      setIsTransactionModalOpen(true);
+      setSelectedCategory(category);
     }
   };
 
@@ -81,7 +81,7 @@ export default function Categories() {
       </div>
       <div className="mb-2 flex justify-between">
         <div className="flex gap-2">
-          <Button onClick={() => handleMainButtonClick(isEdit)}>
+          <Button onClick={() => handleMainButtonClick()}>
             {!isEdit ? 'Режим редактирования' : 'Сохранить изменения'}
           </Button>
           {isEdit ? (
@@ -127,6 +127,7 @@ export default function Categories() {
         type={selectedBalance.value}
       />
       <CategoryEditModal isOpen={isEditModalOpen} onClose={handleCloseEditCategory} />
+      <CategoryTransactionModal />
     </section>
   );
 }

@@ -1,9 +1,12 @@
+import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 
+import { OptionType } from '@/components/base/select/option-type';
 import { CategoryType } from '@/models';
 import { apiFetch } from '@/utils/api-fetch';
 
 import { ACCOUNTS_QUERY_STALE_TIME } from '../accounts/accounts.constants';
+import { useAccounts } from '../accounts/accounts.queries';
 import { CATEGORIES_QUERY_KEY, CATEGORIES_QUERY_PATH, Period } from './category.constants';
 import { CategoryResponse } from './category.types';
 
@@ -36,3 +39,37 @@ export default function useCategories({ type, period }: QueryFnParams = {}) {
 
   return query;
 }
+
+export const useCategoriesTransactions = ({ type }: QueryFnParams) => {
+  const { data: categories, isPending: isCategoriesLoading } = useCategories({ type });
+  const { data: accounts, isPending: isAccountsLoading } = useAccounts();
+
+  const categoriesOptions: OptionType[] = useMemo(
+    () =>
+      categories?.data
+        ? categories.data.map(category => ({
+            title: category.name,
+            value: category.id,
+          }))
+        : [],
+    [categories?.data]
+  );
+
+  const accountsOptions: OptionType[] = useMemo(
+    () =>
+      accounts?.accounts
+        ? accounts.accounts.map(account => ({
+            title: account.name,
+            value: account.id,
+          }))
+        : [],
+    [accounts?.accounts]
+  );
+
+  return {
+    categoriesOptions,
+    accountsOptions,
+    isLoading: isCategoriesLoading || isAccountsLoading,
+    categories: categories?.data,
+  };
+};

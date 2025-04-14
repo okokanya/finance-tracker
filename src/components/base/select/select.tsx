@@ -22,6 +22,7 @@ interface SelectProps {
   disabled?: boolean;
   className?: string;
   wrapperClassName?: string;
+  errorText?: string;
 }
 
 const Select: React.FC<SelectProps> = ({
@@ -33,6 +34,7 @@ const Select: React.FC<SelectProps> = ({
   disabled = false,
   className,
   wrapperClassName,
+  errorText,
   ...props
 }) => {
   return (
@@ -52,12 +54,12 @@ const Select: React.FC<SelectProps> = ({
               {...props}
             >
               <span
-                title={selected.title}
+                title={selected?.title}
                 className={cn('line-clamp-1 font-inter text-sm font-normal text-gray-800', {
                   ['text-gray-300']: disabled,
                 })}
               >
-                {selected.title}
+                {selected?.title}
               </span>
               <ChevronDownIcon
                 className={cn(
@@ -97,6 +99,7 @@ const Select: React.FC<SelectProps> = ({
           </>
         )}
       </Listbox>
+      {errorText ? <p className="text-xs font-normal text-red-500">{errorText}</p> : null}
     </Field>
   );
 };
