@@ -105,7 +105,7 @@ const Signin = () => {
         </form>
         <p className="ml-0 mr-auto mt-10">
           У вас еще нет аккаунта?{' '}
-          <Link className="link" href="/signup">
+          <Link className="uikit-link" href="/signup">
             Зарегистрироваться
           </Link>
         </p>

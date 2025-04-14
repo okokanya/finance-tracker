@@ -134,14 +134,14 @@ export default function Signup() {
             errorText={errors.passwordCheck?.message}
           />
 
-          {submitError && <span className="errorSpan">{submitError}</span>}
+          {submitError && <span className="uikit-error">{submitError}</span>}
 
           <Button type="submit">Зарегистрироваться</Button>
         </form>
 
         <p className="ml-0 mr-auto mt-10">
           Уже есть аккаунт?{' '}
-          <Link className="link" href="/signin">
+          <Link className="uikit-link" href="/signin">
             Войти
           </Link>
         </p>

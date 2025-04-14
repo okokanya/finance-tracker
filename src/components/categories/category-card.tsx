@@ -36,7 +36,7 @@ const CategoryCard: FC<CategoryCardProps> = ({
   return (
     <div
       className={cn(
-        'shadow-def flex max-w-72 cursor-pointer flex-col gap-2 rounded-lg border border-transparent bg-white px-6 py-4 hover:border hover:border-gray-300 hover:bg-gray-100',
+        'uikit-card-shadow flex max-w-72 cursor-pointer flex-col gap-2 rounded-lg border border-transparent bg-white px-6 py-4 hover:border hover:border-gray-300 hover:bg-gray-100',
         {
           ['bg-blue-50']: isEdit,
         }

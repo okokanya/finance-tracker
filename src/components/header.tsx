@@ -54,7 +54,7 @@ export default function Header() {
     <header className="order-last mx-auto inline-flex w-full min-w-[375px] border-t-[1px] border-t-gray-300 bg-white px-6 py-2 md:order-first md:border-b-[1px] md:border-t-0 md:border-b-gray-300 md:py-4">
       <div className="container mx-auto flex max-w-[1340px] items-center justify-between max-md:w-full max-md:justify-center">
         {/* Логотип */}
-        <Link href="/accounts" className="hidden md:inline">
+        <Link href="/accounts" className="uikit-show-desktop">
           <Image src="/logo.svg" alt="Logo" width={40} height={40} className="cursor-pointer" />
         </Link>
         {/* Навигация */}
@@ -67,7 +67,7 @@ export default function Header() {
                   className={cn('flex items-center space-x-1', linkClassNames(item.link))}
                 >
                   <item.icon className="size-8" />
-                  <span className="hidden md:inline">{item.text}</span>
+                  <p className="uikit-show-desktop">{item.text}</p>
                 </Link>
               </li>
             ))}
