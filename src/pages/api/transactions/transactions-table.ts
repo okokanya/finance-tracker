@@ -14,15 +14,6 @@ type TransactionResult = {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    // текущий месяц и год
-    const now = new Date();
-    const targetMonth = now.getMonth(); // с 0 -- январь
-    const targetYear = now.getFullYear();
-
-    // начало и конец месяца для фильтра
-    const monthStart = new Date(targetYear, targetMonth, 1);
-    const monthEnd = new Date(targetYear, targetMonth + 1, 0, 23, 59, 59, 999);
-
     const resultRaw = await db
       .select({
         date: transactions.createdAt,
@@ -33,12 +24,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         type: transactions.type,
       })
       .from(transactions)
-      .where(
-        and(
-          sql`${transactions.createdAt} >= ${monthStart}`,
-          sql`${transactions.createdAt} <= ${monthEnd}`
-        )
-      )
       .leftJoin(accounts, eq(transactions.accountId, accounts.id))
       .leftJoin(categories, eq(transactions.categoryId, categories.id));
 

@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { db } from '@/db'; // Настроенный клиент для SQLite
-import { transactions } from '@/db/schema'; // Схема таблицы transactions
+import { db } from '@/db';
+import { transactions } from '@/db/schema';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
@@ -13,24 +13,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(200).json({ message: 'Нет данных в поле createdAt', data: [] });
     }
 
-    // Преобразуем timestamp в объекты с полями month и year
+    // Преобразуем timestamp в строки формата "год-месяц"
     const monthYearSet = new Set<string>();
-    const monthYearArray = results.map(row => {
-      const date = new Date(row.createdAt); // Преобразуем Unix в Date
-      const month = date.getMonth() + 1; // Январь = 0, поэтому +1
+    const monthYearStrings = results.map(row => {
+      const date = new Date(row.createdAt);
+      const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Добавляем ведущий ноль
       const year = date.getFullYear();
-      return { month, year };
+      return `${year}-${month}`;
     });
 
     // Убираем дубликаты
-    const uniqueMonthYears = monthYearArray.filter(({ month, year }) => {
-      const key = `${month}-${year}`;
-      if (monthYearSet.has(key)) return false;
-      monthYearSet.add(key);
+    const uniqueMonthYears = monthYearStrings.filter(monthYear => {
+      if (monthYearSet.has(monthYear)) return false;
+      monthYearSet.add(monthYear);
       return true;
     });
 
-    return res.status(200).json({ message: 'Месяцы и года успешно получены', data: uniqueMonthYears });
+    return res.status(200).json({
+      message: 'Месяцы и года успешно получены',
+      data: uniqueMonthYears
+    });
   } catch (error) {
     console.error('Ошибка при загрузке данных:', error);
     return res.status(500).json({ error: 'Не удалось получить данные' });
