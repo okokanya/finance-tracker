@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import Spinner from '@/components/base/spinner';
 import Title from '@/components/base/title';
+import Select from '@/components/base/select/select';
 import { getAmountStyle } from '@/components/util/amount-style';
 
 type Transaction = {
@@ -12,10 +13,9 @@ type Transaction = {
   type: string;
 };
 
-
-type MonthYear = {
-  month: number;
-  year: number;
+type OptionType = {
+  value: string;
+  title: string;
 };
 
 const formatNumber = (num: number) => {
@@ -25,28 +25,29 @@ const formatNumber = (num: number) => {
 export default function TransactionsPage() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [monthYearList, setMonthYearList] = useState<MonthYear[]>([]);
-  const [selectedMonth, setSelectedMonth] = useState<number | null>(null);
-  const [selectedYear, setSelectedYear] = useState<number | null>(null);
+  const [monthYearOptions, setMonthYearOptions] = useState<OptionType[]>([]);
+  const [selectedMonthYear, setSelectedMonthYear] = useState<OptionType | null>(null);
 
+  // Загрузка списка месяцев/годов
   useEffect(() => {
     const fetchMonthYearList = async () => {
       try {
         const res = await fetch('/api/transactions/transactions-list');
         const data = await res.json();
+        const monthYearStrings = data.data as string[];
 
-        const timestamps = data.data;
+        // Преобразуем в формат для Select
+        const options = monthYearStrings.map(ym => ({
+          value: ym,
+          title: ym
+        }));
 
-        // Преобразуем массив Unix timestamp в массив объектов с month и year
-        // const monthYearArray = timestamps.map((timestamp: number) => {
-        //   const date = new Date(timestamp * 1000); // Преобразуем Unix timestamp в миллисекунды
-        //   return { month: date.getMonth() + 1, year: date.getFullYear() }; // Месяцы с 1 (с 0 = январь)
-        // });
+        setMonthYearOptions(options);
 
-        console.log(timestamps)
-
-        // Обновляем состояние с новым массивом
-        // setMonthYearList(monthYearArray);
+        // Устанавливаем первый элемент как выбранный по умолчанию
+        if (options.length > 0) {
+          setSelectedMonthYear(options[0]);
+        }
       } catch (error) {
         console.error('Ошибка при загрузке месяцев и годов:', error);
       }
@@ -55,23 +56,27 @@ export default function TransactionsPage() {
     fetchMonthYearList();
   }, []);
 
-
-
+  // Загрузка транзакций
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const res = await fetch('/api/transactions/transactions-table');
+        // Если выбран месяц-год, добавляем в URL параметры
+        const url = selectedMonthYear
+          ? `/api/transactions/transactions-table?monthYear=${selectedMonthYear.value}`
+          : '/api/transactions/transactions-table';
+
+        const res = await fetch(url);
         const data = await res.json();
         setTransactions(data);
-        setLoading(false);  // скрыть спиннер
+        setLoading(false);
       } catch (error) {
         console.error('Ошибка при загрузке:', error);
-        setLoading(false);  // скрыть спиннер
+        setLoading(false);
       }
     };
 
     fetchTransactions();
-  }, []);
+  }, [selectedMonthYear]); // Зависимость от выбранного месяца-года
 
   if (loading) {
     return (
@@ -81,56 +86,70 @@ export default function TransactionsPage() {
     );
   }
 
+  const handleMonthYearChange = (option: OptionType) => {
+    setSelectedMonthYear(option);
+    setLoading(true); // Показываем спиннер при смене периода
+  };
+
   return (
     <main className="w-full p-6">
       <Title className="justify-self-start" variant="h1">
         Операции
       </Title>
 
+      {monthYearOptions.length > 0 && selectedMonthYear && (
+        <Select
+          label="Период"
+          options={monthYearOptions}
+          selected={selectedMonthYear}
+          onChangeOption={handleMonthYearChange}
+          className="mb-4 w-40"
+        />
+      )}
+
       <div>
-  {transactions.length === 0 ? (
-    <div className="text-center text-gray-500 mt-8 text-lg">
-      В текущем месяце нет операций
-    </div>
-  ) : (
-    transactions.map((tx, index) => {
-      let amountStyle = '';
-      if (tx.type === 'transfer' || tx.type === 'withdrawal') {
-        amountStyle = 'text-red-500 negative-number';
-      } else if (tx.type === 'topup') {
-        amountStyle = 'text-emerald-500';
-      } else {
-        amountStyle = getAmountStyle(tx.amount);
-      }
+        {transactions.length === 0 ? (
+          <div className="text-center text-gray-500 mt-8 text-lg">
+            В выбранном периоде нет операций
+          </div>
+        ) : (
+          transactions.map((tx, index) => {
+            let amountStyle = '';
+            if (tx.type === 'transfer' || tx.type === 'withdrawal') {
+              amountStyle = 'text-red-500 negative-number';
+            } else if (tx.type === 'topup') {
+              amountStyle = 'text-emerald-500';
+            } else {
+              amountStyle = getAmountStyle(tx.amount);
+            }
 
-      const formattedAmount = formatNumber(tx.amount);
+            const formattedAmount = formatNumber(tx.amount);
 
-      return (
-        <div
-          key={index}
-          className="flex flex-wrap mb-2 rounded-lg bg-white hover:bg-gray-100 hover:shadow-lg transition-all duration-200"
-        >
-          <div className="flex p-2 items-center w-[10%]">
-            <div>{tx.date}</div>
-          </div>
-          <div className="flex p-2 items-center w-[15%]">
-            <div>{tx.accountName ?? '—'}</div>
-          </div>
-          <div className="flex p-2 items-center w-[25%]">
-            <div>{tx.categoryName ?? '—'}</div>
-          </div>
-          <div className="flex p-2 items-center w-[37%]">
-            <div>{tx.comment ?? '—'}</div>
-          </div>
-          <div className="flex p-2 items-center w-[10%] justify-end">
-            <div className={`${amountStyle}`}>{formattedAmount}</div>
-          </div>
-        </div>
-      );
-    })
-  )}
-</div>
-
+            return (
+              <div
+                key={index}
+                className="flex flex-wrap mb-2 rounded-lg bg-white hover:bg-gray-100 hover:shadow-lg transition-all duration-200"
+              >
+                <div className="flex p-2 items-center w-[10%]">
+                  <div>{tx.date}</div>
+                </div>
+                <div className="flex p-2 items-center w-[15%]">
+                  <div>{tx.accountName ?? '—'}</div>
+                </div>
+                <div className="flex p-2 items-center w-[25%]">
+                  <div>{tx.categoryName ?? '—'}</div>
+                </div>
+                <div className="flex p-2 items-center w-[37%]">
+                  <div>{tx.comment ?? '—'}</div>
+                </div>
+                <div className="flex p-2 items-center w-[10%] justify-end">
+                  <div className={`${amountStyle}`}>{formattedAmount}</div>
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
     </main>
   );
 }

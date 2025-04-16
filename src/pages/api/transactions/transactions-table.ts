@@ -3,20 +3,34 @@ import { db } from '@/db';
 import { transactions, accounts, categories } from '@/db/schema';
 import { eq, and, sql } from 'drizzle-orm';
 
-type TransactionResult = {
-  date: string;
-  accountName: string | null;
-  categoryName: string | null;
-  comment: string | null;
-  amount: number;
-  type: string;
-};
-
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const resultRaw = await db
+    const { monthYear } = req.query;
+
+    let whereConditions = [];
+
+    // Добавляем join условия
+    whereConditions.push(eq(transactions.accountId, accounts.id));
+    whereConditions.push(eq(transactions.categoryId, categories.id));
+
+    // Добавляем фильтр по месяцу и году если передан
+    if (monthYear && typeof monthYear === 'string') {
+      const [year, month] = monthYear.split('-').map(Number);
+
+      // Создаем границы месяца (начало и конец)
+      const startDate = new Date(year, month - 1, 1);
+      const endDate = new Date(year, month, 0, 23, 59, 59);
+
+      // Используем sql-выражение для фильтрации
+      whereConditions.push(sql`
+        ${transactions.createdAt} >= ${Math.floor(startDate.getTime() / 1000)}
+        AND ${transactions.createdAt} <= ${Math.floor(endDate.getTime() / 1000)}
+      `);
+    }
+
+    const result = await db
       .select({
-        date: transactions.createdAt,
+        date: sql<string>`strftime('%d.%m.%Y', datetime(${transactions.createdAt}, 'unixepoch'))`,
         accountName: accounts.name,
         categoryName: categories.name,
         comment: transactions.comment,
@@ -25,18 +39,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       })
       .from(transactions)
       .leftJoin(accounts, eq(transactions.accountId, accounts.id))
-      .leftJoin(categories, eq(transactions.categoryId, categories.id));
-
-    const result: TransactionResult[] = resultRaw.map((tx) => ({
-      date: new Date(
-        typeof tx.date === 'number' ? tx.date * 1000 : tx.date.getTime()
-      ).toLocaleDateString('ru-RU'),
-      accountName: tx.accountName ?? null,
-      categoryName: tx.categoryName ?? null,
-      comment: tx.comment ?? null,
-      amount: tx.amount,
-      type: tx.type,
-    }));
+      .leftJoin(categories, eq(transactions.categoryId, categories.id))
+      .where(and(...whereConditions));
 
     res.status(200).json(result);
   } catch (error) {
