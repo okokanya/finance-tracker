@@ -1,4 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
+import { fn } from '@storybook/test';
 
 import CategoryCard from '@/components/categories/category-card';
 
@@ -14,6 +15,7 @@ const meta = {
     description: 'Вечера за чашкой кофе или трапезой в любимом месте',
     value: 2000,
     type: 'expense',
+    onClick: fn(),
   },
 } satisfies Meta<typeof CategoryCard>;
 
