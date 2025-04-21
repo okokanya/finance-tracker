@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import Spinner from '@/components/base/spinner';
 import Title from '@/components/base/title';
 import Select from '@/components/base/select/select';
+import Modal from '@/components/base/modal';
 import { getAmountStyle } from '@/components/util/amount-style';
 
 type Transaction = {
@@ -28,7 +29,9 @@ export default function TransactionsPage() {
   const [monthYearOptions, setMonthYearOptions] = useState<OptionType[]>([]);
   const [selectedMonthYear, setSelectedMonthYear] = useState<OptionType | null>(null);
 
-  // Загрузка списка месяцев/годов
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
+
   useEffect(() => {
     const fetchMonthYearList = async () => {
       try {
@@ -36,15 +39,12 @@ export default function TransactionsPage() {
         const data = await res.json();
         const monthYearStrings = data.data as string[];
 
-        // Преобразуем в формат для Select
         const options = monthYearStrings.map(ym => ({
           value: ym,
           title: ym
         }));
 
         setMonthYearOptions(options);
-
-        // Устанавливаем первый элемент как выбранный по умолчанию
         if (options.length > 0) {
           setSelectedMonthYear(options[0]);
         }
@@ -56,11 +56,9 @@ export default function TransactionsPage() {
     fetchMonthYearList();
   }, []);
 
-  // Загрузка транзакций
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        // Если выбран месяц-год, добавляем в URL параметры
         const url = selectedMonthYear
           ? `/api/transactions/transactions-table?monthYear=${selectedMonthYear.value}`
           : '/api/transactions/transactions-table';
@@ -76,7 +74,22 @@ export default function TransactionsPage() {
     };
 
     fetchTransactions();
-  }, [selectedMonthYear]); // Зависимость от выбранного месяца-года
+  }, [selectedMonthYear]);
+
+  const handleMonthYearChange = (option: OptionType) => {
+    setSelectedMonthYear(option);
+    setLoading(true);
+  };
+
+  const handleTransactionClick = (transaction: Transaction) => {
+    setSelectedTransaction(transaction);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedTransaction(null);
+  };
 
   if (loading) {
     return (
@@ -85,11 +98,6 @@ export default function TransactionsPage() {
       </div>
     );
   }
-
-  const handleMonthYearChange = (option: OptionType) => {
-    setSelectedMonthYear(option);
-    setLoading(true); // Показываем спиннер при смене периода
-  };
 
   return (
     <main className="w-full p-6">
@@ -128,7 +136,8 @@ export default function TransactionsPage() {
             return (
               <div
                 key={index}
-                className="flex flex-wrap mb-2 rounded-lg bg-white hover:bg-gray-100 hover:shadow-lg transition-all duration-200"
+                onClick={() => handleTransactionClick(tx)}
+                className="flex flex-wrap mb-2 rounded-lg bg-white hover:bg-gray-100 hover:shadow-lg transition-all duration-200 cursor-pointer"
               >
                 <div className="flex p-2 items-center w-[10%]">
                   <div>{tx.date}</div>
@@ -143,13 +152,32 @@ export default function TransactionsPage() {
                   <div>{tx.comment ?? '—'}</div>
                 </div>
                 <div className="flex p-2 items-center w-[10%] justify-end">
-                  <div className={`${amountStyle}`}>{formattedAmount}</div>
+                  <div className={amountStyle}>{formattedAmount}</div>
                 </div>
               </div>
             );
           })
         )}
       </div>
+
+      {/* Модалка */}
+      {selectedTransaction && (
+        <Modal isOpen={isModalOpen} onClose={closeModal} title="Детали операции">
+          <div className="mt-4 space-y-2 text-sm">
+            <div><strong>Дата:</strong> {selectedTransaction.date}</div>
+            <div><strong>Счёт:</strong> {selectedTransaction.accountName ?? '—'}</div>
+            <div><strong>Категория:</strong> {selectedTransaction.categoryName ?? '—'}</div>
+            <div><strong>Комментарий:</strong> {selectedTransaction.comment ?? '—'}</div>
+            <div>
+              <strong>Сумма:</strong>{' '}
+              <span className={getAmountStyle(selectedTransaction.amount)}>
+                {formatNumber(selectedTransaction.amount)}
+              </span>
+            </div>
+            <div><strong>Тип:</strong> {selectedTransaction.type}</div>
+          </div>
+        </Modal>
+      )}
     </main>
   );
 }
