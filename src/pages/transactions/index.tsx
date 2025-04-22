@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 import Spinner from '@/components/base/spinner';
 import Title from '@/components/base/title';
 import Select from '@/components/base/select/select';
-import Modal from '@/components/base/modal';
 import { getAmountStyle } from '@/components/util/amount-style';
+import EditTransactionModal from '@/components/transactions/transactions-edit-modal';
 
 type Transaction = {
-  date: string;
+  date: string; // формат: YYYY-MM-DD
   accountName: string | null;
   categoryName: string | null;
   comment: string | null;
@@ -122,15 +122,7 @@ export default function TransactionsPage() {
           </div>
         ) : (
           transactions.map((tx, index) => {
-            let amountStyle = '';
-            if (tx.type === 'transfer' || tx.type === 'withdrawal') {
-              amountStyle = 'text-red-500 negative-number';
-            } else if (tx.type === 'topup') {
-              amountStyle = 'text-emerald-500';
-            } else {
-              amountStyle = getAmountStyle(tx.amount);
-            }
-
+            const amountStyle = getAmountStyle(tx.amount);
             const formattedAmount = formatNumber(tx.amount);
 
             return (
@@ -139,18 +131,10 @@ export default function TransactionsPage() {
                 onClick={() => handleTransactionClick(tx)}
                 className="flex flex-wrap mb-2 rounded-lg bg-white hover:bg-gray-100 hover:shadow-lg transition-all duration-200 cursor-pointer"
               >
-                <div className="flex p-2 items-center w-[10%]">
-                  <div>{tx.date}</div>
-                </div>
-                <div className="flex p-2 items-center w-[15%]">
-                  <div>{tx.accountName ?? '—'}</div>
-                </div>
-                <div className="flex p-2 items-center w-[25%]">
-                  <div>{tx.categoryName ?? '—'}</div>
-                </div>
-                <div className="flex p-2 items-center w-[37%]">
-                  <div>{tx.comment ?? '—'}</div>
-                </div>
+                <div className="flex p-2 items-center w-[10%]">{tx.date}</div>
+                <div className="flex p-2 items-center w-[15%]">{tx.accountName ?? '—'}</div>
+                <div className="flex p-2 items-center w-[25%]">{tx.categoryName ?? '—'}</div>
+                <div className="flex p-2 items-center w-[37%]">{tx.comment ?? '—'}</div>
                 <div className="flex p-2 items-center w-[10%] justify-end">
                   <div className={amountStyle}>{formattedAmount}</div>
                 </div>
@@ -160,23 +144,13 @@ export default function TransactionsPage() {
         )}
       </div>
 
-      {/* Модалка */}
+      {/* Новая модалка */}
       {selectedTransaction && (
-        <Modal isOpen={isModalOpen} onClose={closeModal} title="Детали операции">
-          <div className="mt-4 space-y-2 text-sm">
-            <div><strong>Дата:</strong> {selectedTransaction.date}</div>
-            <div><strong>Счёт:</strong> {selectedTransaction.accountName ?? '—'}</div>
-            <div><strong>Категория:</strong> {selectedTransaction.categoryName ?? '—'}</div>
-            <div><strong>Комментарий:</strong> {selectedTransaction.comment ?? '—'}</div>
-            <div>
-              <strong>Сумма:</strong>{' '}
-              <span className={getAmountStyle(selectedTransaction.amount)}>
-                {formatNumber(selectedTransaction.amount)}
-              </span>
-            </div>
-            <div><strong>Тип:</strong> {selectedTransaction.type}</div>
-          </div>
-        </Modal>
+        <EditTransactionModal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          title="Редактирование операции"
+          transaction={selectedTransaction} children={undefined}        />
       )}
     </main>
   );

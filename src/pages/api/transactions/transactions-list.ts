@@ -1,11 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '@/db';
-import { transactions } from '@/db/schema';
 import { sql } from 'drizzle-orm';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    // Получаем уникальные месяцы и годы напрямую из базы
+    // уникальные месяц+год
     const uniqueMonthYears = await db.all<{ monthYear: string }>(sql`
       SELECT DISTINCT strftime('%Y-%m', datetime(createdAt, 'unixepoch')) as monthYear
       FROM transactions
