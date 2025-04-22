@@ -10,7 +10,7 @@ type Props = ModalProps & {
     categoryName: string | null;
     comment: string | null;
     amount: number;
-    date: string;
+    date: string; // формат: YYYY-MM-DD
   };
   children?: React.ReactNode;
 };
@@ -29,9 +29,9 @@ const EditTransactionModal: React.FC<Props> = ({ isOpen, onClose, transaction, t
   const [category, setCategory] = useState<string>(transaction.categoryName || '');
   const [comment, setComment] = useState<string>(transaction.comment || '');
 
-  const [day, setDay] = useState<string>(transaction.date.split('-')[2]);
-  const [month, setMonth] = useState<string>(months[+transaction.date.split('-')[1] - 1]);
-  const [year, setYear] = useState<string>(transaction.date.split('-')[0]);
+  const [day, setDay] = useState<string>(transaction.date.split('.')[0]);
+  const [month, setMonth] = useState<string>(transaction.date.split('.')[1]);
+  const [year, setYear] = useState<string>(transaction.date.split('.')[2]);
 
   useEffect(() => {
     const fetchOptions = async () => {
@@ -40,18 +40,35 @@ const EditTransactionModal: React.FC<Props> = ({ isOpen, onClose, transaction, t
         fetch('/api/transactions/transactions-categories-list'),
       ]);
 
-      const accountsData = await accountsRes.json();
-      const categoriesData = await categoriesRes.json();
+      if (accountsRes.ok) {
+        const accountsData = await accountsRes.json();
+        setAccounts(accountsData.map((a: string) => ({ value: a, label: a })));
+      }
 
-      setAccounts(accountsData.map((a: string) => ({ value: a, label: a })));
-      setCategories(categoriesData.map((c: string) => ({ value: c, label: c })));
+      if (categoriesRes.ok) {
+        const categoriesData = await categoriesRes.json();
+        setCategories(categoriesData.map((c: string) => ({ value: c, label: c })));
+      }
     };
 
     if (isOpen) fetchOptions();
   }, [isOpen]);
 
+  useEffect(() => {
+    if (isOpen && transaction?.date) {
+      const [d, m, y] = transaction.date.split('.');
+      setYear(y);
+      setMonth(m);
+      setDay(d);
+      setAccount(transaction.accountName || '');
+      setCategory(transaction.categoryName || '');
+      setAmount(transaction.amount.toString());
+      setComment(transaction.comment || '');
+    }
+  }, [isOpen, transaction]);
+
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, ''); // разрешаем только цифры
+    const value = e.target.value.replace(/\D/g, '');
     setAmount(value);
   };
 
@@ -120,19 +137,22 @@ const EditTransactionModal: React.FC<Props> = ({ isOpen, onClose, transaction, t
 
           <div className="w-1/3">
             <label className="text-sm text-gray-500">Месяц</label>
+
             <select
               className="w-full border rounded px-2 py-1"
               value={month}
               onChange={(e) => setMonth(e.target.value)}
             >
-              {months.map((m, i) => (
-                <option key={i} value={m}>
-                  {m}
-                </option>
-              ))}
+              {months.map((m, i) => {
+                const value = String(i + 1).padStart(2, '0');
+                return (
+                  <option key={value} value={value}>
+                    {m}
+                  </option>
+                );
+              })}
             </select>
           </div>
-
           <div className="w-1/3">
             <label className="text-sm text-gray-500">Год</label>
             <select
@@ -140,7 +160,7 @@ const EditTransactionModal: React.FC<Props> = ({ isOpen, onClose, transaction, t
               value={year}
               onChange={(e) => setYear(e.target.value)}
             >
-              {Array.from({ length: 11 }, (_, i) => 2014 + i).map((y) => (
+              {Array.from({ length: 6 }, (_, i) => 2020 + i).map((y) => (
                 <option key={y} value={y.toString()}>
                   {y}
                 </option>
