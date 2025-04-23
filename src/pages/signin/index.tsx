@@ -11,6 +11,8 @@ import Title from '@/components/base/title';
 import FormWrap from '@/components/form-wrap';
 import LogoTitle from '@/components/logo-title';
 import MainWrap from '@/components/main-wrap';
+import { useProfileController } from '@/features/profile/profile.controller';
+import { User } from '@/features/profile/profile.types';
 
 interface SignInData {
   email: string;
@@ -18,11 +20,7 @@ interface SignInData {
 }
 
 interface AuthResponse {
-  token?: string;
-  user?: {
-    id: string;
-    email: string;
-  };
+  user?: User;
 }
 
 const Signin = () => {
@@ -36,6 +34,8 @@ const Signin = () => {
   } = useForm<SignInData>();
 
   const router = useRouter();
+  const { onLogin } = useProfileController();
+
   const mutation = useMutation<AuthResponse, Error, SignInData>({
     mutationFn: async (data: SignInData) => {
       const response = await fetch('/api/auth/signin', {
@@ -52,7 +52,8 @@ const Signin = () => {
 
       return response.json();
     },
-    onSuccess: () => {
+    onSuccess: data => {
+      if (data.user) onLogin(data.user);
       setIsModalOpen(true); // меняем состояние на удачном входе
       setTimeout(() => {
         setIsModalOpen(false);
