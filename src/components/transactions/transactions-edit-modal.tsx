@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ModalProps } from '../base/modal';
 import Modal from '../base/modal';
+import Button from '../base/button';
 
 type SelectOption = { value: string; label: string };
 
@@ -71,6 +72,48 @@ const EditTransactionModal: React.FC<Props> = ({ isOpen, onClose, transaction, t
     const value = e.target.value.replace(/\D/g, '');
     setAmount(value);
   };
+
+  const handleSave = async () => {
+    const newDate = `${day}.${String(months.indexOf(month) + 1).padStart(2, '0')}.${year}`;
+    const payload = {
+      accountName: account,
+      categoryName: category,
+      amount: Number(amount),
+      comment,
+      date: newDate,
+    };
+
+    const isChanged =
+      payload.accountName !== transaction.accountName ||
+      payload.categoryName !== transaction.categoryName ||
+      payload.amount !== transaction.amount ||
+      payload.comment !== transaction.comment ||
+      payload.date !== transaction.date;
+
+    if (!isChanged) {
+      onClose();
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/transactions/${transaction.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        onClose();
+      } else {
+        console.error('Ошибка сохранения:', await res.text());
+      }
+    } catch (error) {
+      console.error('Ошибка запроса:', error);
+    }
+  };
+
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={title}>
@@ -176,6 +219,12 @@ const EditTransactionModal: React.FC<Props> = ({ isOpen, onClose, transaction, t
             value={comment}
             onChange={(e) => setComment(e.target.value)}
           />
+        </div>
+
+        <div className="flex justify-end">
+          <Button onClick={handleSave} variant="primary">
+          Сохранить
+          </Button>
         </div>
       </div>
     </Modal>
