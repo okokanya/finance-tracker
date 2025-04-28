@@ -30,40 +30,42 @@ export default function TransactionsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
 
+  const fetchMonthYearList = async () => {
+    try {
+      const res = await fetch('/api/transactions/transactions-list');
+      const { data } = await res.json();
+      setMonthYearOptions(data.map((ym: string) => ({
+        value: ym,
+        title: ym
+      })));
+      if (data.length > 0) setSelectedMonthYear({ value: data[0], title: data[0] });
+    } catch (error) {
+      console.error('Error loading months:', error);
+    }
+  };
+
+  const fetchTransactions = async () => {
+    try {
+      setLoading(true);
+      const url = selectedMonthYear
+        ? `/api/transactions/transactions-table?monthYear=${selectedMonthYear.value}`
+        : '/api/transactions/transactions-table';
+
+      const res = await fetch(url);
+      const data = await res.json();
+      setTransactions(data);
+    } catch (error) {
+      console.error('Error loading transactions:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchMonthYearList = async () => {
-      try {
-        const res = await fetch('/api/transactions/transactions-list');
-        const { data } = await res.json();
-        setMonthYearOptions(data.map((ym: string) => ({
-          value: ym,
-          title: ym
-        })));
-        if (data.length > 0) setSelectedMonthYear({ value: data[0], title: data[0] });
-      } catch (error) {
-        console.error('Error loading months:', error);
-      }
-    };
     fetchMonthYearList();
   }, []);
 
   useEffect(() => {
-    const fetchTransactions = async () => {
-      try {
-        const url = selectedMonthYear
-          ? `/api/transactions/transactions-table?monthYear=${selectedMonthYear.value}`
-          : '/api/transactions/transactions-table';
-
-        const res = await fetch(url);
-        const data = await res.json();
-        setTransactions(data);
-      } catch (error) {
-        console.error('Error loading transactions:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchTransactions();
   }, [selectedMonthYear]);
 
@@ -71,6 +73,11 @@ export default function TransactionsPage() {
     setTransactions(prev => prev.map(tx =>
       tx.id === updatedTransaction.id ? updatedTransaction : tx
     ));
+  };
+
+  const handleTransactionDuplicate = async () => {
+    await fetchTransactions();
+    // Можно добавить уведомление об успешном дублировании
   };
 
   if (loading) return <div className="flex justify-center items-center min-h-screen"><Spinner /></div>;
@@ -130,6 +137,7 @@ export default function TransactionsPage() {
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           onSaveSuccess={handleTransactionUpdate}
+          onDuplicateSuccess={handleTransactionDuplicate}
           title="Редактирование операции"
           transaction={selectedTransaction}
         />
