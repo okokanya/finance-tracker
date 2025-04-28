@@ -5,14 +5,19 @@ import Button from '../base/button';
 
 type SelectOption = { value: string; label: string };
 
+type TransactionData = {
+  id: string;
+  accountName: string | null;
+  categoryName: string | null;
+  comment: string | null;
+  amount: number;
+  date: string;
+  type?: string; // Добавил опциональное поле type для совместимости
+};
+
 type Props = ModalProps & {
-  transaction: {
-    accountName: string | null;
-    categoryName: string | null;
-    comment: string | null;
-    amount: number;
-    date: string; // формат: YYYY-MM-DD
-  };
+  transaction: TransactionData;
+  title: string;
   children?: React.ReactNode;
 };
 
@@ -56,7 +61,7 @@ const EditTransactionModal: React.FC<Props> = ({ isOpen, onClose, transaction, t
   }, [isOpen]);
 
   useEffect(() => {
-    if (isOpen && transaction?.date) {
+    if (isOpen && transaction) {
       const [d, m, y] = transaction.date.split('.');
       setYear(y);
       setMonth(m);
@@ -74,13 +79,16 @@ const EditTransactionModal: React.FC<Props> = ({ isOpen, onClose, transaction, t
   };
 
   const handleSave = async () => {
-    const newDate = `${day}.${String(months.indexOf(month) + 1).padStart(2, '0')}.${year}`;
+    const newDate = `${day}.${month}.${year}`;
+
     const payload = {
+      id: transaction.id, // Убедимся, что ID передается
       accountName: account,
       categoryName: category,
       amount: Number(amount),
       comment,
       date: newDate,
+      type: transaction.type // Добавляем type, если он есть
     };
 
     const isChanged =
@@ -113,7 +121,6 @@ const EditTransactionModal: React.FC<Props> = ({ isOpen, onClose, transaction, t
       console.error('Ошибка запроса:', error);
     }
   };
-
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={title}>
@@ -180,7 +187,6 @@ const EditTransactionModal: React.FC<Props> = ({ isOpen, onClose, transaction, t
 
           <div className="w-1/3">
             <label className="text-sm text-gray-500">Месяц</label>
-
             <select
               className="w-full border rounded px-2 py-1"
               value={month}
@@ -196,6 +202,7 @@ const EditTransactionModal: React.FC<Props> = ({ isOpen, onClose, transaction, t
               })}
             </select>
           </div>
+
           <div className="w-1/3">
             <label className="text-sm text-gray-500">Год</label>
             <select
@@ -223,7 +230,7 @@ const EditTransactionModal: React.FC<Props> = ({ isOpen, onClose, transaction, t
 
         <div className="flex justify-end">
           <Button onClick={handleSave} variant="primary">
-          Сохранить
+            Сохранить
           </Button>
         </div>
       </div>

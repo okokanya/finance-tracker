@@ -6,7 +6,8 @@ import { getAmountStyle } from '@/components/util/amount-style';
 import EditTransactionModal from '@/components/transactions/transactions-edit-modal';
 
 type Transaction = {
-  date: string; // формат: YYYY-MM-DD
+  id: string;
+  date: string;
   accountName: string | null;
   categoryName: string | null;
   comment: string | null;
@@ -19,16 +20,13 @@ type OptionType = {
   title: string;
 };
 
-const formatNumber = (num: number) => {
-  return num.toLocaleString('ru-RU');
-};
+const formatNumber = (num: number) => num.toLocaleString('ru-RU');
 
 export default function TransactionsPage() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [monthYearOptions, setMonthYearOptions] = useState<OptionType[]>([]);
   const [selectedMonthYear, setSelectedMonthYear] = useState<OptionType | null>(null);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
 
@@ -36,23 +34,16 @@ export default function TransactionsPage() {
     const fetchMonthYearList = async () => {
       try {
         const res = await fetch('/api/transactions/transactions-list');
-        const data = await res.json();
-        const monthYearStrings = data.data as string[];
-
-        const options = monthYearStrings.map(ym => ({
+        const { data } = await res.json();
+        setMonthYearOptions(data.map((ym: string) => ({
           value: ym,
           title: ym
-        }));
-
-        setMonthYearOptions(options);
-        if (options.length > 0) {
-          setSelectedMonthYear(options[0]);
-        }
+        })));
+        if (data.length > 0) setSelectedMonthYear({ value: data[0], title: data[0] });
       } catch (error) {
-        console.error('Ошибка при загрузке месяцев и годов:', error);
+        console.error('Error loading months:', error);
       }
     };
-
     fetchMonthYearList();
   }, []);
 
@@ -66,9 +57,9 @@ export default function TransactionsPage() {
         const res = await fetch(url);
         const data = await res.json();
         setTransactions(data);
-        setLoading(false);
       } catch (error) {
-        console.error('Ошибка при загрузке:', error);
+        console.error('Error loading transactions:', error);
+      } finally {
         setLoading(false);
       }
     };
@@ -76,41 +67,24 @@ export default function TransactionsPage() {
     fetchTransactions();
   }, [selectedMonthYear]);
 
-  const handleMonthYearChange = (option: OptionType) => {
-    setSelectedMonthYear(option);
-    setLoading(true);
+  const handleTransactionUpdate = (updatedTransaction: Transaction) => {
+    setTransactions(prev => prev.map(tx =>
+      tx.id === updatedTransaction.id ? updatedTransaction : tx
+    ));
   };
 
-  const handleTransactionClick = (transaction: Transaction) => {
-    setSelectedTransaction(transaction);
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setSelectedTransaction(null);
-  };
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <Spinner />
-      </div>
-    );
-  }
+  if (loading) return <div className="flex justify-center items-center min-h-screen"><Spinner /></div>;
 
   return (
     <main className="w-full p-6">
-      <Title className="justify-self-start" variant="h1">
-        Операции
-      </Title>
+      <Title variant="h1">Операции</Title>
 
       {monthYearOptions.length > 0 && selectedMonthYear && (
         <Select
           label="Период"
           options={monthYearOptions}
           selected={selectedMonthYear}
-          onChangeOption={handleMonthYearChange}
+          onChangeOption={setSelectedMonthYear}
           className="mb-4 w-40"
         />
       )}
@@ -121,36 +95,44 @@ export default function TransactionsPage() {
             В выбранном периоде нет операций
           </div>
         ) : (
-          transactions.map((tx, index) => {
-            const amountStyle = getAmountStyle(tx.amount);
-            const formattedAmount = formatNumber(tx.amount);
-
-            return (
-              <div
-                key={index}
-                onClick={() => handleTransactionClick(tx)}
-                className="flex flex-wrap mb-2 rounded-lg bg-white hover:bg-gray-100 hover:shadow-lg transition-all duration-200 cursor-pointer"
-              >
-                <div className="flex p-2 items-center w-[10%]">{tx.date}</div>
-                <div className="flex p-2 items-center w-[15%]">{tx.accountName ?? '—'}</div>
-                <div className="flex p-2 items-center w-[25%]">{tx.categoryName ?? '—'}</div>
-                <div className="flex p-2 items-center w-[37%]">{tx.comment ?? '—'}</div>
-                <div className="flex p-2 items-center w-[10%] justify-end">
-                  <div className={amountStyle}>{formattedAmount}</div>
-                </div>
-              </div>
-            );
-          })
+          <div className="mb-2 flex flex-wrap font-semibold p-2">
+            <div className="w-[8%]">ID</div>
+            <div className="w-[10%]">Дата</div>
+            <div className="w-[15%]">Счёт</div>
+            <div className="w-[25%]">Категория</div>
+            <div className="w-[30%]">Комментарий</div>
+            <div className="w-[10%] text-right">Сумма</div>
+          </div>
         )}
+        {transactions.map((tx) => (
+          <div
+            key={tx.id}
+            onClick={() => {
+              setSelectedTransaction(tx);
+              setIsModalOpen(true);
+            }}
+            className="flex flex-wrap mb-2 rounded-lg bg-white hover:bg-gray-100 hover:shadow-lg transition-all duration-200 cursor-pointer"
+          >
+            <div className="flex p-2 items-center w-[8%] text-gray-500 text-sm">{tx.id}</div>
+            <div className="flex p-2 items-center w-[10%]">{tx.date}</div>
+            <div className="flex p-2 items-center w-[15%]">{tx.accountName ?? '—'}</div>
+            <div className="flex p-2 items-center w-[25%]">{tx.categoryName ?? '—'}</div>
+            <div className="flex p-2 items-center w-[30%]">{tx.comment ?? '—'}</div>
+            <div className="flex p-2 items-center w-[10%] justify-end">
+              <div className={getAmountStyle(tx.amount)}>{formatNumber(tx.amount)}</div>
+            </div>
+          </div>
+        ))}
       </div>
 
-      {/* Новая модалка */}
       {selectedTransaction && (
         <EditTransactionModal
           isOpen={isModalOpen}
-          onClose={closeModal}
+          onClose={() => setIsModalOpen(false)}
+          onSaveSuccess={handleTransactionUpdate}
           title="Редактирование операции"
-          transaction={selectedTransaction} children={undefined}        />
+          transaction={selectedTransaction}
+        />
       )}
     </main>
   );

@@ -30,6 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const result = await db
       .select({
+        id: transactions.id, // Добавляем ID транзакции
         date: sql<string>`strftime('%d.%m.%Y', datetime(${transactions.createdAt}, 'unixepoch'))`,
         accountName: accounts.name,
         categoryName: categories.name,
