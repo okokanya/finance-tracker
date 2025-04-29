@@ -130,7 +130,7 @@ export default function EditTransactionModal({
 
     setIsDeleting(true);
     try {
-      const res = await fetch(`/api/transactions/${transaction.id}`, {
+      const res = await fetch(`/api/transactions/${transaction.id}/delete`, {
         method: 'DELETE',
       });
 
@@ -140,6 +140,7 @@ export default function EditTransactionModal({
       onClose();
     } catch (error) {
       console.error('Delete error:', error);
+      // Можно добавить уведомление об ошибке
     } finally {
       setIsDeleting(false);
     }

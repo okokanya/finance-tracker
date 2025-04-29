@@ -77,7 +77,9 @@ export default function TransactionsPage() {
 
   const handleTransactionDuplicate = async () => {
     await fetchTransactions();
-    // Можно добавить уведомление об успешном дублировании
+  };
+  const handleTransactionDelete = async () => {
+    await fetchTransactions(); // Перезагружаем список транзакций
   };
 
   if (loading) return <div className="flex justify-center items-center min-h-screen"><Spinner /></div>;
@@ -137,6 +139,7 @@ export default function TransactionsPage() {
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           onSaveSuccess={handleTransactionUpdate}
+          onDeleteSuccess={handleTransactionDelete} // Передаем обработчик удаления
           onDuplicateSuccess={handleTransactionDuplicate}
           title="Редактирование операции"
           transaction={selectedTransaction}
