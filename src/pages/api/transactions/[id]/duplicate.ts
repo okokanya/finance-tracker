@@ -28,8 +28,8 @@ export default async function handler(
     const newTransaction = {
       ...originalTx,
       id: uuidv4(),
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: originalTx.createdAt, // Сохраняем оригинальную дату создания
+      updatedAt: new Date(), // Обновляем только дату изменения
     };
 
     await db.insert(transactions).values(newTransaction);
