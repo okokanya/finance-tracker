@@ -140,7 +140,6 @@ export default function EditTransactionModal({
       onClose();
     } catch (error) {
       console.error('Delete error:', error);
-      // Можно добавить уведомление об ошибке
     } finally {
       setIsDeleting(false);
     }

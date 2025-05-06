@@ -9,7 +9,7 @@ type UpdateTransactionRequest = {
   amount: number;
   comment: string | null;
   date: string; // DD.MM.YYYY
-  type?: string;
+  type?: 'topup' | 'withdrawal' | 'transfer'; // Ограничиваем допустимые значения
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -28,8 +28,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       date,
       type
     } = req.body as UpdateTransactionRequest;
-
-    console.log('Updating transaction:', { id, accountName, categoryName, amount, date });
 
     // Находим ID счета и категории по именам
     const [account] = await db
@@ -61,7 +59,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         amount,
         comment,
         createdAt: sql`strftime('%s', ${dateString})`,
-        type: type || 'expense'
+        type: type ?? 'withdrawal' // Используем ?? вместо || для большей ясности
       })
       .where(eq(transactions.id, id as string))
       .returning();

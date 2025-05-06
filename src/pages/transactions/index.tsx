@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Spinner from '@/components/base/spinner';
 import Title from '@/components/base/title';
 import Select from '@/components/base/select/select';
 import { getAmountStyle } from '@/components/util/amount-style';
 import EditTransactionModal from '@/components/transactions/transactions-edit-modal';
+import useTransactions from '@/hooks/useTransactions'; // Предполагается, что хук находится в этой папке
 
 type Transaction = {
   id: string;
@@ -12,77 +13,52 @@ type Transaction = {
   categoryName: string | null;
   comment: string | null;
   amount: number;
-  type: string;
-};
-
-type OptionType = {
-  value: string;
-  title: string;
+  type?: string;
 };
 
 const formatNumber = (num: number) => num.toLocaleString('ru-RU');
 
 export default function TransactionsPage() {
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [monthYearOptions, setMonthYearOptions] = useState<OptionType[]>([]);
-  const [selectedMonthYear, setSelectedMonthYear] = useState<OptionType | null>(null);
+  const {
+    transactions,
+    setTransactions,
+    loading,
+    error,
+    monthYearOptions,
+    selectedMonthYear,
+    setSelectedMonthYear,
+    fetchTransactions,
+  } = useTransactions();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
 
-  const fetchMonthYearList = async () => {
-    try {
-      const res = await fetch('/api/transactions/transactions-list');
-      const { data } = await res.json();
-      setMonthYearOptions(data.map((ym: string) => ({
-        value: ym,
-        title: ym
-      })));
-      if (data.length > 0) setSelectedMonthYear({ value: data[0], title: data[0] });
-    } catch (error) {
-      console.error('Error loading months:', error);
-    }
-  };
-
-  const fetchTransactions = async () => {
-    try {
-      setLoading(true);
-      const url = selectedMonthYear
-        ? `/api/transactions/transactions-table?monthYear=${selectedMonthYear.value}`
-        : '/api/transactions/transactions-table';
-
-      const res = await fetch(url);
-      const data = await res.json();
-      setTransactions(data);
-    } catch (error) {
-      console.error('Error loading transactions:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchMonthYearList();
-  }, []);
-
-  useEffect(() => {
-    fetchTransactions();
-  }, [selectedMonthYear]);
-
-  const handleTransactionUpdate = (updatedTransaction: Transaction) => {
-    setTransactions(prev => prev.map(tx =>
-      tx.id === updatedTransaction.id ? updatedTransaction : tx
-    ));
+  // const handleTransactionUpdate = (updatedTransaction: Transaction) => {
+  //   setTransactions((prev) =>
+  //     prev.map((tx) => (tx.id === updatedTransaction.id ? updatedTransaction : tx))
+  //   );
+  // };
+  const handleTransactionUpdate = async (updatedTransaction: Transaction): Promise<void> => {
+    setTransactions((prev) =>
+      prev.map((tx) => (tx.id === updatedTransaction.id ? updatedTransaction : tx))
+    );
   };
 
   const handleTransactionDuplicate = async () => {
     await fetchTransactions();
   };
+
   const handleTransactionDelete = async () => {
-    await fetchTransactions(); // Перезагружаем список транзакций
+    await fetchTransactions();
   };
 
-  if (loading) return <div className="flex justify-center items-center min-h-screen"><Spinner /></div>;
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
     <main className="w-full p-6">
@@ -98,6 +74,10 @@ export default function TransactionsPage() {
         />
       )}
 
+      {error && (
+        <div className="text-red-500 text-center mb-4">{error}</div>
+      )}
+
       <div>
         {transactions.length === 0 ? (
           <div className="text-center text-gray-500 mt-8 text-lg">
@@ -105,7 +85,6 @@ export default function TransactionsPage() {
           </div>
         ) : (
           <div className="mb-2 flex flex-wrap font-semibold p-2">
-            <div className="w-[8%]">ID</div>
             <div className="w-[10%]">Дата</div>
             <div className="w-[15%]">Счёт</div>
             <div className="w-[25%]">Категория</div>
@@ -122,7 +101,6 @@ export default function TransactionsPage() {
             }}
             className="flex flex-wrap mb-2 rounded-lg bg-white hover:bg-gray-100 hover:shadow-lg transition-all duration-200 cursor-pointer"
           >
-            <div className="flex p-2 items-center w-[8%] text-gray-500 text-sm">{tx.id}</div>
             <div className="flex p-2 items-center w-[10%]">{tx.date}</div>
             <div className="flex p-2 items-center w-[15%]">{tx.accountName ?? '—'}</div>
             <div className="flex p-2 items-center w-[25%]">{tx.categoryName ?? '—'}</div>
@@ -139,7 +117,7 @@ export default function TransactionsPage() {
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           onSaveSuccess={handleTransactionUpdate}
-          onDeleteSuccess={handleTransactionDelete} // Передаем обработчик удаления
+          onDeleteSuccess={handleTransactionDelete}
           onDuplicateSuccess={handleTransactionDuplicate}
           title="Редактирование операции"
           transaction={selectedTransaction}
