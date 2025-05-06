@@ -3,7 +3,8 @@ import Spinner from '@/components/base/spinner';
 import Title from '@/components/base/title';
 import Select from '@/components/base/select/select';
 import { getAmountStyle } from '@/components/util/amount-style';
-import EditTransactionModal from '@/components/transactions/transactions-edit-modal';
+import Table from '@/components/transactions/table';
+import Pie from '@/components/transactions/pie';
 
 type Transaction = {
   id: string;
@@ -15,7 +16,8 @@ type Transaction = {
   type: string;
 };
 
-type OptionType = {
+// Экспортируем тип OptionType для использования в других компонентах
+export type OptionType = {
   value: string;
   title: string;
 };
@@ -34,11 +36,12 @@ export default function TransactionsPage() {
     try {
       const res = await fetch('/api/transactions/transactions-list');
       const { data } = await res.json();
-      setMonthYearOptions(data.map((ym: string) => ({
+      const options = data.map((ym: string) => ({
         value: ym,
-        title: ym
-      })));
-      if (data.length > 0) setSelectedMonthYear({ value: data[0], title: data[0] });
+        title: ym,
+      }));
+      setMonthYearOptions(options);
+      if (options.length > 0) setSelectedMonthYear(options[0]);
     } catch (error) {
       console.error('Error loading months:', error);
     }
@@ -70,16 +73,17 @@ export default function TransactionsPage() {
   }, [selectedMonthYear]);
 
   const handleTransactionUpdate = (updatedTransaction: Transaction) => {
-    setTransactions(prev => prev.map(tx =>
-      tx.id === updatedTransaction.id ? updatedTransaction : tx
-    ));
+    setTransactions((prev) =>
+      prev.map((tx) => (tx.id === updatedTransaction.id ? updatedTransaction : tx))
+    );
   };
 
   const handleTransactionDuplicate = async () => {
     await fetchTransactions();
   };
+
   const handleTransactionDelete = async () => {
-    await fetchTransactions(); // Перезагружаем список транзакций
+    await fetchTransactions();
   };
 
   if (loading) return <div className="flex justify-center items-center min-h-screen"><Spinner /></div>;
@@ -134,12 +138,23 @@ export default function TransactionsPage() {
         ))}
       </div>
 
+      <Pie
+        monthYearOptions={monthYearOptions}
+        selectedMonthYear={selectedMonthYear}
+        setSelectedMonthYear={setSelectedMonthYear}
+      />
+      <Table
+        monthYearOptions={monthYearOptions}
+        selectedMonthYear={selectedMonthYear}
+        setSelectedMonthYear={setSelectedMonthYear}
+      />
+
       {selectedTransaction && (
         <EditTransactionModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           onSaveSuccess={handleTransactionUpdate}
-          onDeleteSuccess={handleTransactionDelete} // Передаем обработчик удаления
+          onDeleteSuccess={handleTransactionDelete}
           onDuplicateSuccess={handleTransactionDuplicate}
           title="Редактирование операции"
           transaction={selectedTransaction}

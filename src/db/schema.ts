@@ -50,6 +50,7 @@ export const categories = sqliteTable('categories', {
   name: text('name', { length: 30 }).notNull(),
   description: text('description', { length: 200 }),
   type: text('type', { enum: CATEGORY_TYPES }).notNull(),
+  color: text('color').notNull().default('rgba(200, 200, 200, 1)'), // Поле для цвета в формате RGBA
   ...timestamps,
 });
 
