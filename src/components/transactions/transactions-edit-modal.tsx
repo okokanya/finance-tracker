@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import Modal from '../base/modal';
+
 import Button from '../base/button';
+import Modal from '../base/modal';
 
 type SelectOption = { value: string; label: string };
 
@@ -25,8 +26,18 @@ type Props = {
 };
 
 const months = [
-  'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
-  'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'
+  'Январь',
+  'Февраль',
+  'Март',
+  'Апрель',
+  'Май',
+  'Июнь',
+  'Июль',
+  'Август',
+  'Сентябрь',
+  'Октябрь',
+  'Ноябрь',
+  'Декабрь',
 ];
 
 export default function EditTransactionModal({
@@ -36,7 +47,7 @@ export default function EditTransactionModal({
   onDeleteSuccess,
   onDuplicateSuccess,
   transaction,
-  title
+  title,
 }: Props) {
   const [accounts, setAccounts] = useState<SelectOption[]>([]);
   const [categories, setCategories] = useState<SelectOption[]>([]);
@@ -104,7 +115,7 @@ export default function EditTransactionModal({
         amount: Number(amount),
         comment,
         date: newDate,
-        type: transaction.type
+        type: transaction.type,
       };
 
       const res = await fetch(`/api/transactions/${transaction.id}`, {
@@ -165,19 +176,21 @@ export default function EditTransactionModal({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={title}>
-      <div className="space-y-4 mt-4">
+      <div className="mt-4 space-y-4">
         <div className="flex gap-4">
           <div className="w-1/2">
             <label className="text-sm text-gray-500">Счёт</label>
             <select
-              className="w-full border rounded px-2 py-1"
+              className="w-full rounded border px-2 py-1"
               value={account}
-              onChange={(e) => setAccount(e.target.value)}
+              onChange={e => setAccount(e.target.value)}
               disabled={isSaving || isDeleting || isDuplicating}
             >
               <option value="">Выберите счёт</option>
-              {accounts.map((opt) => (
-                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              {accounts.map(opt => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
               ))}
             </select>
           </div>
@@ -185,14 +198,16 @@ export default function EditTransactionModal({
           <div className="w-1/2">
             <label className="text-sm text-gray-500">Категория</label>
             <select
-              className="w-full border rounded px-2 py-1"
+              className="w-full rounded border px-2 py-1"
               value={category}
-              onChange={(e) => setCategory(e.target.value)}
+              onChange={e => setCategory(e.target.value)}
               disabled={isSaving || isDeleting || isDuplicating}
             >
               <option value="">Выберите категорию</option>
-              {categories.map((opt) => (
-                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              {categories.map(opt => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
               ))}
             </select>
           </div>
@@ -203,9 +218,9 @@ export default function EditTransactionModal({
           <input
             type="text"
             inputMode="numeric"
-            className="w-full border rounded px-2 py-1"
+            className="w-full rounded border px-2 py-1"
             value={amount}
-            onChange={(e) => setAmount(e.target.value.replace(/\D/g, ''))}
+            onChange={e => setAmount(e.target.value.replace(/\D/g, ''))}
             disabled={isSaving || isDeleting || isDuplicating}
           />
         </div>
@@ -214,9 +229,9 @@ export default function EditTransactionModal({
           <div className="w-1/3">
             <label className="text-sm text-gray-500">День</label>
             <select
-              className="w-full border rounded px-2 py-1"
+              className="w-full rounded border px-2 py-1"
               value={day}
-              onChange={(e) => setDay(e.target.value)}
+              onChange={e => setDay(e.target.value)}
               disabled={isSaving || isDeleting || isDuplicating}
             >
               {Array.from({ length: 31 }, (_, i) => (
@@ -230,15 +245,17 @@ export default function EditTransactionModal({
           <div className="w-1/3">
             <label className="text-sm text-gray-500">Месяц</label>
             <select
-              className="w-full border rounded px-2 py-1"
+              className="w-full rounded border px-2 py-1"
               value={month}
-              onChange={(e) => setMonth(e.target.value)}
+              onChange={e => setMonth(e.target.value)}
               disabled={isSaving || isDeleting || isDuplicating}
             >
               {months.map((m, i) => {
                 const value = String(i + 1).padStart(2, '0');
                 return (
-                  <option key={value} value={value}>{m}</option>
+                  <option key={value} value={value}>
+                    {m}
+                  </option>
                 );
               })}
             </select>
@@ -247,13 +264,15 @@ export default function EditTransactionModal({
           <div className="w-1/3">
             <label className="text-sm text-gray-500">Год</label>
             <select
-              className="w-full border rounded px-2 py-1"
+              className="w-full rounded border px-2 py-1"
               value={year}
-              onChange={(e) => setYear(e.target.value)}
+              onChange={e => setYear(e.target.value)}
               disabled={isSaving || isDeleting || isDuplicating}
             >
-              {Array.from({ length: 6 }, (_, i) => 2020 + i).map((y) => (
-                <option key={y} value={y.toString()}>{y}</option>
+              {Array.from({ length: 6 }, (_, i) => 2020 + i).map(y => (
+                <option key={y} value={y.toString()}>
+                  {y}
+                </option>
               ))}
             </select>
           </div>
@@ -262,20 +281,20 @@ export default function EditTransactionModal({
         <div>
           <label className="text-sm text-gray-500">Комментарий</label>
           <input
-            className="w-full border rounded px-2 py-1"
+            className="w-full rounded border px-2 py-1"
             value={comment}
-            onChange={(e) => setComment(e.target.value)}
+            onChange={e => setComment(e.target.value)}
             disabled={isSaving || isDeleting || isDuplicating}
           />
         </div>
 
-        <div className="flex justify-between items-center flex-wrap">
-          <div className="flex gap-5 w-full mb-5">
+        <div className="flex flex-wrap items-center justify-between">
+          <div className="mb-5 flex w-full gap-5">
             <Button
               onClick={handleSave}
               variant="primary"
               disabled={isSaving || isDeleting || isDuplicating}
-              className='w-[70%]'
+              className="w-[70%]"
             >
               {isSaving ? 'Сохранение...' : 'Сохранить изменения'}
             </Button>
@@ -284,18 +303,18 @@ export default function EditTransactionModal({
               onClick={onClose}
               variant="secondary"
               disabled={isSaving || isDeleting || isDuplicating}
-              className='w-[30%]'
+              className="w-[30%]"
             >
               Отмена
             </Button>
           </div>
 
-          <div className="flex gap-5 w-full mb-5">
+          <div className="mb-5 flex w-full gap-5">
             <Button
               onClick={handleDelete}
               variant="error"
               disabled={isSaving || isDeleting || isDuplicating}
-              className="text-red-500 hover:text-red-700 w-[50%]"
+              className="w-[50%] text-red-500 hover:text-red-700"
             >
               {isDeleting ? 'Удаление...' : 'Удалить операцию'}
             </Button>
@@ -304,7 +323,7 @@ export default function EditTransactionModal({
               onClick={handleCopy}
               variant="secondary"
               disabled={isSaving || isDeleting || isDuplicating}
-              className='w-[50%]'
+              className="w-[50%]"
             >
               {isDuplicating ? 'Дублирование...' : 'Дублировать'}
             </Button>

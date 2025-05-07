@@ -1,7 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { db } from '@/db';
-import { transactions, accounts, categories } from '@/db/schema';
 import { eq, sql } from 'drizzle-orm';
+
+import { db } from '@/db';
+import { accounts, categories, transactions } from '@/db/schema';
 
 type UpdateTransactionRequest = {
   accountName: string;
@@ -20,14 +21,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const {
-      accountName,
-      categoryName,
-      amount,
-      comment,
-      date,
-      type
-    } = req.body as UpdateTransactionRequest;
+    const { accountName, categoryName, amount, comment, date, type } =
+      req.body as UpdateTransactionRequest;
 
     // Находим ID счета и категории по именам
     const [account] = await db
@@ -59,7 +54,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         amount,
         comment,
         createdAt: sql`strftime('%s', ${dateString})`,
-        type: type ?? 'withdrawal' // Используем ?? вместо || для большей ясности
+        type: type ?? 'withdrawal', // Используем ?? вместо || для большей ясности
       })
       .where(eq(transactions.id, id as string))
       .returning();
@@ -70,8 +65,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         ...updatedTransaction,
         accountName,
         categoryName,
-        date: `${day}.${month}.${year}`
-      }
+        date: `${day}.${month}.${year}`,
+      },
     });
   } catch (error) {
     console.error('Error updating transaction:', error);

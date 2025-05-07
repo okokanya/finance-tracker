@@ -1,8 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { db } from '@/db';
-import { transactions, accounts, categories } from '@/db/schema';
-import { eq, and, sql } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 import jwt from 'jsonwebtoken';
+
+import { db } from '@/db';
+import { accounts, categories, transactions } from '@/db/schema';
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 
@@ -37,7 +38,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // 3. Фильтрация
     const { monthYear } = req.query;
 
-    let whereConditions = [];
+    const whereConditions = [];
 
     // Фильтр по userId в таблице transactions
     whereConditions.push(eq(transactions.userId, userId));

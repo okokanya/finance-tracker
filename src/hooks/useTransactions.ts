@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 interface Transaction {
   id: string;
@@ -35,7 +35,7 @@ const useTransactions = () => {
     try {
       const res = await fetch(API_ENDPOINTS.TRANSACTIONS_LIST);
       const { data }: MonthYearResponse = await res.json();
-      const options = data.map((ym) => ({ value: ym, title: ym }));
+      const options = data.map(ym => ({ value: ym, title: ym }));
       setMonthYearOptions(options);
       if (data.length > 0) setSelectedMonthYear({ value: data[0], title: data[0] });
     } catch (error) {

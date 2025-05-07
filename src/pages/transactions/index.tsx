@@ -1,9 +1,10 @@
 import { useState } from 'react';
+
+import Select from '@/components/base/select/select';
 import Spinner from '@/components/base/spinner';
 import Title from '@/components/base/title';
-import Select from '@/components/base/select/select';
-import { getAmountStyle } from '@/components/util/amount-style';
 import EditTransactionModal from '@/components/transactions/transactions-edit-modal';
+import { getAmountStyle } from '@/components/util/amount-style';
 import useTransactions from '@/hooks/useTransactions'; // Предполагается, что хук находится в этой папке
 
 type Transaction = {
@@ -39,8 +40,8 @@ export default function TransactionsPage() {
   //   );
   // };
   const handleTransactionUpdate = async (updatedTransaction: Transaction): Promise<void> => {
-    setTransactions((prev) =>
-      prev.map((tx) => (tx.id === updatedTransaction.id ? updatedTransaction : tx))
+    setTransactions(prev =>
+      prev.map(tx => (tx.id === updatedTransaction.id ? updatedTransaction : tx))
     );
   };
 
@@ -54,7 +55,7 @@ export default function TransactionsPage() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
+      <div className="flex min-h-screen items-center justify-center">
         <Spinner />
       </div>
     );
@@ -74,17 +75,15 @@ export default function TransactionsPage() {
         />
       )}
 
-      {error && (
-        <div className="text-red-500 text-center mb-4">{error}</div>
-      )}
+      {error && <div className="mb-4 text-center text-red-500">{error}</div>}
 
       <div>
         {transactions.length === 0 ? (
-          <div className="text-center text-gray-500 mt-8 text-lg">
+          <div className="mt-8 text-center text-lg text-gray-500">
             В выбранном периоде нет операций
           </div>
         ) : (
-          <div className="mb-2 flex flex-wrap font-semibold p-2">
+          <div className="mb-2 flex flex-wrap p-2 font-semibold">
             <div className="w-[10%]">Дата</div>
             <div className="w-[15%]">Счёт</div>
             <div className="w-[25%]">Категория</div>
@@ -92,20 +91,20 @@ export default function TransactionsPage() {
             <div className="w-[10%] text-right">Сумма</div>
           </div>
         )}
-        {transactions.map((tx) => (
+        {transactions.map(tx => (
           <div
             key={tx.id}
             onClick={() => {
               setSelectedTransaction(tx);
               setIsModalOpen(true);
             }}
-            className="flex flex-wrap mb-2 rounded-lg bg-white hover:bg-gray-100 hover:shadow-lg transition-all duration-200 cursor-pointer"
+            className="mb-2 flex cursor-pointer flex-wrap rounded-lg bg-white transition-all duration-200 hover:bg-gray-100 hover:shadow-lg"
           >
-            <div className="flex p-2 items-center w-[10%]">{tx.date}</div>
-            <div className="flex p-2 items-center w-[15%]">{tx.accountName ?? '—'}</div>
-            <div className="flex p-2 items-center w-[25%]">{tx.categoryName ?? '—'}</div>
-            <div className="flex p-2 items-center w-[30%]">{tx.comment ?? '—'}</div>
-            <div className="flex p-2 items-center w-[10%] justify-end">
+            <div className="flex w-[10%] items-center p-2">{tx.date}</div>
+            <div className="flex w-[15%] items-center p-2">{tx.accountName ?? '—'}</div>
+            <div className="flex w-[25%] items-center p-2">{tx.categoryName ?? '—'}</div>
+            <div className="flex w-[30%] items-center p-2">{tx.comment ?? '—'}</div>
+            <div className="flex w-[10%] items-center justify-end p-2">
               <div className={getAmountStyle(tx.amount)}>{formatNumber(tx.amount)}</div>
             </div>
           </div>

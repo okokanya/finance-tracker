@@ -1,13 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { db } from '@/db';
-import { transactions } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import { v4 as uuidv4 } from 'uuid';
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+import { db } from '@/db';
+import { transactions } from '@/db/schema';
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }

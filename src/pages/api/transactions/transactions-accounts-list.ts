@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+
 import { db } from '@/db';
 import { accounts } from '@/db/schema';
 
@@ -8,11 +9,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const result = await db
-      .select({ name: accounts.name })
-      .from(accounts);
+    const result = await db.select({ name: accounts.name }).from(accounts);
 
-    const accountNames = result.map((acc) => acc.name);
+    const accountNames = result.map(acc => acc.name);
 
     return res.status(200).json(accountNames);
   } catch (error) {
@@ -20,4 +19,3 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(500).json({ error: 'Ошибка при получении счетов' });
   }
 }
-

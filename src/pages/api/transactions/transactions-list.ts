@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { db } from '@/db';
 import { sql } from 'drizzle-orm';
+
+import { db } from '@/db';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
@@ -20,7 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     return res.status(200).json({
       message: 'Месяцы и года успешно получены',
-      data: monthYears
+      data: monthYears,
     });
   } catch (error) {
     console.error('Ошибка при загрузке данных:', error);
