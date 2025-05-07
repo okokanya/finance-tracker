@@ -5,6 +5,7 @@ import Select from '@/components/base/select/select';
 import { getAmountStyle } from '@/components/util/amount-style';
 import Table from '@/components/transactions/table';
 import Pie from '@/components/transactions/pie';
+import EditTransactionModal from '@/components/transactions/transactions-edit-modal';
 
 type Transaction = {
   id: string;
@@ -13,7 +14,7 @@ type Transaction = {
   categoryName: string | null;
   comment: string | null;
   amount: number;
-  type: string;
+  type?: string;
 };
 
 // Экспортируем тип OptionType для использования в других компонентах
@@ -72,7 +73,7 @@ export default function TransactionsPage() {
     fetchTransactions();
   }, [selectedMonthYear]);
 
-  const handleTransactionUpdate = (updatedTransaction: Transaction) => {
+  const handleTransactionUpdate = async (updatedTransaction: Transaction) => {
     setTransactions((prev) =>
       prev.map((tx) => (tx.id === updatedTransaction.id ? updatedTransaction : tx))
     );

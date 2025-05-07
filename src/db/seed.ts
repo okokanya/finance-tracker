@@ -101,6 +101,7 @@ const main = async () => {
         userId: user1Id,
         name: 'Продукты',
         type: 'expense',
+        color: '#FF6384', // Непрозрачный красный
       },
       {
         id: category2Id,
@@ -108,6 +109,7 @@ const main = async () => {
         name: 'Зарплата',
         type: 'income',
         description: 'Ежемесячный доход',
+        color: '#36A2EB', // Непрозрачный синий
       },
       {
         id: category3Id,
@@ -115,6 +117,7 @@ const main = async () => {
         name: 'Транспорт',
         type: 'expense',
         description: 'Проезд и такси',
+        color: '#FFCE56', // Непрозрачный жёлтый
       },
       {
         id: category4Id,
@@ -122,6 +125,7 @@ const main = async () => {
         name: 'Подработка',
         type: 'income',
         description: 'Дополнительный доход',
+        color: '#4BC0C0', // Непрозрачный бирюзовый
       },
     ]);
     //#endregion
