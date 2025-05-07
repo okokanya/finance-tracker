@@ -1,19 +1,20 @@
-import LogoutButton from '@/components/logout-button';
-import MainWrap from '@/components/main-wrap';
+import ProfileLoading from '@/components/profile/profile-loading';
+import ProfilePageContent from '@/components/profile/profile-page-content';
+import { useProfileController } from '@/features/profile/profile.controller';
+import texts from '@/features/profile/profile.texts';
 
 export default function Profile() {
-  return (
-    <MainWrap>
-      <h1>Профиль</h1>
-      <LogoutButton />
-    </MainWrap>
-  );
+  const { isProfileLoading } = useProfileController();
+
+  if (isProfileLoading) return <ProfileLoading />;
+
+  return <ProfilePageContent />;
 }
 
 export async function getServerSideProps() {
   return {
     props: {
-      title: 'Профиль',
+      title: texts.title,
     },
   };
 }

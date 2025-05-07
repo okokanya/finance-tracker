@@ -1,66 +1,75 @@
-// import type { NextApiRequest, NextApiResponse } from 'next';
-// import { and, eq } from 'drizzle-orm'; // and для нескольких условий
-// import { db } from '@/db';
-// import { transactions } from '@/db/schema';
-// import { transactionSchema } from '@/models';
-// import jwt from 'jsonwebtoken'; // npm install jsonwebtoken
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { eq } from 'drizzle-orm';
 
-// const JWT_SECRET = process.env.JWT_SECRET!; // обязательно должен быть в .env
+import { db } from '@/db';
+import { transactions } from '@/db/schema';
+import { transactionSchema } from '@/models';
+import { getUser } from '@/utils/get-user';
 
-// export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-//   switch (req.method) {
-//     case 'GET':
-//       return await GET(req, res);
-//     default:
-//       return res.status(405).end();
-//   }
-// }
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  switch (req.method) {
+    case 'GET':
+      return await GET(req, res);
+    case 'POST':
+      return await POST(req, res);
+    default:
+      return res.status(405).end();
+  }
+}
 
-// async function GET(req: NextApiRequest, res: NextApiResponse) {
-//   try {
-//     // 1. Получаем токен из кук
-//     const token = req.cookies.token;
+async function GET(req: NextApiRequest, res: NextApiResponse) {
+  try {
+    const { accountId } = req.query;
 
-//     if (!token) {
-//       return res.status(401).json({ error: 'Необходима авторизация' });
-//     }
+    const data = accountId
+      ? await db
+          .select()
+          .from(transactions)
+          .where(eq(transactions.accountId, String(accountId)))
+      : await db.select().from(transactions);
 
-//     // 2. Декодируем токен
-//     let decoded;
-//     try {
-//       decoded = jwt.verify(token, JWT_SECRET) as { id: string };
-//     } catch (error) {
-//       console.error('Ошибка верификации токена:', error);
-//       return res.status(401).json({ error: 'Неверный токен' });
-//     }
+    const parsedData = transactionSchema.array().parse(data);
+    return res.status(200).json(parsedData);
+  } catch (error) {
+    console.error('Error fetching transactions:', error);
+    return res.status(500).json({ error: 'Failed to fetch transactions' });
+  }
+}
 
-//     const userId = decoded.id;
+async function POST(req: NextApiRequest, res: NextApiResponse) {
+  try {
+    const userId = await getUser(req);
 
-//     if (!userId) {
-//       return res.status(400).json({ error: 'Проблема с токеном' });
-//     }
+    // Валидация тела запроса
+    const rawData = req.body;
+    const parsedData = transactionSchema
+      .omit({
+        id: true,
+        createdAt: true,
+        updatedAt: true,
+        targetAccountId: true,
+      })
+      .parse({ ...rawData, userId });
 
-//     // 3. Фильтрация
-//     const { accountId } = req.query;
+    // Создание транзакции с автоматической генерацией полей
+    const [newTransaction] = await db
+      .insert(transactions)
+      .values({
+        ...parsedData,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })
+      .returning();
 
-//     const data = accountId
-//       ? await db
-//           .select()
-//           .from(transactions)
-//           .where(and(
-//             eq(transactions.accountId, String(accountId)),
-//             eq(transactions.userId, userId) // доп фильтр по userId
-//           ))
-//       : await db
-//           .select()
-//           .from(transactions)
-//           .where(eq(transactions.userId, userId)); // просто по userId
+    // Повторная валидация результата
+    const validatedTransaction = transactionSchema.parse(newTransaction);
 
-//     const parsedData = transactionSchema.array().parse(data);
-
-//     return res.status(200).json(parsedData);
-//   } catch (error) {
-//     console.error('Error fetching transactions:', error);
-//     return res.status(500).json({ error: 'Ошибка сервера' });
-//   }
-// }
+    return res.status(201).json(validatedTransaction);
+  } catch (error) {
+    console.error('Error creating transaction:', error);
+    return res.status(400).json({
+      error: 'Invalid transaction data',
+      details: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+}

@@ -9,6 +9,8 @@ import {
   UserCircleIcon,
 } from '@heroicons/react/24/outline';
 
+import { useProfileController } from '@/features/profile/profile.controller';
+import texts from '@/features/profile/profile.texts';
 import { cn } from '@/utils/cn';
 
 const mainMenu = {
@@ -42,11 +44,18 @@ const mainMenu = {
 };
 
 export default function Header() {
+  const { avatarUrl } = useProfileController();
   const pathname = usePathname();
 
   const linkClassNames = (link: string): string => {
     return cn('text-gray-800 hover:text-blue-600', {
-      ['text-blue-700']: pathname.includes(link),
+      ['text-blue-700']: pathname?.includes(link),
+    });
+  };
+
+  const avatarConteinerClassNames = (): string => {
+    return cn('size-8 rounded-full md:size-10 hover:ring-2 hover:ring-blue-600', {
+      ['ring-2 ring-blue-700']: pathname?.includes(mainMenu.defaultProfile.link),
     });
   };
 
@@ -76,7 +85,19 @@ export default function Header() {
                 href={`/${mainMenu.defaultProfile.link}`}
                 className={linkClassNames(mainMenu.defaultProfile.link)}
               >
-                <mainMenu.defaultProfile.icon className="size-8 rounded-full" />
+                {avatarUrl ? (
+                  <div className={avatarConteinerClassNames()}>
+                    <Image
+                      src={avatarUrl}
+                      alt={texts.profileAvatar}
+                      width={40}
+                      height={40}
+                      className="rounded-full object-cover"
+                    />
+                  </div>
+                ) : (
+                  <mainMenu.defaultProfile.icon className="size-8 rounded-full md:size-10" />
+                )}
               </Link>
             </li>
           </ul>

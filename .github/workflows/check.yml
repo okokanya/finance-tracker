@@ -1,0 +1,28 @@
+name: Check
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+
+jobs:
+  run-checks:
+    name: Run checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ⚙️ - Cache dependencies ⚡ - Next.js cache ⚡ - Install dependencies 🔧
+        uses: ./.github/workflows/setup-node
+
+      - name: Run prettier 🧹
+        run: npm run check
+
+      - name: Run linter 📖
+        run: npm run lint
+
+      - name: Run build 🏗️
+        run: npm run build
