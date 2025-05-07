@@ -7,7 +7,7 @@ interface Transaction {
   categoryName: string | null;
   comment: string | null;
   amount: number;
-  type: string;
+  type?: string;
 }
 
 interface OptionType {
