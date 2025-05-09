@@ -41,7 +41,7 @@ const Pie = ({ monthYearOptions, selectedMonthYear, setSelectedMonthYear }: PieP
   return (
     <div className="mt-8">
       <h2 className="text-2xl font-semibold mb-4">Расходы по категориям</h2>
-      {monthYearOptions.length > 0 && selectedMonthYear && (
+      {/* {monthYearOptions.length > 0 && selectedMonthYear && (
         <Select
           label="Период"
           options={monthYearOptions}
@@ -49,7 +49,7 @@ const Pie = ({ monthYearOptions, selectedMonthYear, setSelectedMonthYear }: PieP
           onChangeOption={setSelectedMonthYear}
           className="mb-4 w-40"
         />
-      )}
+      )} */}
 
       {loading ? (
         <div className="text-center">Загрузка...</div>
