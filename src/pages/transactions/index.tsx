@@ -1,9 +1,10 @@
+// pages/transactions/index.tsx
 import { useEffect, useState } from 'react';
 import Spinner from '@/components/base/spinner';
 import Title from '@/components/base/title';
 import Select from '@/components/base/select/select';
 import { getAmountStyle } from '@/components/util/amount-style';
-import Table from '@/components/transactions/table';
+import Table from '@/components/transactions/table'; // Столбчатая диаграмма
 import Pie from '@/components/transactions/pie';
 import EditTransactionModal from '@/components/transactions/transactions-edit-modal';
 
@@ -110,7 +111,6 @@ export default function TransactionsPage() {
           </div>
         ) : (
           <div className="mb-2 flex flex-wrap font-semibold p-2">
-            <div className="w-[8%]">ID</div>
             <div className="w-[10%]">Дата</div>
             <div className="w-[15%]">Счёт</div>
             <div className="w-[25%]">Категория</div>
@@ -127,7 +127,6 @@ export default function TransactionsPage() {
             }}
             className="flex flex-wrap mb-2 rounded-lg bg-white hover:bg-gray-100 hover:shadow-lg transition-all duration-200 cursor-pointer"
           >
-            <div className="flex p-2 items-center w-[8%] text-gray-500 text-sm">{tx.id}</div>
             <div className="flex p-2 items-center w-[10%]">{tx.date}</div>
             <div className="flex p-2 items-center w-[15%]">{tx.accountName ?? '—'}</div>
             <div className="flex p-2 items-center w-[25%]">{tx.categoryName ?? '—'}</div>

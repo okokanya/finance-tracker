@@ -82,6 +82,15 @@ const Pie = ({ monthYearOptions, selectedMonthYear, setSelectedMonthYear }: PieP
     );
   };
 
+  // Функция для осветления цвета
+  const lightenColor = (color: string, amount = 0.4) => {
+    const num = parseInt(color.replace('#', ''), 16);
+    const r = Math.min(255, (num >> 16) + 255 * amount);
+    const g = Math.min(255, ((num >> 8) & 0x00ff) + 255 * amount);
+    const b = Math.min(255, (num & 0x0000ff) + 255 * amount);
+    return `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)})`;
+  };
+
   return (
     <div className="mt-8">
       <h2 className="text-2xl font-semibold mb-4">Расходы по категориям</h2>
@@ -91,6 +100,15 @@ const Pie = ({ monthYearOptions, selectedMonthYear, setSelectedMonthYear }: PieP
         <div className="text-center text-gray-500">Нет данных для отображения</div>
       ) : (
         <PieChart width={600} height={400}>
+          <defs>
+            {data.map((entry, index) => (
+              <linearGradient key={index} id={`grad-${index}`} x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stopColor={entry.color} />
+                <stop offset="100%" stopColor={lightenColor(entry.color)} />
+              </linearGradient>
+            ))}
+          </defs>
+
           <RechartsPie
             data={data}
             dataKey="totalAmount"
@@ -105,7 +123,7 @@ const Pie = ({ monthYearOptions, selectedMonthYear, setSelectedMonthYear }: PieP
             {data.map((entry, index) => (
               <Cell
                 key={`cell-${index}`}
-                fill={entry.color}
+                fill={`url(#grad-${index})`}
                 stroke="#fff"
                 strokeWidth={2}
               />
