@@ -1,18 +1,17 @@
 import { z } from 'zod';
 
+import texts from '@/features/profile/profile.texts';
+
 export const userSchema = z.object({
   id: z.string().uuid(),
-  firstName: z
+  firstName: z.string().min(2, texts.firstNameMinLength).max(30, texts.firstNameMaxLength),
+  lastName: z.string().min(2, texts.lastNameMinLength).max(30, texts.lastNameMaxLength),
+  email: z.string().email(texts.wrongEmail),
+  password: z.string().min(8, texts.passwordMinLength),
+  phone: z
     .string()
-    .min(2, 'Имя должно содержать минимум 2 буквы')
-    .max(30, 'Имя не должно превышать 30 символов'),
-  lastName: z
-    .string()
-    .min(2, 'Фамилия должна содержать минимум 2 буквы')
-    .max(30, 'Фамилия не должна превышать 30 символов'),
-  email: z.string().email('Некорректный email'),
-  password: z.string().min(8, 'Пароль должен содержать минимум 8 символов'),
-  phone: z.string().nullable(),
+    .regex(/^\+?[0-9\s-()]+$/, texts.wrongPhoneNumber)
+    .nullable(),
   avatar: z.instanceof(Buffer).nullable(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),

@@ -96,21 +96,23 @@ export default function Signup() {
         </Title>
         <form className="flex w-full flex-wrap justify-between" onSubmit={handleSubmit(onSubmit)}>
           <Input
-            wrapperClassName="w-full sm:w-1/2"
+            wrapperClassName="w-full sm:w-1/2 mb-2"
             label="Имя"
             placeholder="Ярополк"
             {...register('firstName')}
             errorText={errors.firstName?.message}
           />
           <Input
-            wrapperClassName="w-full sm:w-1/2"
+            wrapperClassName="w-full sm:w-1/2 mb-2"
+            className="w-full"
             label="Фамилия"
             placeholder="Иванов"
             {...register('lastName')}
             errorText={errors.lastName?.message}
           />
           <Input
-            wrapperClassName="w-full"
+            wrapperClassName="w-full mb-2"
+            className="w-full"
             label="Email"
             type="email"
             placeholder="ivanov@ya.com"
@@ -118,7 +120,7 @@ export default function Signup() {
             errorText={errors.email?.message}
           />
           <Input
-            wrapperClassName="w-full sm:w-1/2"
+            wrapperClassName="w-full sm:w-1/2 mb-2"
             label="Придумайте пароль"
             type="password"
             placeholder="******"
@@ -126,7 +128,8 @@ export default function Signup() {
             errorText={errors.password?.message}
           />
           <Input
-            wrapperClassName="w-full sm:w-1/2"
+            wrapperClassName="w-full sm:w-1/2 mb-2"
+            className="w-full"
             label="Повторите пароль"
             type="password"
             placeholder="******"
@@ -146,8 +149,6 @@ export default function Signup() {
           </Link>
         </p>
       </FormWrap>
-
-      {/* Модальное окно для успешной регистрации */}
       <Modal
         title="Успешная регистрация"
         isOpen={isModalOpen}
