@@ -67,3 +67,7 @@
     @apply flex min-h-[calc(100dvh-var(--modal-header-height)-40px)] w-full flex-col justify-between gap-6 md:min-h-fit;
   }
 }
+.negative-number::before {
+  content: '-';
+  margin-right: 4px; /* Расстояние между минусом и числом */
+}

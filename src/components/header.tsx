@@ -26,7 +26,7 @@ const mainMenu = {
       icon: Squares2X2Icon,
     },
     {
-      link: 'operations',
+      link: 'transactions',
       text: 'Операции',
       icon: DocumentCurrencyDollarIcon,
     },
