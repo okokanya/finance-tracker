@@ -1,5 +1,5 @@
-import { NextApiRequest, NextApiResponse } from 'next';
 import { and, between, eq, sql } from 'drizzle-orm';
+import { NextApiRequest, NextApiResponse } from 'next';
 
 import { db } from '@/db';
 import { categories, transactions } from '@/db/schema';
@@ -14,18 +14,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   // Получение параметров запроса
-  const { month = REPORTS_MONTH_CURRENT } = req.query;
+  const { monthYear = REPORTS_MONTH_CURRENT } = req.query;
 
   try {
     // Расчет диапазона дат
-    const now = new Date();
     const [startDate, endDate] = (() => {
-      const year = now.getFullYear();
-      const monthIndex = now.getMonth();
+      if (monthYear === 'current') {
+        const now = new Date();
+        const year = now.getFullYear();
+        const monthIndex = now.getMonth();
+        return [new Date(year, monthIndex, 1), new Date(year, monthIndex + 1, 0)];
+      }
 
-      return month === 'current'
-        ? [new Date(year, monthIndex, 1), new Date(year, monthIndex + 1, 0)]
-        : [new Date(year, monthIndex - 1, 1), new Date(year, monthIndex, 0)];
+      const [year, month] = (monthYear as string).split('-').map(Number);
+      return [new Date(year, month - 1, 1), new Date(year, month, 0)];
     })();
 
     const monthNumber = startDate.getMonth() + 1; // +1 т.к. месяцы 0-based
