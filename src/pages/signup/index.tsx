@@ -104,6 +104,7 @@ export default function Signup() {
           />
           <Input
             wrapperClassName="w-full sm:w-1/2 mb-2"
+            className="w-full"
             label="Фамилия"
             placeholder="Иванов"
             {...register('lastName')}
@@ -111,6 +112,7 @@ export default function Signup() {
           />
           <Input
             wrapperClassName="w-full mb-2"
+            className="w-full"
             label="Email"
             type="email"
             placeholder="ivanov@ya.com"
@@ -126,7 +128,8 @@ export default function Signup() {
             errorText={errors.password?.message}
           />
           <Input
-            wrapperClassName="w-full sm:w-1/2 mb-4"
+            wrapperClassName="w-full sm:w-1/2 mb-2"
+            className="w-full"
             label="Повторите пароль"
             type="password"
             placeholder="******"
@@ -146,8 +149,6 @@ export default function Signup() {
           </Link>
         </p>
       </FormWrap>
-
-      {/* Модальное окно для успешной регистрации */}
       <Modal
         title="Успешная регистрация"
         isOpen={isModalOpen}

@@ -61,8 +61,8 @@ export default function EditTransactionModal({
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isDuplicating, setIsDuplicating] = useState(false);
+  const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
 
-  // Инициализация даты
   useEffect(() => {
     if (transaction.date) {
       let dayPart = '';
@@ -81,7 +81,6 @@ export default function EditTransactionModal({
     }
   }, [transaction.date]);
 
-  // Загрузка счетов и категорий
   useEffect(() => {
     const fetchOptions = async () => {
       try {
@@ -136,9 +135,7 @@ export default function EditTransactionModal({
     }
   };
 
-  const handleDelete = async () => {
-    if (!confirm('Вы уверены, что хотите удалить эту операцию?')) return;
-
+  const confirmAndDelete = async () => {
     setIsDeleting(true);
     try {
       const res = await fetch(`/api/transactions/${transaction.id}/delete`, {
@@ -153,6 +150,7 @@ export default function EditTransactionModal({
       console.error('Delete error:', error);
     } finally {
       setIsDeleting(false);
+      setIsConfirmDeleteOpen(false);
     }
   };
 
@@ -175,161 +173,183 @@ export default function EditTransactionModal({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={title}>
-      <div className="mt-4 space-y-4">
-        <div className="flex gap-4">
-          <div className="w-1/2">
-            <label className="text-sm text-gray-500">Счёт</label>
-            <select
-              className="w-full rounded border px-2 py-1"
-              value={account}
-              onChange={e => setAccount(e.target.value)}
-              disabled={isSaving || isDeleting || isDuplicating}
-            >
-              <option value="">Выберите счёт</option>
-              {accounts.map(opt => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="w-1/2">
-            <label className="text-sm text-gray-500">Категория</label>
-            <select
-              className="w-full rounded border px-2 py-1"
-              value={category}
-              onChange={e => setCategory(e.target.value)}
-              disabled={isSaving || isDeleting || isDuplicating}
-            >
-              <option value="">Выберите категорию</option>
-              {categories.map(opt => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-
-        <div>
-          <label className="text-sm text-gray-500">Сумма</label>
-          <input
-            type="text"
-            inputMode="numeric"
-            className="w-full rounded border px-2 py-1"
-            value={amount}
-            onChange={e => setAmount(e.target.value.replace(/\D/g, ''))}
-            disabled={isSaving || isDeleting || isDuplicating}
-          />
-        </div>
-
-        <div className="flex gap-2">
-          <div className="w-1/3">
-            <label className="text-sm text-gray-500">День</label>
-            <select
-              className="w-full rounded border px-2 py-1"
-              value={day}
-              onChange={e => setDay(e.target.value)}
-              disabled={isSaving || isDeleting || isDuplicating}
-            >
-              {Array.from({ length: 31 }, (_, i) => (
-                <option key={i} value={String(i + 1).padStart(2, '0')}>
-                  {String(i + 1).padStart(2, '0')}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="w-1/3">
-            <label className="text-sm text-gray-500">Месяц</label>
-            <select
-              className="w-full rounded border px-2 py-1"
-              value={month}
-              onChange={e => setMonth(e.target.value)}
-              disabled={isSaving || isDeleting || isDuplicating}
-            >
-              {months.map((m, i) => {
-                const value = String(i + 1).padStart(2, '0');
-                return (
-                  <option key={value} value={value}>
-                    {m}
+    <>
+      <Modal isOpen={isOpen} onClose={onClose} title={title}>
+        <div className="mt-4 space-y-4">
+          <div className="flex gap-4">
+            <div className="w-1/2">
+              <label className="text-sm text-gray-500">Счёт</label>
+              <select
+                className="w-full rounded border px-2 py-1"
+                value={account}
+                onChange={e => setAccount(e.target.value)}
+                disabled={isSaving || isDeleting || isDuplicating}
+              >
+                <option value="">Выберите счёт</option>
+                {accounts.map(opt => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
                   </option>
-                );
-              })}
-            </select>
+                ))}
+              </select>
+            </div>
+
+            <div className="w-1/2">
+              <label className="text-sm text-gray-500">Категория</label>
+              <select
+                className="w-full rounded border px-2 py-1"
+                value={category}
+                onChange={e => setCategory(e.target.value)}
+                disabled={isSaving || isDeleting || isDuplicating}
+              >
+                <option value="">Выберите категорию</option>
+                {categories.map(opt => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
-          <div className="w-1/3">
-            <label className="text-sm text-gray-500">Год</label>
-            <select
+          <div>
+            <label className="text-sm text-gray-500">Сумма</label>
+            <input
+              type="text"
+              inputMode="numeric"
               className="w-full rounded border px-2 py-1"
-              value={year}
-              onChange={e => setYear(e.target.value)}
+              value={amount}
+              onChange={e => setAmount(e.target.value.replace(/\D/g, ''))}
               disabled={isSaving || isDeleting || isDuplicating}
-            >
-              {Array.from({ length: 6 }, (_, i) => 2020 + i).map(y => (
-                <option key={y} value={y.toString()}>
-                  {y}
-                </option>
-              ))}
-            </select>
+            />
+          </div>
+
+          <div className="flex gap-2">
+            <div className="w-1/3">
+              <label className="text-sm text-gray-500">День</label>
+              <select
+                className="w-full rounded border px-2 py-1"
+                value={day}
+                onChange={e => setDay(e.target.value)}
+                disabled={isSaving || isDeleting || isDuplicating}
+              >
+                {Array.from({ length: 31 }, (_, i) => (
+                  <option key={i} value={String(i + 1).padStart(2, '0')}>
+                    {String(i + 1).padStart(2, '0')}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="w-1/3">
+              <label className="text-sm text-gray-500">Месяц</label>
+              <select
+                className="w-full rounded border px-2 py-1"
+                value={month}
+                onChange={e => setMonth(e.target.value)}
+                disabled={isSaving || isDeleting || isDuplicating}
+              >
+                {months.map((m, i) => {
+                  const value = String(i + 1).padStart(2, '0');
+                  return (
+                    <option key={value} value={value}>
+                      {m}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+
+            <div className="w-1/3">
+              <label className="text-sm text-gray-500">Год</label>
+              <select
+                className="w-full rounded border px-2 py-1"
+                value={year}
+                onChange={e => setYear(e.target.value)}
+                disabled={isSaving || isDeleting || isDuplicating}
+              >
+                {Array.from({ length: 6 }, (_, i) => 2020 + i).map(y => (
+                  <option key={y} value={y.toString()}>
+                    {y}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label className="text-sm text-gray-500">Комментарий</label>
+            <input
+              className="w-full rounded border px-2 py-1"
+              value={comment}
+              onChange={e => setComment(e.target.value)}
+              disabled={isSaving || isDeleting || isDuplicating}
+            />
+          </div>
+
+          <div className="flex flex-wrap items-center justify-between">
+            <div className="mb-5 flex w-full gap-5">
+              <Button
+                onClick={handleSave}
+                variant="primary"
+                disabled={isSaving || isDeleting || isDuplicating}
+                className="w-[70%]"
+              >
+                {isSaving ? 'Сохранение...' : 'Сохранить изменения'}
+              </Button>
+
+              <Button
+                onClick={onClose}
+                variant="secondary"
+                disabled={isSaving || isDeleting || isDuplicating}
+                className="w-[30%]"
+              >
+                Отмена
+              </Button>
+            </div>
+
+            <div className="mb-5 flex w-full gap-5">
+              <Button
+                onClick={() => setIsConfirmDeleteOpen(true)}
+                variant="error"
+                disabled={isSaving || isDeleting || isDuplicating}
+                className="w-[50%] text-red-500 hover:text-red-700"
+              >
+                {isDeleting ? 'Удаление...' : 'Удалить операцию'}
+              </Button>
+
+              <Button
+                onClick={handleCopy}
+                variant="secondary"
+                disabled={isSaving || isDeleting || isDuplicating}
+                className="w-[50%]"
+              >
+                {isDuplicating ? 'Дублирование...' : 'Дублировать'}
+              </Button>
+            </div>
           </div>
         </div>
+      </Modal>
 
-        <div>
-          <label className="text-sm text-gray-500">Комментарий</label>
-          <input
-            className="w-full rounded border px-2 py-1"
-            value={comment}
-            onChange={e => setComment(e.target.value)}
-            disabled={isSaving || isDeleting || isDuplicating}
-          />
-        </div>
-
-        <div className="flex flex-wrap items-center justify-between">
-          <div className="mb-5 flex w-full gap-5">
-            <Button
-              onClick={handleSave}
-              variant="primary"
-              disabled={isSaving || isDeleting || isDuplicating}
-              className="w-[70%]"
-            >
-              {isSaving ? 'Сохранение...' : 'Сохранить изменения'}
-            </Button>
-
-            <Button
-              onClick={onClose}
-              variant="secondary"
-              disabled={isSaving || isDeleting || isDuplicating}
-              className="w-[30%]"
-            >
+      <Modal
+        isOpen={isConfirmDeleteOpen}
+        onClose={() => setIsConfirmDeleteOpen(false)}
+        title="Удалить операцию?"
+      >
+        <div className="mt-4 space-y-4">
+          <p className="text-gray-700">
+            Вы уверены, что хотите удалить эту операцию? Это действие необратимо.
+          </p>
+          <div className="flex justify-end gap-4">
+            <Button variant="secondary" onClick={() => setIsConfirmDeleteOpen(false)}>
               Отмена
             </Button>
-          </div>
-
-          <div className="mb-5 flex w-full gap-5">
-            <Button
-              onClick={handleDelete}
-              variant="error"
-              disabled={isSaving || isDeleting || isDuplicating}
-              className="w-[50%] text-red-500 hover:text-red-700"
-            >
-              {isDeleting ? 'Удаление...' : 'Удалить операцию'}
-            </Button>
-
-            <Button
-              onClick={handleCopy}
-              variant="secondary"
-              disabled={isSaving || isDeleting || isDuplicating}
-              className="w-[50%]"
-            >
-              {isDuplicating ? 'Дублирование...' : 'Дублировать'}
+            <Button variant="error" onClick={confirmAndDelete}>
+              Да, удалить
             </Button>
           </div>
         </div>
-      </div>
-    </Modal>
+      </Modal>
+    </>
   );
 }
