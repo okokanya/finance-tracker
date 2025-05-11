@@ -5,9 +5,9 @@ import {
   ACCOUNTS_QUERY_KEY,
   TRANSACTIONS_QUERY_PATH,
 } from '@/features/accounts/accounts.constants';
+import { REPORTS_QUERY_KEY } from '@/features/reports/reports.constants';
 import { apiFetch } from '@/utils/api-fetch';
 
-import { REPORTS_QUERY_KEY } from '@/features/reports/reports.constants';
 import { CATEGORIES_QUERY_KEY } from '../category.constants';
 import { texts } from '../category.texts';
 import { TransactionFormData } from '../category.types';

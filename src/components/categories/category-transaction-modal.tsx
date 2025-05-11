@@ -1,6 +1,6 @@
+import { useEffect, useMemo, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DateTime } from 'luxon';
-import { useEffect, useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -22,7 +22,7 @@ import Select from '../base/select/select';
 
 type Props = {
   categoryType: CategoryType;
-}
+};
 
 export default function CategoryTransactionModal({ categoryType }: Props) {
   const {
@@ -45,7 +45,7 @@ export default function CategoryTransactionModal({ categoryType }: Props) {
     [categoryType]
   );
 
-  const { categoriesOptions, accountsOptions, isLoading,  } = useCategoriesTransactions({
+  const { categoriesOptions, accountsOptions, isLoading } = useCategoriesTransactions({
     type: categoryType,
   });
 
@@ -54,7 +54,6 @@ export default function CategoryTransactionModal({ categoryType }: Props) {
     value: selectedCategory?.id ?? '',
   });
   const [account, setAccount] = useState<OptionType>(accountsOptions[0]);
-
 
   useEffect(() => {
     if (selectedCategory) {
@@ -115,7 +114,6 @@ export default function CategoryTransactionModal({ categoryType }: Props) {
   };
 
   const handleChangeCategory = (selected: OptionType) => {
-
     setCategory(selected);
     setValue('categoryId', selected?.value);
   };

@@ -1,6 +1,7 @@
+import { FC } from 'react';
+
 import Text from '@/components/base/text';
 import { cn } from '@/utils/cn';
-import { FC } from 'react';
 
 interface ReportAveragesProps {
   type: 'topup' | 'withdrawal';
@@ -26,18 +27,18 @@ const ReportAverages: FC<ReportAveragesProps> = ({ type, title, values, classNam
   return (
     <div
       className={cn(
-        'rounded-lg w-[335px] min-w-[335px] px-4 py-3 flex flex-col gap-2',
-        'md:rounded-xl md:w-full md:min-w-0 md:px-8 md:py-4 md:gap-2',
+        'flex w-[335px] min-w-[335px] flex-col gap-2 rounded-lg px-4 py-3',
+        'md:w-full md:min-w-0 md:gap-2 md:rounded-xl md:px-8 md:py-4',
         bgColor[type],
         className
       )}
     >
-      <Text isBold className="text-center mb-1 md:mb-1">
+      <Text isBold className="mb-1 text-center md:mb-1">
         {title}
       </Text>
-      <div className="flex flex-col gap-y-1 items-start md:flex-row md:flex-wrap md:gap-x-4 md:gap-y-1 md:justify-center md:items-center">
+      <div className="flex flex-col items-start gap-y-1 md:flex-row md:flex-wrap md:items-center md:justify-center md:gap-x-4 md:gap-y-1">
         {values.map(({ label, value }, idx) => (
-          <div key={idx} className="flex flex-row gap-1 items-center">
+          <div key={idx} className="flex flex-row items-center gap-1">
             <Text variant="sm" className="text-gray-500">
               {label}
             </Text>

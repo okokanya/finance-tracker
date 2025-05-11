@@ -1,6 +1,6 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
 import { eq } from 'drizzle-orm';
 import { DateTime } from 'luxon';
-import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { db } from '@/db';
 import { transactions } from '@/db/schema';
@@ -46,15 +46,18 @@ async function POST(req: NextApiRequest, res: NextApiResponse) {
 
     // Создаем дату с учетом часового пояса пользователя
     // Устанавливаем время на начало дня в указанном часовом поясе
-    const transactionDate = DateTime.fromObject({
-      year: Number(rawData.year),
-      month: Number(rawData.month),
-      day: Number(rawData.day),
-      hour: 0,
-      minute: 0,
-      second: 0,
-      millisecond: 0
-    }, { zone: 'UTC' });
+    const transactionDate = DateTime.fromObject(
+      {
+        year: Number(rawData.year),
+        month: Number(rawData.month),
+        day: Number(rawData.day),
+        hour: 0,
+        minute: 0,
+        second: 0,
+        millisecond: 0,
+      },
+      { zone: 'UTC' }
+    );
 
     const parsedData = transactionSchema
       .omit({
@@ -65,7 +68,7 @@ async function POST(req: NextApiRequest, res: NextApiResponse) {
       .parse({
         ...rawData,
         userId,
-        createdAt: transactionDate.toMillis() // Сохраняем миллисекунды как есть
+        createdAt: transactionDate.toMillis(), // Сохраняем миллисекунды как есть
       });
 
     // Создание транзакции с автоматической генерацией полей

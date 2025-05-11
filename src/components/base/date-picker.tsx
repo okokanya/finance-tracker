@@ -1,5 +1,5 @@
-import { DateTime } from 'luxon';
 import { useEffect, useState } from 'react';
+import { DateTime } from 'luxon';
 import { useFormContext } from 'react-hook-form';
 
 import { cn } from '@/utils/cn';
@@ -85,7 +85,6 @@ export default function DatePicker({ currentDate }: Props) {
     }
   };
 
-
   return (
     <div className="flex w-full flex-row gap-1">
       <Select
@@ -94,7 +93,7 @@ export default function DatePicker({ currentDate }: Props) {
         selected={day}
         onChangeOption={selected => handleChange('day', selected)}
         wrapperClassName={cn('w-20')}
-        {...register('day', { setValueAs: (v) => Number(v) })}
+        {...register('day', { setValueAs: v => Number(v) })}
         errorText={errors?.day?.message as string}
       />
 
@@ -103,7 +102,7 @@ export default function DatePicker({ currentDate }: Props) {
         options={months}
         selected={month}
         onChangeOption={selected => handleChange('month', selected)}
-        {...register('month', { setValueAs: (v) => Number(v) })}
+        {...register('month', { setValueAs: v => Number(v) })}
         wrapperClassName={cn('w-full')}
         errorText={errors?.month?.message as string}
       />
@@ -113,7 +112,7 @@ export default function DatePicker({ currentDate }: Props) {
         options={years}
         selected={year}
         onChangeOption={selected => handleChange('year', selected)}
-        {...register('year', { setValueAs: (v) => Number(v) })}
+        {...register('year', { setValueAs: v => Number(v) })}
         wrapperClassName={cn('w-21')}
         errorText={errors?.year?.message as string}
       />

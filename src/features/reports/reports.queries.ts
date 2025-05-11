@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 
+import { OptionType } from '@/components/base/select/option-type';
 import { apiFetch } from '@/utils/api-fetch';
 
-import { OptionType } from '@/components/base/select/option-type';
 import { ACCOUNTS_QUERY_STALE_TIME } from '../accounts/accounts.constants';
 import { REPORTS_QUERY_KEY, REPORTS_QUERY_PATH, TRANSACTIONS_LIST_PATH } from './reports.constants';
 import { ReportsData } from './reports.types';
@@ -31,7 +31,9 @@ export function useReportMonthList() {
   const query = useQuery<OptionType[]>({
     queryKey: [REPORTS_QUERY_KEY, 'monthList'],
     queryFn: () => {
-      return apiFetch<{message: string, data: string[]}>(TRANSACTIONS_LIST_PATH).then(({data}) => data.map(ym => ({ value: ym, title: ym })));
+      return apiFetch<{ message: string; data: string[] }>(TRANSACTIONS_LIST_PATH).then(
+        ({ data }) => data.map(ym => ({ value: ym, title: ym }))
+      );
     },
   });
 

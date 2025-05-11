@@ -24,7 +24,6 @@ const ReportCategory: FC<ReportCategoryProps> = ({
 }) => {
   const operationSign = useMemo(() => {
     switch (type) {
-
       case 'withdrawal':
         return '—';
       case 'topup':
@@ -36,8 +35,8 @@ const ReportCategory: FC<ReportCategoryProps> = ({
   return (
     <div
       className={cn(
-        'uikit-card-shadow flex flex-col gap-2 rounded-lg w-[335px] min-w-[335px] px-4 py-3 border border-transparent bg-white hover:border hover:border-gray-300 hover:bg-gray-100',
-        'md:max-w-72 md:min-w-0 md:px-6 md:py-4',
+        'uikit-card-shadow flex w-[335px] min-w-[335px] flex-col gap-2 rounded-lg border border-transparent bg-white px-4 py-3 hover:border hover:border-gray-300 hover:bg-gray-100',
+        'md:min-w-0 md:max-w-72 md:px-6 md:py-4',
         className,
         {
           'cursor-pointer': onClick,
@@ -48,11 +47,13 @@ const ReportCategory: FC<ReportCategoryProps> = ({
       <Text isBold className="line-clamp-1">
         {category}
       </Text>
-      <div className='flex flex-row justify-between items-center'>
+      <div className="flex flex-row items-center justify-between">
         <Text variant="sm" className="text-gray-500">
           Сумма
         </Text>
-        <Text variant='sm' isBold
+        <Text
+          variant="sm"
+          isBold
           className={cn({
             ['text-green-500']: type === 'topup',
             ['text-red-500']: type === 'withdrawal',

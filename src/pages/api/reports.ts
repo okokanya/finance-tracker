@@ -1,5 +1,5 @@
-import { and, between, eq, sql } from 'drizzle-orm';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { and, between, eq, sql } from 'drizzle-orm';
 
 import { db } from '@/db';
 import { categories, transactions } from '@/db/schema';
