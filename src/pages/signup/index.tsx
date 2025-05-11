@@ -121,7 +121,6 @@ export default function Signup() {
           />
           <Input
             wrapperClassName="w-full sm:w-1/2 mb-2"
-            // className="w-full"
             label="Придумайте пароль"
             type="password"
             placeholder="******"
@@ -150,8 +149,6 @@ export default function Signup() {
           </Link>
         </p>
       </FormWrap>
-
-      {/* Модальное окно для успешной регистрации */}
       <Modal
         title="Успешная регистрация"
         isOpen={isModalOpen}

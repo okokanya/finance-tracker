@@ -5,7 +5,7 @@ import Spinner from '@/components/base/spinner';
 import Title from '@/components/base/title';
 import EditTransactionModal from '@/components/transactions/transactions-edit-modal';
 import { getAmountStyle } from '@/components/util/amount-style';
-import useTransactions from '@/hooks/useTransactions'; // Предполагается, что хук находится в этой папке
+import useTransactions from '@/hooks/useTransactions';
 
 type Transaction = {
   id: string;
@@ -34,11 +34,6 @@ export default function TransactionsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
 
-  // const handleTransactionUpdate = (updatedTransaction: Transaction) => {
-  //   setTransactions((prev) =>
-  //     prev.map((tx) => (tx.id === updatedTransaction.id ? updatedTransaction : tx))
-  //   );
-  // };
   const handleTransactionUpdate = async (updatedTransaction: Transaction): Promise<void> => {
     setTransactions(prev =>
       prev.map(tx => (tx.id === updatedTransaction.id ? updatedTransaction : tx))
