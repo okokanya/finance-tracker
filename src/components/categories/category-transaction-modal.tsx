@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DateTime } from 'luxon';
+import { useEffect, useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -20,7 +20,11 @@ import Modal from '../base/modal';
 import { OptionType } from '../base/select/option-type';
 import Select from '../base/select/select';
 
-export default function CategoryTransactionModal() {
+type Props = {
+  categoryType: CategoryType;
+}
+
+export default function CategoryTransactionModal({ categoryType }: Props) {
   const {
     isTransactionModalOpen,
     setIsTransactionModalOpen,
@@ -36,21 +40,21 @@ export default function CategoryTransactionModal() {
     year: now.year,
   };
 
-  const [categoryType, setCategoryType] = useState<CategoryType>();
-
   const currentType: TransactionFormData['type'] = useMemo(
     () => (categoryType === 'expense' ? 'withdrawal' : 'topup'),
     [categoryType]
   );
 
-  const { categoriesOptions, accountsOptions, isLoading, categories } = useCategoriesTransactions({
+  const { categoriesOptions, accountsOptions, isLoading,  } = useCategoriesTransactions({
     type: categoryType,
   });
+
   const [category, setCategory] = useState<OptionType>({
     title: selectedCategory?.name ?? '',
     value: selectedCategory?.id ?? '',
   });
   const [account, setAccount] = useState<OptionType>(accountsOptions[0]);
+
 
   useEffect(() => {
     if (selectedCategory) {
@@ -64,7 +68,7 @@ export default function CategoryTransactionModal() {
     if (accountsOptions.length) {
       handleChangeAccount(accountsOptions[0]);
     }
-  }, [accountsOptions]);
+  }, [accountsOptions, isTransactionModalOpen]);
 
   const methods = useForm<TransactionFormData>({
     resolver: zodResolver(
@@ -103,7 +107,6 @@ export default function CategoryTransactionModal() {
   const { mutate } = useAddCategoryTransaction();
 
   const onSubmit = (data: TransactionFormData) => {
-    console.log(data);
     mutate(data, {
       onSuccess: () => {
         handleClose();
@@ -112,10 +115,6 @@ export default function CategoryTransactionModal() {
   };
 
   const handleChangeCategory = (selected: OptionType) => {
-    const currentCategory = categories?.find(cat => cat.id === selected.value);
-    if (currentCategory) {
-      setCategoryType(currentCategory.type);
-    }
 
     setCategory(selected);
     setValue('categoryId', selected?.value);

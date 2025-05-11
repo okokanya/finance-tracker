@@ -127,7 +127,7 @@ export default function Categories() {
         type={selectedBalance.value}
       />
       <CategoryEditModal isOpen={isEditModalOpen} onClose={handleCloseEditCategory} />
-      <CategoryTransactionModal />
+      <CategoryTransactionModal  categoryType={selectedBalance.value} />
     </section>
   );
 }

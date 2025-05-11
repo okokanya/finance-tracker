@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
 import { DateTime } from 'luxon';
+import { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { cn } from '@/utils/cn';
@@ -65,23 +65,26 @@ export default function DatePicker({ currentDate }: Props) {
     };
   });
 
-  const years: OptionType[] = Array.from({ length: 10 }, (_, i) => {
-    const year = DateTime.now().year + i;
+  const years: OptionType[] = Array.from({ length: 4 }, (_, i) => {
+    const year = DateTime.now().year - i;
     return { value: String(year), title: String(year) };
   });
 
   const handleChange = (type: 'day' | 'month' | 'year', value: OptionType) => {
     if (type === 'day') {
       setDay(value);
+      setValue(type, Number(value.value));
     }
     if (type === 'month') {
       setMonth(value);
+      setValue(type, Number(value.value));
     }
     if (type === 'year') {
       setYear(value);
+      setValue(type, Number(value.value));
     }
-    setValue(type, Number(value.value));
   };
+
 
   return (
     <div className="flex w-full flex-row gap-1">
@@ -91,7 +94,7 @@ export default function DatePicker({ currentDate }: Props) {
         selected={day}
         onChangeOption={selected => handleChange('day', selected)}
         wrapperClassName={cn('w-20')}
-        {...register('day', { value: Number(day.value) })}
+        {...register('day', { setValueAs: (v) => Number(v) })}
         errorText={errors?.day?.message as string}
       />
 
@@ -100,7 +103,7 @@ export default function DatePicker({ currentDate }: Props) {
         options={months}
         selected={month}
         onChangeOption={selected => handleChange('month', selected)}
-        {...register('month', { value: Number(month.value) })}
+        {...register('month', { setValueAs: (v) => Number(v) })}
         wrapperClassName={cn('w-full')}
         errorText={errors?.month?.message as string}
       />
@@ -110,7 +113,7 @@ export default function DatePicker({ currentDate }: Props) {
         options={years}
         selected={year}
         onChangeOption={selected => handleChange('year', selected)}
-        {...register('year', { value: Number(year.value) })}
+        {...register('year', { setValueAs: (v) => Number(v) })}
         wrapperClassName={cn('w-21')}
         errorText={errors?.year?.message as string}
       />

@@ -1,5 +1,6 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
 import { eq } from 'drizzle-orm';
+import { DateTime } from 'luxon';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { db } from '@/db';
 import { transactions } from '@/db/schema';
@@ -42,21 +43,29 @@ async function POST(req: NextApiRequest, res: NextApiResponse) {
 
     // Валидация тела запроса
     const rawData = req.body;
+
     const parsedData = transactionSchema
       .omit({
         id: true,
-        createdAt: true,
         updatedAt: true,
         targetAccountId: true,
       })
-      .parse({ ...rawData, userId });
+      .parse({
+        ...rawData,
+        userId,
+        createdAt: DateTime.fromObject({
+          year: Number(rawData.year),
+          month: Number(rawData.month),
+          day: Number(rawData.day)
+        }).toISO()
+      });
+
 
     // Создание транзакции с автоматической генерацией полей
     const [newTransaction] = await db
       .insert(transactions)
       .values({
         ...parsedData,
-        createdAt: new Date(),
         updatedAt: new Date(),
       })
       .returning();
