@@ -79,8 +79,8 @@ export default function Categories() {
         </Title>
         {isEdit ? <Text className={'mt-[10px] text-blue-500'}>Режим редактирования</Text> : null}
       </div>
-      <div className="mb-2 flex justify-between">
-        <div className="flex gap-2">
+      <div className="mb-2 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-col gap-2 md:flex-row">
           <Button onClick={() => handleMainButtonClick()}>
             {!isEdit ? 'Режим редактирования' : 'Сохранить изменения'}
           </Button>
@@ -90,7 +90,7 @@ export default function Categories() {
             </Button>
           ) : null}
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-col gap-2 md:flex-row">
           <Select
             options={BALANCE_OPTIONS}
             selected={selectedBalance}
@@ -103,7 +103,7 @@ export default function Categories() {
           />
         </div>
       </div>
-      <div className={cn('grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-4')}>
+      <div className={cn('grid grid-cols-1 gap-x-2 gap-y-3 sm:grid-cols-2 md:grid-cols-4')}>
         {categories.data?.length ? (
           categories.data.map(category => (
             <CategoryCard
@@ -127,7 +127,7 @@ export default function Categories() {
         type={selectedBalance.value}
       />
       <CategoryEditModal isOpen={isEditModalOpen} onClose={handleCloseEditCategory} />
-      <CategoryTransactionModal />
+      <CategoryTransactionModal categoryType={selectedBalance.value} />
     </section>
   );
 }
