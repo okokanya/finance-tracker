@@ -6,9 +6,10 @@ export type ReportMonthData = {
   monthNumber: number;
 };
 
-export type ReportCategories = Pick<Category, 'id' | 'name' | 'type'> & {
+export type ReportCategories = Pick<Category, 'id' | 'name' > & {
   amount: number;
   percentage: number;
+  type: 'topup' | 'withdrawal';
 };
 
 type ReportAverages = {

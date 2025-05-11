@@ -2,6 +2,8 @@ import MonthChart from '@/components/base/month-chart';
 import { OptionType } from '@/components/base/select/option-type';
 import Select from '@/components/base/select/select';
 import Title from '@/components/base/title';
+import ReportAverages from '@/components/categories/report-averages';
+import ReportCategory from '@/components/categories/report-category';
 import useReports, { useReportMonthList } from '@/features/reports/reports.queries';
 import { texts } from '@/features/reports/reports.texts';
 import { useEffect, useState } from 'react';
@@ -33,7 +35,7 @@ export default function Reports() {
   if (error) return <span>Ошибка: {error.message}</span>;
 
   return (
-    <section className="mt-10 w-full">
+    <section className="mt-10 w-full mb-10">
       <div className="mb-6 flex gap-2 justify-between">
         <Title className="justify-self-start" variant="h1">
           {texts.title}
@@ -47,9 +49,8 @@ export default function Reports() {
             className="mb-4 w-40"
           />
         )}
-
       </div>
-      <div className="flex w-full flex-row gap-5">
+      <div className="flex flex-col gap-3 mb-6 md:flex-row md:gap-5 w-full">
         <MonthChart
           data={data.income.data}
           chartType="income"
@@ -62,6 +63,29 @@ export default function Reports() {
           averageValue={data.expense.average}
           monthNumber={data.expense.monthNumber}
         />
+      </div>
+      <div className="flex flex-col gap-3 mb-6 md:flex-row md:gap-5 w-full">
+        <ReportAverages
+          type="topup"
+          title="Средний доход"
+          values={[{label: 'за день', value: data.averages.daily.income}, {label: 'за неделю', value: data.averages.weekly.income}]}
+        />
+        <ReportAverages
+          type="withdrawal"
+          title="Средний расход"
+          values={[{label: 'за день', value: data.averages.daily.expense}, {label: 'за неделю', value: data.averages.weekly.expense}]}
+        />
+      </div>
+      <div className="flex flex-col gap-3 md:flex-row md:gap-5 w-full">
+        {data.categories.map(category => (
+          <ReportCategory
+            key={category.id}
+            category={category.name}
+            value={category.amount}
+            percent={category.percentage}
+            type={category.type}
+          />
+        ))}
       </div>
     </section>
   );
