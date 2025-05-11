@@ -44,6 +44,18 @@ async function POST(req: NextApiRequest, res: NextApiResponse) {
     // Валидация тела запроса
     const rawData = req.body;
 
+    // Создаем дату с учетом часового пояса пользователя
+    // Устанавливаем время на начало дня в указанном часовом поясе
+    const transactionDate = DateTime.fromObject({
+      year: Number(rawData.year),
+      month: Number(rawData.month),
+      day: Number(rawData.day),
+      hour: 0,
+      minute: 0,
+      second: 0,
+      millisecond: 0
+    }, { zone: 'UTC' });
+
     const parsedData = transactionSchema
       .omit({
         id: true,
@@ -53,13 +65,8 @@ async function POST(req: NextApiRequest, res: NextApiResponse) {
       .parse({
         ...rawData,
         userId,
-        createdAt: DateTime.fromObject({
-          year: Number(rawData.year),
-          month: Number(rawData.month),
-          day: Number(rawData.day)
-        }).toISO()
+        createdAt: transactionDate.toMillis() // Сохраняем миллисекунды как есть
       });
-
 
     // Создание транзакции с автоматической генерацией полей
     const [newTransaction] = await db
