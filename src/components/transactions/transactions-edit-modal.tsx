@@ -337,7 +337,9 @@ export default function EditTransactionModal({
         title="Удалить операцию?"
       >
         <div className="mt-4 space-y-4">
-          <p className="text-gray-700">Вы уверены, что хотите удалить эту операцию? Это действие необратимо.</p>
+          <p className="text-gray-700">
+            Вы уверены, что хотите удалить эту операцию? Это действие необратимо.
+          </p>
           <div className="flex justify-end gap-4">
             <Button variant="secondary" onClick={() => setIsConfirmDeleteOpen(false)}>
               Отмена
