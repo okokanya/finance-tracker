@@ -17,7 +17,7 @@ export default function Accounts() {
     useAccountsController();
   const { isAddAccountLoading, setAddAccountModalOpen } = useAddAccountController();
   const { isUpdateAccountLoading, onManageAccountClicked } = useManageAccountController();
-  const { isAddAccountTransactionLoading, onAddAccountTransactionClicked } =
+  const { isAddAccountTransactionLoading, isTransactionAvailable, onAddAccountTransactionClicked } =
     useAddAccountTransactionController();
 
   const isLoading =
@@ -48,6 +48,7 @@ export default function Accounts() {
               <AccountCard
                 key={account.id}
                 account={account}
+                isTransactionAvailable={isTransactionAvailable(account, accountsData?.accounts)}
                 onAddTransactionClick={() =>
                   onAddAccountTransactionClicked(account, accountsData.accounts)
                 }

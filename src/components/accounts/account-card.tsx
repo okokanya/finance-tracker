@@ -9,11 +9,17 @@ import { useDisplayAmountHelper } from '@/utils/format-amount';
 
 type Props = {
   account: AccountResponse;
+  isTransactionAvailable: boolean;
   onAddTransactionClick: () => void;
   onManageClick: () => void;
 };
 
-export default function AccountCard({ account, onManageClick, onAddTransactionClick }: Props) {
+export default function AccountCard({
+  account,
+  isTransactionAvailable,
+  onManageClick,
+  onAddTransactionClick,
+}: Props) {
   const getVariantStyles = () => {
     switch (account.type) {
       case 'savings':
@@ -59,9 +65,11 @@ export default function AccountCard({ account, onManageClick, onAddTransactionCl
           {account.name}
         </p>
         <div className="flex items-center gap-1">
-          <HeadlessButton title={texts.accountCard.transaction} onClick={onAddTransactionClick}>
-            <ArrowsRightLeftIcon className="size-5 text-gray-500" />
-          </HeadlessButton>
+          {isTransactionAvailable && (
+            <HeadlessButton title={texts.accountCard.transaction} onClick={onAddTransactionClick}>
+              <ArrowsRightLeftIcon className="size-5 text-gray-500" />
+            </HeadlessButton>
+          )}
           <HeadlessButton title={texts.accountCard.manage} onClick={onManageClick}>
             <Cog6ToothIcon className="size-5 text-gray-500" />
           </HeadlessButton>

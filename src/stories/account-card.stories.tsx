@@ -10,6 +10,7 @@ const meta = {
     layout: 'centered',
   },
   args: {
+    isTransactionAvailable: true,
     onAddTransactionClick: fn(),
     onManageClick: fn(),
   },
@@ -84,6 +85,21 @@ export const DebtTheyOwe: Story = {
       balance: 15000.0,
       displayBalance: 15000.0,
       type: 'debt_they_owe',
+      isArchived: false,
+    },
+  },
+};
+
+export const TransactionNotAvailable: Story = {
+  args: {
+    isTransactionAvailable: false,
+    account: {
+      id: '1',
+      name: 'Основной счёт',
+      description: 'Обычный',
+      balance: 10500.55,
+      displayBalance: 10500.55,
+      type: 'regular',
       isArchived: false,
     },
   },
