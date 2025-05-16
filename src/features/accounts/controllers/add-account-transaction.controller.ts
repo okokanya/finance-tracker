@@ -38,19 +38,45 @@ export const useAddAccountTransactionController = () => {
   const { mutate: mutateAddAccountTransaction, isPending: isAddAccountTransactionLoading } =
     useAddAccountTransaction();
 
+  const getAllowedTypes = (account: AccountResponse): readonly string[] => {
+    return account.type === 'regular' ? ACCOUNT_TYPES : ['regular'];
+  };
+
+  const isOtherAccountAvailableForTransfer = (
+    account: AccountResponse,
+    accountToTransfer: AccountResponse,
+    allowedTypes: readonly string[]
+  ): boolean => {
+    return accountToTransfer.id !== account.id && allowedTypes.includes(accountToTransfer.type);
+  };
+
+  const isTransactionAvailable = (
+    account: AccountResponse,
+    accounts: AccountResponse[]
+  ): boolean => {
+    if (accounts.length === 1) {
+      return false;
+    } else {
+      const allowedTypes = getAllowedTypes(account);
+      return accounts.some(accountToTransfer =>
+        isOtherAccountAvailableForTransfer(account, accountToTransfer, allowedTypes)
+      );
+    }
+  };
+
   const onAddAccountTransactionClicked = (
     account: AccountResponse,
     accounts: AccountResponse[]
   ) => {
-    const allowedTypes = account.type === 'regular' ? ACCOUNT_TYPES : ['regular'];
+    const allowedTypes = getAllowedTypes(account);
     const accountsForTransfer: OptionType<string>[] = [];
     const allAccounts = new Map();
 
-    accounts.forEach(data => {
-      allAccounts.set(data.id, data);
+    accounts.forEach(accountToTransfer => {
+      allAccounts.set(accountToTransfer.id, accountToTransfer);
 
-      if (data.id !== account.id && allowedTypes.includes(data.type)) {
-        accountsForTransfer.push({ title: data.name, value: data.id });
+      if (isOtherAccountAvailableForTransfer(account, accountToTransfer, allowedTypes)) {
+        accountsForTransfer.push({ title: accountToTransfer.name, value: accountToTransfer.id });
       }
     });
 
@@ -168,6 +194,7 @@ export const useAddAccountTransactionController = () => {
 
   return {
     isAddAccountTransactionLoading,
+    isTransactionAvailable,
     isAddAccountTransactionModalOpen,
     onAddAccountTransactionClicked,
     accountToAddTransaction,
